@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { nuevoTrabajo } from "@/app/sync/nuevoTrabajo";
 
 const PRECIOS: Record<string, { monto: number }> = {
   limpieza: { monto: 5000 },
@@ -34,7 +35,8 @@ export default function SolicitudTrabajoActual() {
       </div>
 
       <div className="rounded-2xl p-6 bg-brand-surface/60 border border-brand-purple/40 backdrop-blur-md">
-        <form className="flex flex-col gap-5">
+          <form className="flex flex-col gap-5" action={nuevoTrabajo}>
+          <input type="hidden" name="id" value={id} />
 
           {/* Categoría */}
           <div className="flex flex-col gap-1">
@@ -73,7 +75,7 @@ export default function SolicitudTrabajoActual() {
                 </p>
               </div>
               <p className="text-3xl font-extrabold text-brand-text shrink-0">
-                ${PrecioconDescuento(precio.monto, 50).toLocaleString("es-AR")}
+                ${PrecioconDescuento(precio.monto, 0).toLocaleString("es-AR")}
               </p>
             </div>
           )}
