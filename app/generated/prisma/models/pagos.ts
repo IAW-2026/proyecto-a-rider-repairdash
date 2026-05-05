@@ -42,18 +42,21 @@ export type PagosMinAggregateOutputType = {
   id_pago: number | null
   id_viaje: number | null
   monto: runtime.Decimal | null
+  estado: string | null
 }
 
 export type PagosMaxAggregateOutputType = {
   id_pago: number | null
   id_viaje: number | null
   monto: runtime.Decimal | null
+  estado: string | null
 }
 
 export type PagosCountAggregateOutputType = {
   id_pago: number
   id_viaje: number
   monto: number
+  estado: number
   _all: number
 }
 
@@ -74,18 +77,21 @@ export type PagosMinAggregateInputType = {
   id_pago?: true
   id_viaje?: true
   monto?: true
+  estado?: true
 }
 
 export type PagosMaxAggregateInputType = {
   id_pago?: true
   id_viaje?: true
   monto?: true
+  estado?: true
 }
 
 export type PagosCountAggregateInputType = {
   id_pago?: true
   id_viaje?: true
   monto?: true
+  estado?: true
   _all?: true
 }
 
@@ -179,6 +185,7 @@ export type PagosGroupByOutputType = {
   id_pago: number
   id_viaje: number | null
   monto: runtime.Decimal
+  estado: string | null
   _count: PagosCountAggregateOutputType | null
   _avg: PagosAvgAggregateOutputType | null
   _sum: PagosSumAggregateOutputType | null
@@ -208,6 +215,7 @@ export type pagosWhereInput = {
   id_pago?: Prisma.IntFilter<"pagos"> | number
   id_viaje?: Prisma.IntNullableFilter<"pagos"> | number | null
   monto?: Prisma.DecimalFilter<"pagos"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  estado?: Prisma.StringNullableFilter<"pagos"> | string | null
   viajes?: Prisma.XOR<Prisma.ViajesNullableScalarRelationFilter, Prisma.viajesWhereInput> | null
 }
 
@@ -215,6 +223,7 @@ export type pagosOrderByWithRelationInput = {
   id_pago?: Prisma.SortOrder
   id_viaje?: Prisma.SortOrderInput | Prisma.SortOrder
   monto?: Prisma.SortOrder
+  estado?: Prisma.SortOrderInput | Prisma.SortOrder
   viajes?: Prisma.viajesOrderByWithRelationInput
 }
 
@@ -225,6 +234,7 @@ export type pagosWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.pagosWhereInput | Prisma.pagosWhereInput[]
   id_viaje?: Prisma.IntNullableFilter<"pagos"> | number | null
   monto?: Prisma.DecimalFilter<"pagos"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  estado?: Prisma.StringNullableFilter<"pagos"> | string | null
   viajes?: Prisma.XOR<Prisma.ViajesNullableScalarRelationFilter, Prisma.viajesWhereInput> | null
 }, "id_pago">
 
@@ -232,6 +242,7 @@ export type pagosOrderByWithAggregationInput = {
   id_pago?: Prisma.SortOrder
   id_viaje?: Prisma.SortOrderInput | Prisma.SortOrder
   monto?: Prisma.SortOrder
+  estado?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.pagosCountOrderByAggregateInput
   _avg?: Prisma.pagosAvgOrderByAggregateInput
   _max?: Prisma.pagosMaxOrderByAggregateInput
@@ -246,10 +257,12 @@ export type pagosScalarWhereWithAggregatesInput = {
   id_pago?: Prisma.IntWithAggregatesFilter<"pagos"> | number
   id_viaje?: Prisma.IntNullableWithAggregatesFilter<"pagos"> | number | null
   monto?: Prisma.DecimalWithAggregatesFilter<"pagos"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  estado?: Prisma.StringNullableWithAggregatesFilter<"pagos"> | string | null
 }
 
 export type pagosCreateInput = {
   monto: runtime.Decimal | runtime.DecimalJsLike | number | string
+  estado?: string | null
   viajes?: Prisma.viajesCreateNestedOneWithoutPagosInput
 }
 
@@ -257,10 +270,12 @@ export type pagosUncheckedCreateInput = {
   id_pago?: number
   id_viaje?: number | null
   monto: runtime.Decimal | runtime.DecimalJsLike | number | string
+  estado?: string | null
 }
 
 export type pagosUpdateInput = {
   monto?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   viajes?: Prisma.viajesUpdateOneWithoutPagosNestedInput
 }
 
@@ -268,28 +283,33 @@ export type pagosUncheckedUpdateInput = {
   id_pago?: Prisma.IntFieldUpdateOperationsInput | number
   id_viaje?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   monto?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type pagosCreateManyInput = {
   id_pago?: number
   id_viaje?: number | null
   monto: runtime.Decimal | runtime.DecimalJsLike | number | string
+  estado?: string | null
 }
 
 export type pagosUpdateManyMutationInput = {
   monto?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type pagosUncheckedUpdateManyInput = {
   id_pago?: Prisma.IntFieldUpdateOperationsInput | number
   id_viaje?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   monto?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type pagosCountOrderByAggregateInput = {
   id_pago?: Prisma.SortOrder
   id_viaje?: Prisma.SortOrder
   monto?: Prisma.SortOrder
+  estado?: Prisma.SortOrder
 }
 
 export type pagosAvgOrderByAggregateInput = {
@@ -302,12 +322,14 @@ export type pagosMaxOrderByAggregateInput = {
   id_pago?: Prisma.SortOrder
   id_viaje?: Prisma.SortOrder
   monto?: Prisma.SortOrder
+  estado?: Prisma.SortOrder
 }
 
 export type pagosMinOrderByAggregateInput = {
   id_pago?: Prisma.SortOrder
   id_viaje?: Prisma.SortOrder
   monto?: Prisma.SortOrder
+  estado?: Prisma.SortOrder
 }
 
 export type pagosSumOrderByAggregateInput = {
@@ -386,11 +408,13 @@ export type pagosUncheckedUpdateManyWithoutViajesNestedInput = {
 
 export type pagosCreateWithoutViajesInput = {
   monto: runtime.Decimal | runtime.DecimalJsLike | number | string
+  estado?: string | null
 }
 
 export type pagosUncheckedCreateWithoutViajesInput = {
   id_pago?: number
   monto: runtime.Decimal | runtime.DecimalJsLike | number | string
+  estado?: string | null
 }
 
 export type pagosCreateOrConnectWithoutViajesInput = {
@@ -426,25 +450,30 @@ export type pagosScalarWhereInput = {
   id_pago?: Prisma.IntFilter<"pagos"> | number
   id_viaje?: Prisma.IntNullableFilter<"pagos"> | number | null
   monto?: Prisma.DecimalFilter<"pagos"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  estado?: Prisma.StringNullableFilter<"pagos"> | string | null
 }
 
 export type pagosCreateManyViajesInput = {
   id_pago?: number
   monto: runtime.Decimal | runtime.DecimalJsLike | number | string
+  estado?: string | null
 }
 
 export type pagosUpdateWithoutViajesInput = {
   monto?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type pagosUncheckedUpdateWithoutViajesInput = {
   id_pago?: Prisma.IntFieldUpdateOperationsInput | number
   monto?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type pagosUncheckedUpdateManyWithoutViajesInput = {
   id_pago?: Prisma.IntFieldUpdateOperationsInput | number
   monto?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -453,6 +482,7 @@ export type pagosSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   id_pago?: boolean
   id_viaje?: boolean
   monto?: boolean
+  estado?: boolean
   viajes?: boolean | Prisma.pagos$viajesArgs<ExtArgs>
 }, ExtArgs["result"]["pagos"]>
 
@@ -460,6 +490,7 @@ export type pagosSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   id_pago?: boolean
   id_viaje?: boolean
   monto?: boolean
+  estado?: boolean
   viajes?: boolean | Prisma.pagos$viajesArgs<ExtArgs>
 }, ExtArgs["result"]["pagos"]>
 
@@ -467,6 +498,7 @@ export type pagosSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   id_pago?: boolean
   id_viaje?: boolean
   monto?: boolean
+  estado?: boolean
   viajes?: boolean | Prisma.pagos$viajesArgs<ExtArgs>
 }, ExtArgs["result"]["pagos"]>
 
@@ -474,9 +506,10 @@ export type pagosSelectScalar = {
   id_pago?: boolean
   id_viaje?: boolean
   monto?: boolean
+  estado?: boolean
 }
 
-export type pagosOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id_pago" | "id_viaje" | "monto", ExtArgs["result"]["pagos"]>
+export type pagosOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id_pago" | "id_viaje" | "monto" | "estado", ExtArgs["result"]["pagos"]>
 export type pagosInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   viajes?: boolean | Prisma.pagos$viajesArgs<ExtArgs>
 }
@@ -496,6 +529,7 @@ export type $pagosPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     id_pago: number
     id_viaje: number | null
     monto: runtime.Decimal
+    estado: string | null
   }, ExtArgs["result"]["pagos"]>
   composites: {}
 }
@@ -923,6 +957,7 @@ export interface pagosFieldRefs {
   readonly id_pago: Prisma.FieldRef<"pagos", 'Int'>
   readonly id_viaje: Prisma.FieldRef<"pagos", 'Int'>
   readonly monto: Prisma.FieldRef<"pagos", 'Decimal'>
+  readonly estado: Prisma.FieldRef<"pagos", 'String'>
 }
     
 

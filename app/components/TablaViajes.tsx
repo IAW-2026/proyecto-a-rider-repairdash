@@ -1,29 +1,11 @@
+import { Decimal } from "@prisma/client/runtime/index-browser";
+import { getPagosByViajeId, getViajesByClienteId } from "../lib/queries";
+
 export default async function TablaViajes({ id }: { id: string }) {
+
   const columnas = ["Servicio", "Fecha", "Costo", "Trabajador", "Estado"];
 
-  const filas = [ //estas failas se completaran con el fectch a la base de datos
-    {
-      servicio: "Servicio 1",
-      fecha: "Fecha 1",
-      costo: "Costo 1",
-      trabajador: "Trabajador 1",
-      estado: "Estado 1",
-    },
-    {
-      servicio: "Servicio 2",
-      fecha: "Fecha 2",
-      costo: "Costo 2",
-      trabajador: "Trabajador 2",
-      estado: "Estado 2",
-    },
-    {
-      servicio: "Servicio 3",
-      fecha: "Fecha 3",
-      costo: "Costo 3",
-      trabajador: "Trabajador 3",
-      estado: "Estado 3",
-    },
-  ];
+  const filas = await getViajesByClienteId(Number(id)); 
 
   return (
     <div className="w-full overflow-x-auto">
@@ -47,17 +29,22 @@ export default async function TablaViajes({ id }: { id: string }) {
               className="border-t border-brand-purple/20 hover:bg-white/5 transition-colors duration-200"
             >
               <td className="px-6 py-7 text-brand-text text-base font-semibold">
-                {fila.servicio}
+                {fila.tipo_de_trabajo}
               </td>
               <td className="px-6 py-7 text-brand-lavender text-base">
-                {fila.fecha}
+                {fila.fecha?.toLocaleDateString("es-ES", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                })}
               </td>
               <td className="px-6 py-7 text-brand-lavender text-base">
-                {fila.costo}
+                {fila.pagos[0].monto.toString() }
               </td>
               <td className="px-6 py-7 text-brand-lavender text-base">
-                {fila.trabajador}
+                Juan Pérez
               </td>
+              {/* hacer get con el id del driver para recuperar el nmbre del driver*/}
               <td className="px-6 py-7 text-brand-lavender text-base">
                 {fila.estado}
               </td>
