@@ -79,7 +79,10 @@ export default function SolicitudTrabajoActual() {
               </p>
             </div>
           )}
-
+          
+          {/* Input oculto seguro para enviar al backend (solo si hay precio y en formato crudo, no localizado) */}
+          <input type="hidden" name="monto" value={precio ? PrecioconDescuento(precio.monto, 0) : 0} />
+          
           {/*Adjuntar foto*/}
           <div className="flex flex-col gap-1">
             <label className="text-base font-semibold text-brand-lavender">Adjuntar foto</label>

@@ -2,6 +2,7 @@
 
 import { createViaje } from "@/app/lib/queries/viajes";
 import { redirect } from "next/navigation";
+import nuevoPago from "./nuevoPago";
 
 export async function nuevoTrabajo(formData: FormData){
     const id = formData.get("id") as string;
@@ -14,5 +15,8 @@ export async function nuevoTrabajo(formData: FormData){
     });
     //mandar el post a driver con la misma informacion del formulario
     // Redirigimos al usuario para que vea su nuevo trabajo en el panel
+    
+    //se crea un nuevo pago asociado al viaje recien creado
+    await nuevoPago(formData, newTrabajo.id_viaje);
     redirect(`/user/${id}/menu`);
 }

@@ -89,7 +89,8 @@ export type ClienteScalarFieldEnum = (typeof ClienteScalarFieldEnum)[keyof typeo
 export const PagosScalarFieldEnum = {
   id_pago: 'id_pago',
   id_viaje: 'id_viaje',
-  monto: 'monto'
+  monto: 'monto',
+  estado: 'estado'
 } as const
 
 export type PagosScalarFieldEnum = (typeof PagosScalarFieldEnum)[keyof typeof PagosScalarFieldEnum]
