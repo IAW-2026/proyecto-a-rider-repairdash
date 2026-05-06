@@ -30,12 +30,14 @@ export default async function Layout({ params, children }: { params: Promise<{ i
     // Si por alguna razón está logueado pero no tiene email
     redirect("/");
   }
+  const nombre = user.firstName;
+  const apellido = user?.lastName;
   // ───────────────────────────────────────────────────────────────────────────
 
   return (
     <div className="min-h-screen bg-brand-bg flex flex-col">
       <header className="fixed top-0 left-0 z-[110] p-3">
-        <MenuHamburguesa id={id} />
+        <MenuHamburguesa id={id} nombre={nombre || ""} apellido={apellido || ""} />
       </header>
       <main className="pt-20 flex-1 flex flex-col items-center">
         <div className="w-full max-w-screen-xl px-8">

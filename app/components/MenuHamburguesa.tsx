@@ -10,7 +10,9 @@ import BotonDescuentos from "./BotonDescuentos"
 import { Show, UserButton } from "@clerk/nextjs"
 
 
-export default function MenuHamburguesa({ id }: { id: string }) {
+export default function MenuHamburguesa({ id, nombre, apellido }: { id: string, nombre?: string, apellido?: string }) {
+
+  
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
@@ -51,8 +53,7 @@ export default function MenuHamburguesa({ id }: { id: string }) {
                 </div>
               </div>
             </Show>
-            <h2 className="text-xl font-bold text-brand-text mt-4">Mi Panel</h2>
-            <p className="text-sm mt-1 text-brand-purple">ID: {id}</p>
+            <h2 className="text-xl font-bold text-brand-text mt-4">{nombre} {apellido}</h2>
           </div>
 
           {/* Nav links */}

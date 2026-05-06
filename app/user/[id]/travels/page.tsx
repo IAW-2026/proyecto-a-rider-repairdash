@@ -1,7 +1,10 @@
 import TablaViajes from "@/app/components/TablaViajes";
+import { getViajesByClienteId } from "@/app/lib/queries";
 
 export default async function Travels({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  const filas = await getViajesByClienteId(Number(id));
+  
   return (
     <div className="py-6">
       <div className="mb-8">
@@ -12,7 +15,7 @@ export default async function Travels({ params }: { params: Promise<{ id: string
           Historial de todos tus servicios técnicos.
         </p>
       </div>
-      <TablaViajes id={id} />
+      <TablaViajes filas={filas} />
     </div>
   );
 }

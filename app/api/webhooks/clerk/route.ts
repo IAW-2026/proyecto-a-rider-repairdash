@@ -55,10 +55,25 @@ export async function POST(req: Request) {
     });
     
     console.log(`Usuario creado en la BD: ${id}`);
+    return new Response('', { status: 200 })
   }
+ if (eventType === 'user.updated') {
+  const { id, email_addresses, first_name, last_name } = evt.data;
 
+  // Guardar en tu base de datos
+  await updateClienteByClerkID(id,{
+    mail: email_addresses[0]?.email_address,
+    nombre: first_name,
+    apellido: last_name,
+  });
+  
+  console.log(`Usuario actualizado en la BD: ${id}`);
   return new Response('', { status: 200 })
+}
+
 }
   
 Descomentar e implementar cuando el repositorio este publico
 API para crear usuario que se registran por primera vez en clerk y dejar de usar sync*/
+
+export {};
