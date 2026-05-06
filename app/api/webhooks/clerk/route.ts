@@ -70,6 +70,7 @@ export async function POST(req: Request) {
   console.log(`Usuario actualizado en la BD: ${id}`);
   return new Response('', { status: 200 })
 }
+ if (eventType === 'session.created')
 
 }
   
