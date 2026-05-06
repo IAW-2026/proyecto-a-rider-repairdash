@@ -1,11 +1,8 @@
 import { Decimal } from "@prisma/client/runtime/index-browser";
-import { getPagosByViajeId, getViajesByClienteId } from "../lib/queries";
 
-export default async function TablaViajes({ id }: { id: string }) {
+export default function TablaViajes({ filas }: { filas: any[] }) {
 
   const columnas = ["Servicio", "Fecha", "Costo", "Trabajador", "Estado"];
-
-  const filas = await getViajesByClienteId(Number(id)); 
 
   return (
     <div className="w-full overflow-x-auto">

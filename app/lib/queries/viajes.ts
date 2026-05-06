@@ -108,6 +108,32 @@ export async function createViaje(data: {
   });
 }
 
+/** Crear un nuevo viaje junto con su pago asociado de forma atómica */
+export async function createViajeConPago(data: {
+  id_cliente: number;
+  tipo_de_trabajo: string;
+  monto: number;
+}) {
+  return prisma.viajes.create({
+    data: {
+      id_cliente: data.id_cliente,
+      tipo_de_trabajo: data.tipo_de_trabajo,
+      estado: "Pendiente",
+      pagos: {
+        create: [
+          {
+            monto: data.monto,
+            estado: "Pendiente"
+          }
+        ]
+      }
+    },
+    include: {
+      pagos: true
+    }
+  });
+}
+
 // ─── UPDATE ──────────────────────────────────────────────────────────────────
 
 /** Actualizar un viaje */

@@ -4,16 +4,8 @@ import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { nuevoTrabajo } from "@/app/sync/nuevoTrabajo";
 
-const PRECIOS: Record<string, { monto: number }> = {
-  limpieza: { monto: 5000 },
-  reparacion: { monto: 15000 },
-  mantenimiento: { monto: 8000 },
-  otro: { monto: 3000 },
-};
+import { PRECIOS, PrecioconDescuento } from "@/app/lib/services/pricing";
 
-function PrecioconDescuento(monto: number, descuento: number) {
-  return monto- (monto * descuento / 100);
-}
 
 export default function SolicitudTrabajoActual() {
   const router = useRouter();
