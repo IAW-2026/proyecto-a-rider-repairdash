@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { nuevoTrabajo } from "@/app/sync/nuevoTrabajo";
+import { nuevoTrabajo } from "@/app/lib/actions/nuevoTrabajo";
 
 import { PRECIOS, PrecioconDescuento } from "@/app/lib/services/pricing";
 

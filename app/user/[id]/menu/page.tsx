@@ -1,8 +1,23 @@
-
 import BotonNuevoTrabajo from "@/app/components/BotonNuevoTrabajo";
+import ViajeEnCurso from "@/app/components/viajeEnCurso";
+import { getViajesByClienteId } from "@/app/lib/queries/viajes";
+import { getViajesCliente } from "@/app/lib/actions/viajes";
 
 export default async function Menu({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+
+  // Obtenemos todos los viajes del cliente
+  const viajes = await getViajesCliente(parseInt(id));
+
+  // Buscamos si tiene algún viaje activo (ni finalizado ni cancelado)
+  const viajeActivo = viajes.find(
+    (v) => v.estado && v.estado.toLowerCase() !== "finalizado" && v.estado.toLowerCase() !== "cancelado"
+  );
+
+  // Filtramos los viajes que ya son un historial
+  const viajesPasados = viajes.filter(
+    (v) => v.estado && (v.estado.toLowerCase() === "finalizado" || v.estado.toLowerCase() === "cancelado")
+  );
 
   return (
     <div className="py-6">
@@ -12,30 +27,50 @@ export default async function Menu({ params }: { params: Promise<{ id: string }>
           Menú principal
         </h1>
         <p className="mt-2 text-base text-brand-purple">
-          ¿Qué querés hacer hoy?
+          {viajeActivo ? "Seguimiento de tu servicio" : "¿Qué querés hacer hoy?"}
         </p>
       </div>
 
-      {/* Action card */}
-      <div
-        className="rounded-2xl p-6 flex flex-col gap-4 bg-brand-surface/60 border border-brand-purple/40 backdrop-blur-md"
-      >
-        <h2 className="text-xl font-bold text-brand-lavender">Nuevo trabajo</h2>
-        <p className="text-base text-brand-purple">Creá una solicitud de servicio técnico.</p>
-        <BotonNuevoTrabajo id={id} />
-      </div>
+      {viajeActivo ? (
+        // Renderizar el seguimiento si hay un viaje en curso
+        <div className="mb-8">
+          <ViajeEnCurso idViaje={viajeActivo.id_viaje} />
+        </div>
+      ) : (
+        // Action card normal si no hay viaje en curso
+        <div className="mb-8 rounded-2xl p-6 flex flex-col gap-4 bg-brand-surface/60 border border-brand-purple/40 backdrop-blur-md">
+          <h2 className="text-xl font-bold text-brand-lavender">Nuevo trabajo</h2>
+          <p className="text-base text-brand-purple">Creá una solicitud de servicio técnico.</p>
+          <BotonNuevoTrabajo id={id} />
+        </div>
+      )}
 
       {/* Recent jobs section */}
       <div className="mt-6">
         <h2 className="text-2xl font-bold mb-4 text-brand-text">Últimos trabajos</h2>
-        <div
-          className="rounded-2xl p-6 text-center bg-brand-surface/40 border border-brand-purple/30"
-        >
-          <p className="text-base text-brand-purple">Aún no hay trabajos recientes.</p>
-        </div>
+        {viajesPasados.length > 0 ? (
+          <div className="flex flex-col gap-3">
+            {viajesPasados.map((viaje) => (
+              <div 
+                key={viaje.id_viaje} 
+                className="rounded-2xl p-5 bg-brand-surface/40 border border-brand-purple/30 flex justify-between items-center"
+              >
+                <div>
+                  <p className="text-brand-text font-bold capitalize">{viaje.tipo_de_trabajo}</p>
+                  <p className="text-sm text-brand-muted">{viaje.fecha ? new Date(viaje.fecha).toLocaleDateString() : "Sin fecha"}</p>
+                </div>
+                <span className={`px-3 py-1 text-xs rounded-full ${viaje.estado?.toLowerCase() === 'finalizado' ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300'}`}>
+                  {viaje.estado}
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-2xl p-6 text-center bg-brand-surface/40 border border-brand-purple/30">
+            <p className="text-base text-brand-purple">Aún no hay trabajos recientes.</p>
+          </div>
+        )}
       </div>
     </div>
-
-    
   );
 }

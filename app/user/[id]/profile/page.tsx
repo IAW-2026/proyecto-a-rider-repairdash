@@ -1,9 +1,9 @@
 import { Show, UserButton } from "@clerk/nextjs";
-import { getClienteById } from "@/app/lib/queries/clientes";
+import { getClienteID } from "@/app/lib/actions/clientes";
 
 export default async function Profile({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const cliente = await getClienteById(parseInt(id));
+  const cliente = await getClienteID(id);
   const nombre = cliente?.nombre;
   const apellido = cliente?.apellido;
   

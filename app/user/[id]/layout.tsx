@@ -2,7 +2,7 @@ import MenuHamburguesa from "@/app/components/MenuHamburguesa";
 import Link from "next/link";
 import { currentUser, auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { getClienteByClerkID } from "@/app/lib/queries";
+import { getClienteClerkID } from "@/app/lib/actions/clientes";
 
 export default async function Layout({ params, children }: { params: Promise<{ id: string }>; children: React.ReactNode;}) {
   const { id } = await params;
@@ -19,7 +19,7 @@ export default async function Layout({ params, children }: { params: Promise<{ i
   const clerkId = user?.id;
 
   if (clerkId) {
-    const dbUser = await getClienteByClerkID(clerkId);
+    const dbUser = await getClienteClerkID(clerkId);
     
     // Si el usuario en la BD no existe, o si el ID de la URL no coincide con su ID real:
     if (!dbUser || dbUser.id_cliente.toString() !== id) {
