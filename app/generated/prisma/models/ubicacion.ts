@@ -221,6 +221,7 @@ export type ubicacionWhereInput = {
   numero?: Prisma.StringFilter<"ubicacion"> | string
   ciudad?: Prisma.StringFilter<"ubicacion"> | string
   cliente?: Prisma.XOR<Prisma.ClienteNullableScalarRelationFilter, Prisma.clienteWhereInput> | null
+  viajes?: Prisma.ViajesListRelationFilter
 }
 
 export type ubicacionOrderByWithRelationInput = {
@@ -230,6 +231,7 @@ export type ubicacionOrderByWithRelationInput = {
   numero?: Prisma.SortOrder
   ciudad?: Prisma.SortOrder
   cliente?: Prisma.clienteOrderByWithRelationInput
+  viajes?: Prisma.viajesOrderByRelationAggregateInput
 }
 
 export type ubicacionWhereUniqueInput = Prisma.AtLeast<{
@@ -242,6 +244,7 @@ export type ubicacionWhereUniqueInput = Prisma.AtLeast<{
   numero?: Prisma.StringFilter<"ubicacion"> | string
   ciudad?: Prisma.StringFilter<"ubicacion"> | string
   cliente?: Prisma.XOR<Prisma.ClienteNullableScalarRelationFilter, Prisma.clienteWhereInput> | null
+  viajes?: Prisma.ViajesListRelationFilter
 }, "id_ubicacion">
 
 export type ubicacionOrderByWithAggregationInput = {
@@ -273,6 +276,7 @@ export type ubicacionCreateInput = {
   numero: string
   ciudad: string
   cliente?: Prisma.clienteCreateNestedOneWithoutUbicacionInput
+  viajes?: Prisma.viajesCreateNestedManyWithoutUbicacionInput
 }
 
 export type ubicacionUncheckedCreateInput = {
@@ -281,6 +285,7 @@ export type ubicacionUncheckedCreateInput = {
   calle: string
   numero: string
   ciudad: string
+  viajes?: Prisma.viajesUncheckedCreateNestedManyWithoutUbicacionInput
 }
 
 export type ubicacionUpdateInput = {
@@ -288,6 +293,7 @@ export type ubicacionUpdateInput = {
   numero?: Prisma.StringFieldUpdateOperationsInput | string
   ciudad?: Prisma.StringFieldUpdateOperationsInput | string
   cliente?: Prisma.clienteUpdateOneWithoutUbicacionNestedInput
+  viajes?: Prisma.viajesUpdateManyWithoutUbicacionNestedInput
 }
 
 export type ubicacionUncheckedUpdateInput = {
@@ -296,6 +302,7 @@ export type ubicacionUncheckedUpdateInput = {
   calle?: Prisma.StringFieldUpdateOperationsInput | string
   numero?: Prisma.StringFieldUpdateOperationsInput | string
   ciudad?: Prisma.StringFieldUpdateOperationsInput | string
+  viajes?: Prisma.viajesUncheckedUpdateManyWithoutUbicacionNestedInput
 }
 
 export type ubicacionCreateManyInput = {
@@ -364,6 +371,11 @@ export type ubicacionSumOrderByAggregateInput = {
   id_cliente?: Prisma.SortOrder
 }
 
+export type UbicacionNullableScalarRelationFilter = {
+  is?: Prisma.ubicacionWhereInput | null
+  isNot?: Prisma.ubicacionWhereInput | null
+}
+
 export type ubicacionCreateNestedManyWithoutClienteInput = {
   create?: Prisma.XOR<Prisma.ubicacionCreateWithoutClienteInput, Prisma.ubicacionUncheckedCreateWithoutClienteInput> | Prisma.ubicacionCreateWithoutClienteInput[] | Prisma.ubicacionUncheckedCreateWithoutClienteInput[]
   connectOrCreate?: Prisma.ubicacionCreateOrConnectWithoutClienteInput | Prisma.ubicacionCreateOrConnectWithoutClienteInput[]
@@ -406,10 +418,27 @@ export type ubicacionUncheckedUpdateManyWithoutClienteNestedInput = {
   deleteMany?: Prisma.ubicacionScalarWhereInput | Prisma.ubicacionScalarWhereInput[]
 }
 
+export type ubicacionCreateNestedOneWithoutViajesInput = {
+  create?: Prisma.XOR<Prisma.ubicacionCreateWithoutViajesInput, Prisma.ubicacionUncheckedCreateWithoutViajesInput>
+  connectOrCreate?: Prisma.ubicacionCreateOrConnectWithoutViajesInput
+  connect?: Prisma.ubicacionWhereUniqueInput
+}
+
+export type ubicacionUpdateOneWithoutViajesNestedInput = {
+  create?: Prisma.XOR<Prisma.ubicacionCreateWithoutViajesInput, Prisma.ubicacionUncheckedCreateWithoutViajesInput>
+  connectOrCreate?: Prisma.ubicacionCreateOrConnectWithoutViajesInput
+  upsert?: Prisma.ubicacionUpsertWithoutViajesInput
+  disconnect?: Prisma.ubicacionWhereInput | boolean
+  delete?: Prisma.ubicacionWhereInput | boolean
+  connect?: Prisma.ubicacionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ubicacionUpdateToOneWithWhereWithoutViajesInput, Prisma.ubicacionUpdateWithoutViajesInput>, Prisma.ubicacionUncheckedUpdateWithoutViajesInput>
+}
+
 export type ubicacionCreateWithoutClienteInput = {
   calle: string
   numero: string
   ciudad: string
+  viajes?: Prisma.viajesCreateNestedManyWithoutUbicacionInput
 }
 
 export type ubicacionUncheckedCreateWithoutClienteInput = {
@@ -417,6 +446,7 @@ export type ubicacionUncheckedCreateWithoutClienteInput = {
   calle: string
   numero: string
   ciudad: string
+  viajes?: Prisma.viajesUncheckedCreateNestedManyWithoutUbicacionInput
 }
 
 export type ubicacionCreateOrConnectWithoutClienteInput = {
@@ -456,6 +486,52 @@ export type ubicacionScalarWhereInput = {
   ciudad?: Prisma.StringFilter<"ubicacion"> | string
 }
 
+export type ubicacionCreateWithoutViajesInput = {
+  calle: string
+  numero: string
+  ciudad: string
+  cliente?: Prisma.clienteCreateNestedOneWithoutUbicacionInput
+}
+
+export type ubicacionUncheckedCreateWithoutViajesInput = {
+  id_ubicacion?: number
+  id_cliente?: number | null
+  calle: string
+  numero: string
+  ciudad: string
+}
+
+export type ubicacionCreateOrConnectWithoutViajesInput = {
+  where: Prisma.ubicacionWhereUniqueInput
+  create: Prisma.XOR<Prisma.ubicacionCreateWithoutViajesInput, Prisma.ubicacionUncheckedCreateWithoutViajesInput>
+}
+
+export type ubicacionUpsertWithoutViajesInput = {
+  update: Prisma.XOR<Prisma.ubicacionUpdateWithoutViajesInput, Prisma.ubicacionUncheckedUpdateWithoutViajesInput>
+  create: Prisma.XOR<Prisma.ubicacionCreateWithoutViajesInput, Prisma.ubicacionUncheckedCreateWithoutViajesInput>
+  where?: Prisma.ubicacionWhereInput
+}
+
+export type ubicacionUpdateToOneWithWhereWithoutViajesInput = {
+  where?: Prisma.ubicacionWhereInput
+  data: Prisma.XOR<Prisma.ubicacionUpdateWithoutViajesInput, Prisma.ubicacionUncheckedUpdateWithoutViajesInput>
+}
+
+export type ubicacionUpdateWithoutViajesInput = {
+  calle?: Prisma.StringFieldUpdateOperationsInput | string
+  numero?: Prisma.StringFieldUpdateOperationsInput | string
+  ciudad?: Prisma.StringFieldUpdateOperationsInput | string
+  cliente?: Prisma.clienteUpdateOneWithoutUbicacionNestedInput
+}
+
+export type ubicacionUncheckedUpdateWithoutViajesInput = {
+  id_ubicacion?: Prisma.IntFieldUpdateOperationsInput | number
+  id_cliente?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  calle?: Prisma.StringFieldUpdateOperationsInput | string
+  numero?: Prisma.StringFieldUpdateOperationsInput | string
+  ciudad?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
 export type ubicacionCreateManyClienteInput = {
   id_ubicacion?: number
   calle: string
@@ -467,6 +543,7 @@ export type ubicacionUpdateWithoutClienteInput = {
   calle?: Prisma.StringFieldUpdateOperationsInput | string
   numero?: Prisma.StringFieldUpdateOperationsInput | string
   ciudad?: Prisma.StringFieldUpdateOperationsInput | string
+  viajes?: Prisma.viajesUpdateManyWithoutUbicacionNestedInput
 }
 
 export type ubicacionUncheckedUpdateWithoutClienteInput = {
@@ -474,6 +551,7 @@ export type ubicacionUncheckedUpdateWithoutClienteInput = {
   calle?: Prisma.StringFieldUpdateOperationsInput | string
   numero?: Prisma.StringFieldUpdateOperationsInput | string
   ciudad?: Prisma.StringFieldUpdateOperationsInput | string
+  viajes?: Prisma.viajesUncheckedUpdateManyWithoutUbicacionNestedInput
 }
 
 export type ubicacionUncheckedUpdateManyWithoutClienteInput = {
@@ -484,6 +562,35 @@ export type ubicacionUncheckedUpdateManyWithoutClienteInput = {
 }
 
 
+/**
+ * Count Type UbicacionCountOutputType
+ */
+
+export type UbicacionCountOutputType = {
+  viajes: number
+}
+
+export type UbicacionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  viajes?: boolean | UbicacionCountOutputTypeCountViajesArgs
+}
+
+/**
+ * UbicacionCountOutputType without action
+ */
+export type UbicacionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UbicacionCountOutputType
+   */
+  select?: Prisma.UbicacionCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * UbicacionCountOutputType without action
+ */
+export type UbicacionCountOutputTypeCountViajesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.viajesWhereInput
+}
+
 
 export type ubicacionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id_ubicacion?: boolean
@@ -492,6 +599,8 @@ export type ubicacionSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   numero?: boolean
   ciudad?: boolean
   cliente?: boolean | Prisma.ubicacion$clienteArgs<ExtArgs>
+  viajes?: boolean | Prisma.ubicacion$viajesArgs<ExtArgs>
+  _count?: boolean | Prisma.UbicacionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["ubicacion"]>
 
 export type ubicacionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -523,6 +632,8 @@ export type ubicacionSelectScalar = {
 export type ubicacionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id_ubicacion" | "id_cliente" | "calle" | "numero" | "ciudad", ExtArgs["result"]["ubicacion"]>
 export type ubicacionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cliente?: boolean | Prisma.ubicacion$clienteArgs<ExtArgs>
+  viajes?: boolean | Prisma.ubicacion$viajesArgs<ExtArgs>
+  _count?: boolean | Prisma.UbicacionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ubicacionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cliente?: boolean | Prisma.ubicacion$clienteArgs<ExtArgs>
@@ -535,6 +646,7 @@ export type $ubicacionPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   name: "ubicacion"
   objects: {
     cliente: Prisma.$clientePayload<ExtArgs> | null
+    viajes: Prisma.$viajesPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id_ubicacion: number
@@ -937,6 +1049,7 @@ readonly fields: ubicacionFieldRefs;
 export interface Prisma__ubicacionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   cliente<T extends Prisma.ubicacion$clienteArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ubicacion$clienteArgs<ExtArgs>>): Prisma.Prisma__clienteClient<runtime.Types.Result.GetResult<Prisma.$clientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  viajes<T extends Prisma.ubicacion$viajesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ubicacion$viajesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$viajesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1388,6 +1501,30 @@ export type ubicacion$clienteArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   include?: Prisma.clienteInclude<ExtArgs> | null
   where?: Prisma.clienteWhereInput
+}
+
+/**
+ * ubicacion.viajes
+ */
+export type ubicacion$viajesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the viajes
+   */
+  select?: Prisma.viajesSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the viajes
+   */
+  omit?: Prisma.viajesOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.viajesInclude<ExtArgs> | null
+  where?: Prisma.viajesWhereInput
+  orderBy?: Prisma.viajesOrderByWithRelationInput | Prisma.viajesOrderByWithRelationInput[]
+  cursor?: Prisma.viajesWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ViajesScalarFieldEnum | Prisma.ViajesScalarFieldEnum[]
 }
 
 /**

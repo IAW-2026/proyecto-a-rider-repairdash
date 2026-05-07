@@ -33,13 +33,13 @@ export default function MenuHamburguesa({ id, nombre, apellido }: { id: string, 
 
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-[100] w-80 transform transition-transform duration-300 ease-in-out flex flex-col bg-[linear-gradient(180deg,var(--color-brand-surface)_0%,var(--color-brand-bg)_100%)] border-r border-brand-purple/40 shadow-[4px_0_40px_#27103380] ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed inset-y-0 right-0 z-[100] w-80 transform transition-transform duration-300 ease-in-out flex flex-col bg-[linear-gradient(180deg,var(--color-brand-surface)_0%,var(--color-brand-bg)_100%)] border-l border-brand-purple/40 shadow-[-4px_0_40px_#27103380] ${isOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="p-6 flex flex-col h-full">
           {/* Close button */}
           <button
             onClick={() => setIsOpen(false)}
-            className="self-end w-9 h-9 rounded-full flex items-center justify-center text-lg transition-all hover:scale-110 active:scale-95 bg-brand-purple/30 text-brand-text"
+            className="self-start w-9 h-9 rounded-full flex items-center justify-center text-lg transition-all hover:scale-110 active:scale-95 bg-brand-purple/30 text-brand-text"
             aria-label="Cerrar menú"
           >
             ✖
