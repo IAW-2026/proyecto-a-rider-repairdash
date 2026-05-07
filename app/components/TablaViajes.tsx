@@ -4,8 +4,8 @@ export default function TablaViajes({ filas }: { filas: any[] }) {
   const columnas = ["Servicio", "Fecha", "Costo", "Trabajador", "Estado"];
 
   return (
-    <div className="w-full overflow-x-auto">
-      <table className="w-full border-separate border-spacing-y-5">
+    <div className="w-full max-w-full overflow-x-auto pb-4">
+      <table className="w-full min-w-[700px] border-separate border-spacing-y-2 sm:border-spacing-y-5">
         <thead>
           <tr>
             {columnas.map((col) => (

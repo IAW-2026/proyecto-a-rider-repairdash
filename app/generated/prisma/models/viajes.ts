@@ -29,11 +29,13 @@ export type AggregateViajes = {
 export type ViajesAvgAggregateOutputType = {
   id_viaje: number | null
   id_cliente: number | null
+  id_ubicacion: number | null
 }
 
 export type ViajesSumAggregateOutputType = {
   id_viaje: number | null
   id_cliente: number | null
+  id_ubicacion: number | null
 }
 
 export type ViajesMinAggregateOutputType = {
@@ -43,6 +45,7 @@ export type ViajesMinAggregateOutputType = {
   driver: string | null
   fecha: Date | null
   estado: string | null
+  id_ubicacion: number | null
 }
 
 export type ViajesMaxAggregateOutputType = {
@@ -52,6 +55,7 @@ export type ViajesMaxAggregateOutputType = {
   driver: string | null
   fecha: Date | null
   estado: string | null
+  id_ubicacion: number | null
 }
 
 export type ViajesCountAggregateOutputType = {
@@ -61,6 +65,7 @@ export type ViajesCountAggregateOutputType = {
   driver: number
   fecha: number
   estado: number
+  id_ubicacion: number
   _all: number
 }
 
@@ -68,11 +73,13 @@ export type ViajesCountAggregateOutputType = {
 export type ViajesAvgAggregateInputType = {
   id_viaje?: true
   id_cliente?: true
+  id_ubicacion?: true
 }
 
 export type ViajesSumAggregateInputType = {
   id_viaje?: true
   id_cliente?: true
+  id_ubicacion?: true
 }
 
 export type ViajesMinAggregateInputType = {
@@ -82,6 +89,7 @@ export type ViajesMinAggregateInputType = {
   driver?: true
   fecha?: true
   estado?: true
+  id_ubicacion?: true
 }
 
 export type ViajesMaxAggregateInputType = {
@@ -91,6 +99,7 @@ export type ViajesMaxAggregateInputType = {
   driver?: true
   fecha?: true
   estado?: true
+  id_ubicacion?: true
 }
 
 export type ViajesCountAggregateInputType = {
@@ -100,6 +109,7 @@ export type ViajesCountAggregateInputType = {
   driver?: true
   fecha?: true
   estado?: true
+  id_ubicacion?: true
   _all?: true
 }
 
@@ -196,6 +206,7 @@ export type ViajesGroupByOutputType = {
   driver: string | null
   fecha: Date | null
   estado: string | null
+  id_ubicacion: number | null
   _count: ViajesCountAggregateOutputType | null
   _avg: ViajesAvgAggregateOutputType | null
   _sum: ViajesSumAggregateOutputType | null
@@ -228,8 +239,10 @@ export type viajesWhereInput = {
   driver?: Prisma.StringNullableFilter<"viajes"> | string | null
   fecha?: Prisma.DateTimeNullableFilter<"viajes"> | Date | string | null
   estado?: Prisma.StringNullableFilter<"viajes"> | string | null
+  id_ubicacion?: Prisma.IntNullableFilter<"viajes"> | number | null
   pagos?: Prisma.PagosListRelationFilter
   cliente?: Prisma.XOR<Prisma.ClienteNullableScalarRelationFilter, Prisma.clienteWhereInput> | null
+  ubicacion?: Prisma.XOR<Prisma.UbicacionNullableScalarRelationFilter, Prisma.ubicacionWhereInput> | null
 }
 
 export type viajesOrderByWithRelationInput = {
@@ -239,8 +252,10 @@ export type viajesOrderByWithRelationInput = {
   driver?: Prisma.SortOrderInput | Prisma.SortOrder
   fecha?: Prisma.SortOrderInput | Prisma.SortOrder
   estado?: Prisma.SortOrderInput | Prisma.SortOrder
+  id_ubicacion?: Prisma.SortOrderInput | Prisma.SortOrder
   pagos?: Prisma.pagosOrderByRelationAggregateInput
   cliente?: Prisma.clienteOrderByWithRelationInput
+  ubicacion?: Prisma.ubicacionOrderByWithRelationInput
 }
 
 export type viajesWhereUniqueInput = Prisma.AtLeast<{
@@ -253,8 +268,10 @@ export type viajesWhereUniqueInput = Prisma.AtLeast<{
   driver?: Prisma.StringNullableFilter<"viajes"> | string | null
   fecha?: Prisma.DateTimeNullableFilter<"viajes"> | Date | string | null
   estado?: Prisma.StringNullableFilter<"viajes"> | string | null
+  id_ubicacion?: Prisma.IntNullableFilter<"viajes"> | number | null
   pagos?: Prisma.PagosListRelationFilter
   cliente?: Prisma.XOR<Prisma.ClienteNullableScalarRelationFilter, Prisma.clienteWhereInput> | null
+  ubicacion?: Prisma.XOR<Prisma.UbicacionNullableScalarRelationFilter, Prisma.ubicacionWhereInput> | null
 }, "id_viaje">
 
 export type viajesOrderByWithAggregationInput = {
@@ -264,6 +281,7 @@ export type viajesOrderByWithAggregationInput = {
   driver?: Prisma.SortOrderInput | Prisma.SortOrder
   fecha?: Prisma.SortOrderInput | Prisma.SortOrder
   estado?: Prisma.SortOrderInput | Prisma.SortOrder
+  id_ubicacion?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.viajesCountOrderByAggregateInput
   _avg?: Prisma.viajesAvgOrderByAggregateInput
   _max?: Prisma.viajesMaxOrderByAggregateInput
@@ -281,6 +299,7 @@ export type viajesScalarWhereWithAggregatesInput = {
   driver?: Prisma.StringNullableWithAggregatesFilter<"viajes"> | string | null
   fecha?: Prisma.DateTimeNullableWithAggregatesFilter<"viajes"> | Date | string | null
   estado?: Prisma.StringNullableWithAggregatesFilter<"viajes"> | string | null
+  id_ubicacion?: Prisma.IntNullableWithAggregatesFilter<"viajes"> | number | null
 }
 
 export type viajesCreateInput = {
@@ -290,6 +309,7 @@ export type viajesCreateInput = {
   estado?: string | null
   pagos?: Prisma.pagosCreateNestedManyWithoutViajesInput
   cliente?: Prisma.clienteCreateNestedOneWithoutViajesInput
+  ubicacion?: Prisma.ubicacionCreateNestedOneWithoutViajesInput
 }
 
 export type viajesUncheckedCreateInput = {
@@ -299,6 +319,7 @@ export type viajesUncheckedCreateInput = {
   driver?: string | null
   fecha?: Date | string | null
   estado?: string | null
+  id_ubicacion?: number | null
   pagos?: Prisma.pagosUncheckedCreateNestedManyWithoutViajesInput
 }
 
@@ -309,6 +330,7 @@ export type viajesUpdateInput = {
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pagos?: Prisma.pagosUpdateManyWithoutViajesNestedInput
   cliente?: Prisma.clienteUpdateOneWithoutViajesNestedInput
+  ubicacion?: Prisma.ubicacionUpdateOneWithoutViajesNestedInput
 }
 
 export type viajesUncheckedUpdateInput = {
@@ -318,6 +340,7 @@ export type viajesUncheckedUpdateInput = {
   driver?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id_ubicacion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pagos?: Prisma.pagosUncheckedUpdateManyWithoutViajesNestedInput
 }
 
@@ -328,6 +351,7 @@ export type viajesCreateManyInput = {
   driver?: string | null
   fecha?: Date | string | null
   estado?: string | null
+  id_ubicacion?: number | null
 }
 
 export type viajesUpdateManyMutationInput = {
@@ -344,6 +368,7 @@ export type viajesUncheckedUpdateManyInput = {
   driver?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id_ubicacion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type ViajesListRelationFilter = {
@@ -368,11 +393,13 @@ export type viajesCountOrderByAggregateInput = {
   driver?: Prisma.SortOrder
   fecha?: Prisma.SortOrder
   estado?: Prisma.SortOrder
+  id_ubicacion?: Prisma.SortOrder
 }
 
 export type viajesAvgOrderByAggregateInput = {
   id_viaje?: Prisma.SortOrder
   id_cliente?: Prisma.SortOrder
+  id_ubicacion?: Prisma.SortOrder
 }
 
 export type viajesMaxOrderByAggregateInput = {
@@ -382,6 +409,7 @@ export type viajesMaxOrderByAggregateInput = {
   driver?: Prisma.SortOrder
   fecha?: Prisma.SortOrder
   estado?: Prisma.SortOrder
+  id_ubicacion?: Prisma.SortOrder
 }
 
 export type viajesMinOrderByAggregateInput = {
@@ -391,11 +419,13 @@ export type viajesMinOrderByAggregateInput = {
   driver?: Prisma.SortOrder
   fecha?: Prisma.SortOrder
   estado?: Prisma.SortOrder
+  id_ubicacion?: Prisma.SortOrder
 }
 
 export type viajesSumOrderByAggregateInput = {
   id_viaje?: Prisma.SortOrder
   id_cliente?: Prisma.SortOrder
+  id_ubicacion?: Prisma.SortOrder
 }
 
 export type viajesCreateNestedManyWithoutClienteInput = {
@@ -456,6 +486,48 @@ export type viajesUpdateOneWithoutPagosNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.viajesUpdateToOneWithWhereWithoutPagosInput, Prisma.viajesUpdateWithoutPagosInput>, Prisma.viajesUncheckedUpdateWithoutPagosInput>
 }
 
+export type viajesCreateNestedManyWithoutUbicacionInput = {
+  create?: Prisma.XOR<Prisma.viajesCreateWithoutUbicacionInput, Prisma.viajesUncheckedCreateWithoutUbicacionInput> | Prisma.viajesCreateWithoutUbicacionInput[] | Prisma.viajesUncheckedCreateWithoutUbicacionInput[]
+  connectOrCreate?: Prisma.viajesCreateOrConnectWithoutUbicacionInput | Prisma.viajesCreateOrConnectWithoutUbicacionInput[]
+  createMany?: Prisma.viajesCreateManyUbicacionInputEnvelope
+  connect?: Prisma.viajesWhereUniqueInput | Prisma.viajesWhereUniqueInput[]
+}
+
+export type viajesUncheckedCreateNestedManyWithoutUbicacionInput = {
+  create?: Prisma.XOR<Prisma.viajesCreateWithoutUbicacionInput, Prisma.viajesUncheckedCreateWithoutUbicacionInput> | Prisma.viajesCreateWithoutUbicacionInput[] | Prisma.viajesUncheckedCreateWithoutUbicacionInput[]
+  connectOrCreate?: Prisma.viajesCreateOrConnectWithoutUbicacionInput | Prisma.viajesCreateOrConnectWithoutUbicacionInput[]
+  createMany?: Prisma.viajesCreateManyUbicacionInputEnvelope
+  connect?: Prisma.viajesWhereUniqueInput | Prisma.viajesWhereUniqueInput[]
+}
+
+export type viajesUpdateManyWithoutUbicacionNestedInput = {
+  create?: Prisma.XOR<Prisma.viajesCreateWithoutUbicacionInput, Prisma.viajesUncheckedCreateWithoutUbicacionInput> | Prisma.viajesCreateWithoutUbicacionInput[] | Prisma.viajesUncheckedCreateWithoutUbicacionInput[]
+  connectOrCreate?: Prisma.viajesCreateOrConnectWithoutUbicacionInput | Prisma.viajesCreateOrConnectWithoutUbicacionInput[]
+  upsert?: Prisma.viajesUpsertWithWhereUniqueWithoutUbicacionInput | Prisma.viajesUpsertWithWhereUniqueWithoutUbicacionInput[]
+  createMany?: Prisma.viajesCreateManyUbicacionInputEnvelope
+  set?: Prisma.viajesWhereUniqueInput | Prisma.viajesWhereUniqueInput[]
+  disconnect?: Prisma.viajesWhereUniqueInput | Prisma.viajesWhereUniqueInput[]
+  delete?: Prisma.viajesWhereUniqueInput | Prisma.viajesWhereUniqueInput[]
+  connect?: Prisma.viajesWhereUniqueInput | Prisma.viajesWhereUniqueInput[]
+  update?: Prisma.viajesUpdateWithWhereUniqueWithoutUbicacionInput | Prisma.viajesUpdateWithWhereUniqueWithoutUbicacionInput[]
+  updateMany?: Prisma.viajesUpdateManyWithWhereWithoutUbicacionInput | Prisma.viajesUpdateManyWithWhereWithoutUbicacionInput[]
+  deleteMany?: Prisma.viajesScalarWhereInput | Prisma.viajesScalarWhereInput[]
+}
+
+export type viajesUncheckedUpdateManyWithoutUbicacionNestedInput = {
+  create?: Prisma.XOR<Prisma.viajesCreateWithoutUbicacionInput, Prisma.viajesUncheckedCreateWithoutUbicacionInput> | Prisma.viajesCreateWithoutUbicacionInput[] | Prisma.viajesUncheckedCreateWithoutUbicacionInput[]
+  connectOrCreate?: Prisma.viajesCreateOrConnectWithoutUbicacionInput | Prisma.viajesCreateOrConnectWithoutUbicacionInput[]
+  upsert?: Prisma.viajesUpsertWithWhereUniqueWithoutUbicacionInput | Prisma.viajesUpsertWithWhereUniqueWithoutUbicacionInput[]
+  createMany?: Prisma.viajesCreateManyUbicacionInputEnvelope
+  set?: Prisma.viajesWhereUniqueInput | Prisma.viajesWhereUniqueInput[]
+  disconnect?: Prisma.viajesWhereUniqueInput | Prisma.viajesWhereUniqueInput[]
+  delete?: Prisma.viajesWhereUniqueInput | Prisma.viajesWhereUniqueInput[]
+  connect?: Prisma.viajesWhereUniqueInput | Prisma.viajesWhereUniqueInput[]
+  update?: Prisma.viajesUpdateWithWhereUniqueWithoutUbicacionInput | Prisma.viajesUpdateWithWhereUniqueWithoutUbicacionInput[]
+  updateMany?: Prisma.viajesUpdateManyWithWhereWithoutUbicacionInput | Prisma.viajesUpdateManyWithWhereWithoutUbicacionInput[]
+  deleteMany?: Prisma.viajesScalarWhereInput | Prisma.viajesScalarWhereInput[]
+}
+
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
@@ -466,6 +538,7 @@ export type viajesCreateWithoutClienteInput = {
   fecha?: Date | string | null
   estado?: string | null
   pagos?: Prisma.pagosCreateNestedManyWithoutViajesInput
+  ubicacion?: Prisma.ubicacionCreateNestedOneWithoutViajesInput
 }
 
 export type viajesUncheckedCreateWithoutClienteInput = {
@@ -474,6 +547,7 @@ export type viajesUncheckedCreateWithoutClienteInput = {
   driver?: string | null
   fecha?: Date | string | null
   estado?: string | null
+  id_ubicacion?: number | null
   pagos?: Prisma.pagosUncheckedCreateNestedManyWithoutViajesInput
 }
 
@@ -513,6 +587,7 @@ export type viajesScalarWhereInput = {
   driver?: Prisma.StringNullableFilter<"viajes"> | string | null
   fecha?: Prisma.DateTimeNullableFilter<"viajes"> | Date | string | null
   estado?: Prisma.StringNullableFilter<"viajes"> | string | null
+  id_ubicacion?: Prisma.IntNullableFilter<"viajes"> | number | null
 }
 
 export type viajesCreateWithoutPagosInput = {
@@ -521,6 +596,7 @@ export type viajesCreateWithoutPagosInput = {
   fecha?: Date | string | null
   estado?: string | null
   cliente?: Prisma.clienteCreateNestedOneWithoutViajesInput
+  ubicacion?: Prisma.ubicacionCreateNestedOneWithoutViajesInput
 }
 
 export type viajesUncheckedCreateWithoutPagosInput = {
@@ -530,6 +606,7 @@ export type viajesUncheckedCreateWithoutPagosInput = {
   driver?: string | null
   fecha?: Date | string | null
   estado?: string | null
+  id_ubicacion?: number | null
 }
 
 export type viajesCreateOrConnectWithoutPagosInput = {
@@ -554,6 +631,7 @@ export type viajesUpdateWithoutPagosInput = {
   fecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   cliente?: Prisma.clienteUpdateOneWithoutViajesNestedInput
+  ubicacion?: Prisma.ubicacionUpdateOneWithoutViajesNestedInput
 }
 
 export type viajesUncheckedUpdateWithoutPagosInput = {
@@ -563,6 +641,52 @@ export type viajesUncheckedUpdateWithoutPagosInput = {
   driver?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id_ubicacion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type viajesCreateWithoutUbicacionInput = {
+  tipo_de_trabajo: string
+  driver?: string | null
+  fecha?: Date | string | null
+  estado?: string | null
+  pagos?: Prisma.pagosCreateNestedManyWithoutViajesInput
+  cliente?: Prisma.clienteCreateNestedOneWithoutViajesInput
+}
+
+export type viajesUncheckedCreateWithoutUbicacionInput = {
+  id_viaje?: number
+  id_cliente?: number | null
+  tipo_de_trabajo: string
+  driver?: string | null
+  fecha?: Date | string | null
+  estado?: string | null
+  pagos?: Prisma.pagosUncheckedCreateNestedManyWithoutViajesInput
+}
+
+export type viajesCreateOrConnectWithoutUbicacionInput = {
+  where: Prisma.viajesWhereUniqueInput
+  create: Prisma.XOR<Prisma.viajesCreateWithoutUbicacionInput, Prisma.viajesUncheckedCreateWithoutUbicacionInput>
+}
+
+export type viajesCreateManyUbicacionInputEnvelope = {
+  data: Prisma.viajesCreateManyUbicacionInput | Prisma.viajesCreateManyUbicacionInput[]
+  skipDuplicates?: boolean
+}
+
+export type viajesUpsertWithWhereUniqueWithoutUbicacionInput = {
+  where: Prisma.viajesWhereUniqueInput
+  update: Prisma.XOR<Prisma.viajesUpdateWithoutUbicacionInput, Prisma.viajesUncheckedUpdateWithoutUbicacionInput>
+  create: Prisma.XOR<Prisma.viajesCreateWithoutUbicacionInput, Prisma.viajesUncheckedCreateWithoutUbicacionInput>
+}
+
+export type viajesUpdateWithWhereUniqueWithoutUbicacionInput = {
+  where: Prisma.viajesWhereUniqueInput
+  data: Prisma.XOR<Prisma.viajesUpdateWithoutUbicacionInput, Prisma.viajesUncheckedUpdateWithoutUbicacionInput>
+}
+
+export type viajesUpdateManyWithWhereWithoutUbicacionInput = {
+  where: Prisma.viajesScalarWhereInput
+  data: Prisma.XOR<Prisma.viajesUpdateManyMutationInput, Prisma.viajesUncheckedUpdateManyWithoutUbicacionInput>
 }
 
 export type viajesCreateManyClienteInput = {
@@ -571,6 +695,7 @@ export type viajesCreateManyClienteInput = {
   driver?: string | null
   fecha?: Date | string | null
   estado?: string | null
+  id_ubicacion?: number | null
 }
 
 export type viajesUpdateWithoutClienteInput = {
@@ -579,6 +704,7 @@ export type viajesUpdateWithoutClienteInput = {
   fecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pagos?: Prisma.pagosUpdateManyWithoutViajesNestedInput
+  ubicacion?: Prisma.ubicacionUpdateOneWithoutViajesNestedInput
 }
 
 export type viajesUncheckedUpdateWithoutClienteInput = {
@@ -587,11 +713,50 @@ export type viajesUncheckedUpdateWithoutClienteInput = {
   driver?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id_ubicacion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pagos?: Prisma.pagosUncheckedUpdateManyWithoutViajesNestedInput
 }
 
 export type viajesUncheckedUpdateManyWithoutClienteInput = {
   id_viaje?: Prisma.IntFieldUpdateOperationsInput | number
+  tipo_de_trabajo?: Prisma.StringFieldUpdateOperationsInput | string
+  driver?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  id_ubicacion?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+}
+
+export type viajesCreateManyUbicacionInput = {
+  id_viaje?: number
+  id_cliente?: number | null
+  tipo_de_trabajo: string
+  driver?: string | null
+  fecha?: Date | string | null
+  estado?: string | null
+}
+
+export type viajesUpdateWithoutUbicacionInput = {
+  tipo_de_trabajo?: Prisma.StringFieldUpdateOperationsInput | string
+  driver?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pagos?: Prisma.pagosUpdateManyWithoutViajesNestedInput
+  cliente?: Prisma.clienteUpdateOneWithoutViajesNestedInput
+}
+
+export type viajesUncheckedUpdateWithoutUbicacionInput = {
+  id_viaje?: Prisma.IntFieldUpdateOperationsInput | number
+  id_cliente?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  tipo_de_trabajo?: Prisma.StringFieldUpdateOperationsInput | string
+  driver?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pagos?: Prisma.pagosUncheckedUpdateManyWithoutViajesNestedInput
+}
+
+export type viajesUncheckedUpdateManyWithoutUbicacionInput = {
+  id_viaje?: Prisma.IntFieldUpdateOperationsInput | number
+  id_cliente?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   tipo_de_trabajo?: Prisma.StringFieldUpdateOperationsInput | string
   driver?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -636,8 +801,10 @@ export type viajesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   driver?: boolean
   fecha?: boolean
   estado?: boolean
+  id_ubicacion?: boolean
   pagos?: boolean | Prisma.viajes$pagosArgs<ExtArgs>
   cliente?: boolean | Prisma.viajes$clienteArgs<ExtArgs>
+  ubicacion?: boolean | Prisma.viajes$ubicacionArgs<ExtArgs>
   _count?: boolean | Prisma.ViajesCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["viajes"]>
 
@@ -648,7 +815,9 @@ export type viajesSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   driver?: boolean
   fecha?: boolean
   estado?: boolean
+  id_ubicacion?: boolean
   cliente?: boolean | Prisma.viajes$clienteArgs<ExtArgs>
+  ubicacion?: boolean | Prisma.viajes$ubicacionArgs<ExtArgs>
 }, ExtArgs["result"]["viajes"]>
 
 export type viajesSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -658,7 +827,9 @@ export type viajesSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   driver?: boolean
   fecha?: boolean
   estado?: boolean
+  id_ubicacion?: boolean
   cliente?: boolean | Prisma.viajes$clienteArgs<ExtArgs>
+  ubicacion?: boolean | Prisma.viajes$ubicacionArgs<ExtArgs>
 }, ExtArgs["result"]["viajes"]>
 
 export type viajesSelectScalar = {
@@ -668,19 +839,23 @@ export type viajesSelectScalar = {
   driver?: boolean
   fecha?: boolean
   estado?: boolean
+  id_ubicacion?: boolean
 }
 
-export type viajesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id_viaje" | "id_cliente" | "tipo_de_trabajo" | "driver" | "fecha" | "estado", ExtArgs["result"]["viajes"]>
+export type viajesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id_viaje" | "id_cliente" | "tipo_de_trabajo" | "driver" | "fecha" | "estado" | "id_ubicacion", ExtArgs["result"]["viajes"]>
 export type viajesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   pagos?: boolean | Prisma.viajes$pagosArgs<ExtArgs>
   cliente?: boolean | Prisma.viajes$clienteArgs<ExtArgs>
+  ubicacion?: boolean | Prisma.viajes$ubicacionArgs<ExtArgs>
   _count?: boolean | Prisma.ViajesCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type viajesIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cliente?: boolean | Prisma.viajes$clienteArgs<ExtArgs>
+  ubicacion?: boolean | Prisma.viajes$ubicacionArgs<ExtArgs>
 }
 export type viajesIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cliente?: boolean | Prisma.viajes$clienteArgs<ExtArgs>
+  ubicacion?: boolean | Prisma.viajes$ubicacionArgs<ExtArgs>
 }
 
 export type $viajesPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -688,6 +863,7 @@ export type $viajesPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   objects: {
     pagos: Prisma.$pagosPayload<ExtArgs>[]
     cliente: Prisma.$clientePayload<ExtArgs> | null
+    ubicacion: Prisma.$ubicacionPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id_viaje: number
@@ -696,6 +872,7 @@ export type $viajesPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     driver: string | null
     fecha: Date | null
     estado: string | null
+    id_ubicacion: number | null
   }, ExtArgs["result"]["viajes"]>
   composites: {}
 }
@@ -1092,6 +1269,7 @@ export interface Prisma__viajesClient<T, Null = never, ExtArgs extends runtime.T
   readonly [Symbol.toStringTag]: "PrismaPromise"
   pagos<T extends Prisma.viajes$pagosArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.viajes$pagosArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$pagosPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   cliente<T extends Prisma.viajes$clienteArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.viajes$clienteArgs<ExtArgs>>): Prisma.Prisma__clienteClient<runtime.Types.Result.GetResult<Prisma.$clientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  ubicacion<T extends Prisma.viajes$ubicacionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.viajes$ubicacionArgs<ExtArgs>>): Prisma.Prisma__ubicacionClient<runtime.Types.Result.GetResult<Prisma.$ubicacionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1127,6 +1305,7 @@ export interface viajesFieldRefs {
   readonly driver: Prisma.FieldRef<"viajes", 'String'>
   readonly fecha: Prisma.FieldRef<"viajes", 'DateTime'>
   readonly estado: Prisma.FieldRef<"viajes", 'String'>
+  readonly id_ubicacion: Prisma.FieldRef<"viajes", 'Int'>
 }
     
 
@@ -1568,6 +1747,25 @@ export type viajes$clienteArgs<ExtArgs extends runtime.Types.Extensions.Internal
    */
   include?: Prisma.clienteInclude<ExtArgs> | null
   where?: Prisma.clienteWhereInput
+}
+
+/**
+ * viajes.ubicacion
+ */
+export type viajes$ubicacionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ubicacion
+   */
+  select?: Prisma.ubicacionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ubicacion
+   */
+  omit?: Prisma.ubicacionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ubicacionInclude<ExtArgs> | null
+  where?: Prisma.ubicacionWhereInput
 }
 
 /**

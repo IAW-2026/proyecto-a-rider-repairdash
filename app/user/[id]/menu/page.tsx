@@ -1,13 +1,12 @@
 import BotonNuevoTrabajo from "@/app/components/BotonNuevoTrabajo";
 import ViajeEnCurso from "@/app/components/viajeEnCurso";
-import { getViajesByClienteId } from "@/app/lib/queries/viajes";
-import { getViajesCliente } from "@/app/lib/actions/viajes";
+import {getUltimos4Cliente } from "@/app/lib/actions/viajes";
 
 export default async function Menu({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
   // Obtenemos todos los viajes del cliente
-  const viajes = await getViajesCliente(parseInt(id));
+  const viajes = await getUltimos4Cliente(parseInt(id));
 
   // Buscamos si tiene algún viaje activo (ni finalizado ni cancelado)
   const viajeActivo = viajes.find(

@@ -1,5 +1,5 @@
 
-import { deletePago, deleteViaje, getPagosByViajeId, updateViaje } from "@/app/lib/queries"
+/*import { deletePago, deleteViaje, getPagosByViajeId, updateViaje } from "@/app/lib/queries"
 
 export async function PUT( req:Request){
     const body = await req.json();
@@ -52,4 +52,5 @@ export async function PUT( req:Request){
             return new Response(JSON.stringify({ message: "Estado no válido" }), { status: 400 });
     }
     return new Response(JSON.stringify({ message }), { status: 200 })
-}
+}*/
+export {};

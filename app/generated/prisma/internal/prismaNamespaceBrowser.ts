@@ -122,7 +122,8 @@ export const ViajesScalarFieldEnum = {
   tipo_de_trabajo: 'tipo_de_trabajo',
   driver: 'driver',
   fecha: 'fecha',
-  estado: 'estado'
+  estado: 'estado',
+  id_ubicacion: 'id_ubicacion'
 } as const
 
 export type ViajesScalarFieldEnum = (typeof ViajesScalarFieldEnum)[keyof typeof ViajesScalarFieldEnum]

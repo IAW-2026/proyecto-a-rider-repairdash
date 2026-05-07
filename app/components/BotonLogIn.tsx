@@ -8,17 +8,12 @@ export default function BotonLogIn() {
     <div>
     <Show when="signed-out">
       <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center justify-center">
-        <SignInButton forceRedirectUrl="/sync">
-          <button className="bg-[linear-gradient(135deg,var(--color-brand-accent),var(--color-brand-purple))] text-white rounded-full font-bold text-lg sm:text-xl h-14 sm:h-16 w-48 sm:w-56 shadow-[0_0_20px_#F500F150] transition-transform hover:scale-105 active:scale-95">
+          <button onClick={() => router.push("/sing-in")} className="bg-[linear-gradient(135deg,var(--color-brand-accent),var(--color-brand-purple))] text-white rounded-full font-bold text-lg sm:text-xl h-14 sm:h-16 w-48 sm:w-56 shadow-[0_0_20px_#F500F150] transition-transform hover:scale-105 active:scale-95">
             Sign In
           </button>
-        </SignInButton>
-        <SignUpButton forceRedirectUrl="/sync">
-          <button className="bg-[linear-gradient(135deg,var(--color-brand-accent),var(--color-brand-purple))] text-white rounded-full font-bold text-lg sm:text-xl h-14 sm:h-16 w-48 sm:w-56 shadow-[0_0_20px_#F500F150] transition-transform hover:scale-105 active:scale-95">
-            Sign Up
-          </button>
-        </SignUpButton>
-        
+        <button onClick={() => router.push("/sing-up")} className="bg-[linear-gradient(135deg,var(--color-brand-accent),var(--color-brand-purple))] text-white rounded-full font-bold text-lg sm:text-xl h-14 sm:h-16 w-48 sm:w-56 shadow-[0_0_20px_#F500F150] transition-transform hover:scale-105 active:scale-95">
+          Sign Up
+        </button>
       </div>
     </Show>
     <Show when="signed-in">
