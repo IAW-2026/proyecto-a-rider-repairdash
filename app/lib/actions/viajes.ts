@@ -1,6 +1,6 @@
 "use server";
 
-import { deleteViaje, getViajeById, getViajesByClienteId } from "@/app/lib/queries/viajes";
+import { deleteViaje, getViajesPaginados, getViajeById, getViajesByClienteId } from "@/app/lib/queries/viajes";
 
 export async function getEstadoViaje(idViaje: number) {
  const viaja = await getViajeById(idViaje);
@@ -15,3 +15,10 @@ export async function getViajesCliente(idCliente: number) {
 export async function cancelarViaje(idViaje: number) {
   await deleteViaje(idViaje);
 }
+
+export async function getViajesPaginadosCliente(idCliente: number, pagina: number = 1) {
+  return await getViajesPaginados(idCliente, pagina);
+}
+
+
+

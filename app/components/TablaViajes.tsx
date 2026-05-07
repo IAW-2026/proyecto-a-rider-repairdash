@@ -1,4 +1,3 @@
-import { Decimal } from "@prisma/client/runtime/index-browser";
 
 export default function TablaViajes({ filas }: { filas: any[] }) {
 

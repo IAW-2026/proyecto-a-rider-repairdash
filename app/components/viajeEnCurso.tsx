@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import { cancelarViaje, getEstadoViaje } from "@/app/lib/actions/viajes";
 import { cancelarPago } from "../lib/actions/pagos";
+import BotonConformidad from "./BotonConformidad";
+import BotonDisconformidad from "./BotonDisconformidad";
 
 const STEPS = [
   { id: "pendiente",  label: "Buscando técnico",  icon: "🔍", description: "Estamos buscando al mejor profesional para tu solicitud." },
   { id: "aceptado",   label: "Técnico asignado",  icon: "👷", description: "Un profesional ha aceptado tu solicitud y está en camino." },
   { id: "en camino",  label: "En camino",          icon: "🚗", description: "El técnico se dirige a tu ubicación ahora mismo." },
   { id: "ha llegado", label: "En tu puerta",       icon: "📍", description: "¡El técnico ha llegado y está listo para comenzar!" },
-  { id: "finalizado", label: "Completado",          icon: "✅", description: "El trabajo ha finalizado con éxito. ¡Gracias por confiar en nosotros!" },
 ];
 
 export default function ViajeEnCurso({ idViaje }: { idViaje: number }) {
@@ -21,12 +22,6 @@ export default function ViajeEnCurso({ idViaje }: { idViaje: number }) {
     if (estadoActual === "cancelado" || estadoActual === "finalizado") {
       return;
     }
-
-    const fetchInitial = async () => {
-      const estadoBD = await getEstadoViaje(idViaje);
-      if (estadoBD) setEstadoActual(estadoBD.toLowerCase());
-    };
-    fetchInitial();
 
     const interval = setInterval(async () => {
       try {
@@ -84,6 +79,27 @@ export default function ViajeEnCurso({ idViaje }: { idViaje: number }) {
     );
   }
 
+  if (estadoActual === "finalizado"){
+    
+
+    return (
+
+      <div className="w-full rounded-3xl p-8 bg-green-900/20 border border-green-500/40 flex flex-col items-center gap-5 text-center shadow-[0_0_40px_#ef444420] animate-[fadeIn_0.5s_ease-out]">
+        <div className="w-20 h-20 rounded-full bg-green-500/20 border border-green-500/40 flex items-center justify-center text-4xl animate-bounce">
+          ✅
+        </div>
+        <div>
+          <h2 className="text-3xl font-extrabold text-green-400 tracking-tight">Servicio Finalizado</h2>
+          <p className="text-brand-text/70 text-sm mt-2 max-w-xs mx-auto">
+            Este servicio técnico ha sido finalizado y ya no está en curso.
+          </p>
+        </div>
+        <BotonConformidad />
+        <BotonDisconformidad />
+      </div>
+    );
+  }
+
  
   const currentIndex = STEPS.findIndex((s) => s.id === estadoActual);
   const activeIndex = currentIndex === -1 ? 0 : currentIndex;
@@ -101,7 +117,7 @@ export default function ViajeEnCurso({ idViaje }: { idViaje: number }) {
         </div>
         {/* Indicador "en vivo" */}
         <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-brand-accent/10 border border-brand-accent/30">
-          <span className="w-2 h-2 rounded-full bg-brand-accent animate-ping inline-block" />
+          <span className="w-1 h-1 rounded-full bg-brand-accent animate-ping inline-block" />
           <span className="text-xs font-bold text-brand-accent uppercase tracking-widest">En vivo</span>
         </div>
       </div>
