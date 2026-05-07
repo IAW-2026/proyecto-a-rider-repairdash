@@ -56,7 +56,7 @@ export async function createPago(data: {
     data: {
       viajes: data.id_viaje ? { connect: { id_viaje: data.id_viaje } } : undefined,
       monto: data.monto,
-      estado: "Pendiente",
+      estado: "pendiente",
     },
   });
 }

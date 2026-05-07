@@ -50,7 +50,7 @@ export default async function Menu({ params }: { params: Promise<{ id: string }>
         <h2 className="text-2xl font-bold mb-4 text-brand-text">Últimos trabajos</h2>
         {viajesPasados.length > 0 ? (
           <div className="flex flex-col gap-3">
-            {viajesPasados.map((viaje) => (
+            {viajesPasados.slice(0, 4).map((viaje) => (
               <div 
                 key={viaje.id_viaje} 
                 className="rounded-2xl p-5 bg-brand-surface/40 border border-brand-purple/30 flex justify-between items-center"

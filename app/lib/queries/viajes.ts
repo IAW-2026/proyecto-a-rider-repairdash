@@ -89,6 +89,29 @@ export async function getViajesByFechaRango(desde: Date, hasta: Date) {
   });
 }
 
+/** Obtener viajes paginados de un cliente (10 por página) */
+export async function getViajesPaginados(id_cliente: number, pagina: number = 1) {
+  const porPagina = 10;
+  const skip = (pagina - 1) * porPagina;
+
+  const [viajes, total] = await Promise.all([
+    prisma.viajes.findMany({
+      where: { id_cliente },
+      orderBy: { fecha: "desc" },
+      skip,
+      take: porPagina,
+      include: { pagos: true },
+    }),
+    prisma.viajes.count({ where: { id_cliente } }),
+  ]);
+
+  return {
+    viajes,
+    total,
+    totalPaginas: Math.ceil(total / porPagina),
+    paginaActual: pagina,
+  };
+}
 // ─── CREATE ──────────────────────────────────────────────────────────────────
 
 /** Crear un nuevo viaje */
@@ -103,7 +126,7 @@ export async function createViaje(data: {
       id_cliente: data.id_cliente,
       tipo_de_trabajo: data.tipo_de_trabajo,
       driver: data.driver,
-      estado: data.estado ?? "Pendiente",
+      estado: data.estado ?? "pendiente",
     },
   });
 }
@@ -118,12 +141,12 @@ export async function createViajeConPago(data: {
     data: {
       id_cliente: data.id_cliente,
       tipo_de_trabajo: data.tipo_de_trabajo,
-      estado: "Pendiente",
+      estado: "pendiente",
       pagos: {
         create: [
           {
             monto: data.monto,
-            estado: "Pendiente"
+            estado: "pendiente"
           }
         ]
       }
@@ -133,6 +156,8 @@ export async function createViajeConPago(data: {
     }
   });
 }
+
+
 
 // ─── UPDATE ──────────────────────────────────────────────────────────────────
 
@@ -196,3 +221,5 @@ export async function countViajesByCliente(idCliente: number) {
     where: { id_cliente: idCliente },
   });
 }
+
+
