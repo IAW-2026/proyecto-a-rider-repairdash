@@ -1,10 +1,10 @@
 import BotonNuevoTrabajo from "@/app/components/BotonNuevoTrabajo";
 import ViajeEnCurso from "@/app/components/viajeEnCurso";
 import {getUltimos4Cliente } from "@/app/lib/actions/viajes";
+import { Suspense } from "react";
+import MenuSkeleton from "@/app/components/skeletons/MenuSkeleton";
 
-export default async function Menu({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-
+async function MenuData({ id }: { id: string }) {
   // Obtenemos todos los viajes del cliente
   const viajes = await getUltimos4Cliente(parseInt(id));
 
@@ -71,5 +71,14 @@ export default async function Menu({ params }: { params: Promise<{ id: string }>
         )}
       </div>
     </div>
+  );
+}
+
+export default async function Menu({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return (
+    <Suspense fallback={<MenuSkeleton />}>
+      <MenuData id={id} />
+    </Suspense>
   );
 }

@@ -1,12 +1,11 @@
 import TablaViajes from "@/app/components/TablaViajes";
 import { getViajesPaginadosCliente } from "@/app/lib/actions/viajes";
 import Link from "next/link";
+import { Suspense } from "react";
+import TravelsSkeleton from "@/app/components/skeletons/TravelsSkeleton";
 
-export default async function Travels({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ page?: string }>;}) {
-  const { id } = await params;
-  const { page } = await searchParams;
+async function TravelsData({ id, page }: { id: string, page?: string }) {
   const paginaActual = Number(page) || 1;
-
   const { viajes, totalPaginas } = await getViajesPaginadosCliente(Number(id), paginaActual);
 
   return (
@@ -68,5 +67,16 @@ export default async function Travels({ params, searchParams }: { params: Promis
         </div>
       )}
     </div>
+  );
+}
+
+export default async function Travels({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ page?: string }>;}) {
+  const { id } = await params;
+  const resolvedSearchParams = await searchParams;
+  
+  return (
+    <Suspense fallback={<TravelsSkeleton />}>
+      <TravelsData id={id} page={resolvedSearchParams.page} />
+    </Suspense>
   );
 }
