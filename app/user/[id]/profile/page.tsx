@@ -1,5 +1,13 @@
-export default async function Profile({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+import { Show, UserButton } from "@clerk/nextjs";
+import { getClienteID } from "@/app/lib/actions/clientes";
+import { Suspense } from "react";
+import ProfileSkeleton from "@/app/components/skeletons/ProfileSkeleton";
+
+async function ProfileData({ id }: { id: string }) {
+  const cliente = await getClienteID(id);
+  const nombre = cliente?.nombre;
+  const apellido = cliente?.apellido;
+  
   return (
     <div className="py-6">
       {/* Header */}
@@ -11,23 +19,16 @@ export default async function Profile({ params }: { params: Promise<{ id: string
       <div
         className="rounded-2xl p-8 flex flex-col items-center gap-4 bg-brand-surface/60 border border-brand-purple/40 backdrop-blur-md"
       >
-        <div
-          className="w-28 h-28 rounded-full overflow-hidden border-[3px] border-brand-accent shadow-[0_0_20px_#F500F160]"
-        >
-          <img
-            src="/content/user-profile-icon.jpg"
-            alt="Usuario"
-            width={112}
-            height={112}
-            className="object-cover w-full h-full"
-          />
-        </div>
-
+          <Show when="signed-in">
+              <div className="w-24 h-24 rounded-full border-[3px] border-brand-accent shadow-[0_0_20px_#F500F170] flex items-center justify-center overflow-hidden transition-transform hover:scale-105">
+                <div className="scale-[3] origin-center flex items-center justify-center w-full h-full">
+                  <UserButton />
+                </div>
+              </div>
+          </Show>
+        
         <div className="text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest mb-1 text-brand-purple">
-            ID de usuario
-          </p>
-          <p className="text-xl font-bold text-brand-text">{id}</p>
+          <p className="text-xl font-bold text-brand-text">{nombre} {apellido}</p>
         </div>
 
         <div
@@ -39,5 +40,14 @@ export default async function Profile({ params }: { params: Promise<{ id: string
         </div>
       </div>
     </div>
+  );
+}
+
+export default async function Profile({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return (
+    <Suspense fallback={<ProfileSkeleton />}>
+      <ProfileData id={id} />
+    </Suspense>
   );
 }

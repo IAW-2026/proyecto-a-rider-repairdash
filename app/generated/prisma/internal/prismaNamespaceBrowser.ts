@@ -89,7 +89,8 @@ export type ClienteScalarFieldEnum = (typeof ClienteScalarFieldEnum)[keyof typeo
 export const PagosScalarFieldEnum = {
   id_pago: 'id_pago',
   id_viaje: 'id_viaje',
-  monto: 'monto'
+  monto: 'monto',
+  estado: 'estado'
 } as const
 
 export type PagosScalarFieldEnum = (typeof PagosScalarFieldEnum)[keyof typeof PagosScalarFieldEnum]
@@ -121,7 +122,8 @@ export const ViajesScalarFieldEnum = {
   tipo_de_trabajo: 'tipo_de_trabajo',
   driver: 'driver',
   fecha: 'fecha',
-  estado: 'estado'
+  estado: 'estado',
+  id_ubicacion: 'id_ubicacion'
 } as const
 
 export type ViajesScalarFieldEnum = (typeof ViajesScalarFieldEnum)[keyof typeof ViajesScalarFieldEnum]

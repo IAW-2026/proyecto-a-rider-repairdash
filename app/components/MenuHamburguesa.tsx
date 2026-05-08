@@ -10,7 +10,9 @@ import BotonDescuentos from "./BotonDescuentos"
 import { Show, UserButton } from "@clerk/nextjs"
 
 
-export default function MenuHamburguesa({ id }: { id: string }) {
+export default function MenuHamburguesa({ id, nombre, apellido }: { id: string, nombre?: string, apellido?: string }) {
+
+  
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
@@ -31,13 +33,13 @@ export default function MenuHamburguesa({ id }: { id: string }) {
 
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-[100] w-80 transform transition-transform duration-300 ease-in-out flex flex-col bg-[linear-gradient(180deg,var(--color-brand-surface)_0%,var(--color-brand-bg)_100%)] border-r border-brand-purple/40 shadow-[4px_0_40px_#27103380] ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed inset-y-0 right-0 z-[100] w-80 transform transition-transform duration-300 ease-in-out flex flex-col bg-[linear-gradient(180deg,var(--color-brand-surface)_0%,var(--color-brand-bg)_100%)] border-l border-brand-purple/40 shadow-[-4px_0_40px_#27103380] ${isOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="p-6 flex flex-col h-full">
           {/* Close button */}
           <button
             onClick={() => setIsOpen(false)}
-            className="self-end w-9 h-9 rounded-full flex items-center justify-center text-lg transition-all hover:scale-110 active:scale-95 bg-brand-purple/30 text-brand-text"
+            className="self-start w-9 h-9 rounded-full flex items-center justify-center text-lg transition-all hover:scale-110 active:scale-95 bg-brand-purple/30 text-brand-text"
             aria-label="Cerrar menú"
           >
             ✖
@@ -51,8 +53,7 @@ export default function MenuHamburguesa({ id }: { id: string }) {
                 </div>
               </div>
             </Show>
-            <h2 className="text-xl font-bold text-brand-text mt-4">Mi Panel</h2>
-            <p className="text-sm mt-1 text-brand-purple">ID: {id}</p>
+            <h2 className="text-xl font-bold text-brand-text mt-4">{nombre} {apellido}</h2>
           </div>
 
           {/* Nav links */}
@@ -68,7 +69,7 @@ export default function MenuHamburguesa({ id }: { id: string }) {
 
           {/* Footer */}
           <div className="mt-auto pt-4 border-t border-brand-purple/40">
-            <p className="text-sm text-center text-brand-purple">RepairDash v1.0</p>
+            <p className="text-sm text-center text-brand-purple">RepairDash v1.0.1</p>
           </div>
         </div>
       </div>

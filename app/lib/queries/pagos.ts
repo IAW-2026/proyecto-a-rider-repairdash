@@ -54,8 +54,9 @@ export async function createPago(data: {
 }) {
   return prisma.pagos.create({
     data: {
-      id_viaje: data.id_viaje,
+      viajes: data.id_viaje ? { connect: { id_viaje: data.id_viaje } } : undefined,
       monto: data.monto,
+      estado: "pendiente",
     },
   });
 }

@@ -66,6 +66,8 @@ export async function updateCliente(
   data: {
     mail?: string;
     calificacion?: number;
+    nombre?: string;
+    apellido?: string;
   }
 ) {
   return prisma.cliente.update({
@@ -73,7 +75,20 @@ export async function updateCliente(
     data,
   });
 }
-
+export async function updateClienteByClerkID(
+  id_clerk: string,
+  data: {
+    mail?: string;
+    calificacion?: number;
+    nombre?: string;
+    apellido?: string;
+  }
+) {
+  return prisma.cliente.update({
+    where: { id_clerk },
+    data,
+  });
+}
 /** Actualizar la calificación de un cliente */
 export async function updateCalificacionCliente(
   id: number,

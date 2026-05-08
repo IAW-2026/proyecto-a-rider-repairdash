@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model cliente {
+  id_cliente   Int           @id @default(autoincrement())
+  mail         String        @unique @db.VarChar(255)
+  calificacion Decimal?      @db.Decimal(3, 2)
+  nombre       String?       @db.VarChar
+  apellido     String?       @db.VarChar
+  id_clerk     String?       @unique @db.VarChar
+  promociones  promociones[]
+  ubicacion    ubicacion[]
+  viajes       viajes[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model pagos {
+  id_pago  Int     @id @default(autoincrement())
+  id_viaje Int?
+  monto    Decimal @db.Decimal(10, 2)
+  estado   String? @db.VarChar
+  viajes   viajes? @relation(fields: [id_viaje], references: [id_viaje], onDelete: Cascade, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model promociones {
+  id_promocion     Int      @id @default(autoincrement())
+  id_cliente       Int?
+  codigo_descuento String   @db.VarChar(50)
+  cliente          cliente? @relation(fields: [id_cliente], references: [id_cliente], onDelete: Cascade, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model ubicacion {
+  id_ubicacion Int      @id @default(autoincrement())
+  id_cliente   Int?
+  calle        String   @db.VarChar(255)
+  numero       String   @db.VarChar(50)
+  ciudad       String   @db.VarChar(100)
+  cliente      cliente? @relation(fields: [id_cliente], references: [id_cliente], onDelete: Cascade, onUpdate: NoAction)
+  viajes       viajes[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model viajes {
+  id_viaje        Int        @id @default(autoincrement())
+  id_cliente      Int?
+  tipo_de_trabajo String     @db.VarChar(100)
+  driver          String?    @db.VarChar(255)
+  fecha           DateTime?  @default(now()) @db.Timestamp(6)
+  estado          String?    @default("Pendiente") @db.VarChar(50)
+  id_ubicacion    Int?
+  pagos           pagos[]
+  cliente         cliente?   @relation(fields: [id_cliente], references: [id_cliente], onDelete: Cascade, onUpdate: NoAction)
+  ubicacion       ubicacion? @relation(fields: [id_ubicacion], references: [id_ubicacion], onDelete: NoAction, onUpdate: NoAction)
+}
