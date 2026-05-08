@@ -1,7 +1,7 @@
-/*import { Webhook } from 'svix'
+import { Webhook } from 'svix'
 import { headers } from 'next/headers'
 import { WebhookEvent } from '@clerk/nextjs/server'
-import { createCliente } from "@/app/lib/queries"
+import { crearCliente} from "@/app/lib/actions/clientes"
 
 export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET
@@ -46,35 +46,16 @@ export async function POST(req: Request) {
     const { id, email_addresses, first_name, last_name } = evt.data;
 
     // Guardar en tu base de datos
-    await createCliente({
-      mail: email_addresses[0]?.email_address,
-      calificacion: 0,
-      nombre: first_name,
-      apellido: last_name,
-      id_clerk: id,
-    });
+    await crearCliente(
+      email_addresses[0]?.email_address,
+      0,
+      first_name || "",
+      last_name || "",
+      id,
+    );
     
     console.log(`Usuario creado en la BD: ${id}`);
     return new Response('', { status: 200 })
   }
- if (eventType === 'user.updated') {
-  const { id, email_addresses, first_name, last_name } = evt.data;
-
-  // Guardar en tu base de datos
-  await updateClienteByClerkID(id,{
-    mail: email_addresses[0]?.email_address,
-    nombre: first_name,
-    apellido: last_name,
-  });
-  
-  console.log(`Usuario actualizado en la BD: ${id}`);
-  return new Response('', { status: 200 })
 }
- if (eventType === 'session.created')
 
-}
-  
-Descomentar e implementar cuando el repositorio este publico
-API para crear usuario que se registran por primera vez en clerk y dejar de usar sync*/
-
-export {};
