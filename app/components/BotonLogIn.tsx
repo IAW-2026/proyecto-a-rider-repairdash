@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { Show, UserButton } from '@clerk/nextjs';
 import { getClienteClerkID } from "../lib/actions/clientes";
 import { useAuth } from "@clerk/nextjs";
+import BotonIrAlMenu from "./botonIrAlMenu";
 
 export default function BotonLogIn() {
   const router = useRouter();
@@ -36,12 +37,7 @@ export default function BotonLogIn() {
             <UserButton />
           </div>
         </div>
-        <button
-          onClick={handleIrAlMenu}
-          className="bg-[linear-gradient(135deg,var(--color-brand-accent),var(--color-brand-purple))] text-white rounded-full font-bold text-xl h-16 px-12 shadow-[0_0_20px_#F500F160] transition-transform hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center min-w-[200px]"
-        >
-          Ir al menu
-        </button>
+        <BotonIrAlMenu />
       </div>
     </Show>
     </div>

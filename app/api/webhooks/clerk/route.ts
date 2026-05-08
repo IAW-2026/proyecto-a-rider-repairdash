@@ -1,7 +1,7 @@
 import { Webhook } from 'svix'
 import { headers } from 'next/headers'
 import { WebhookEvent } from '@clerk/nextjs/server'
-import { createCliente } from "@/app/lib/queries/clientes"
+import { getClienteByClerkID, updateClienteByClerkID } from "@/app/lib/queries/clientes"
 
 export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET
@@ -20,9 +20,8 @@ export async function POST(req: Request) {
     return new Response('Error occured -- no svix headers', { status: 400 })
   }
 
-  // Obtener el body
-  const payload = await req.json()
-  const body = JSON.stringify(payload);
+  // Obtener el body crudo para validar la firma correctamente
+  const body = await req.text();
 
   // Crear un nuevo webhook de svix y verificarlo
   const wh = new Webhook(WEBHOOK_SECRET);
@@ -42,20 +41,27 @@ export async function POST(req: Request) {
   // ¡Aquí manejamos el evento!
   const eventType = evt.type;
 
-  if (eventType === 'user.created') {
+
+  // Actualizar datos del usuario cuando los cambia en Clerk
+  if (eventType === 'user.updated') {
     const { id, email_addresses, first_name, last_name } = evt.data;
 
-    // Guardar en tu base de datos
-    await createCliente({
-      mail: email_addresses[0]?.email_address,
-      calificacion: 0,
-      nombre: first_name || "",
-      apellido: last_name || "",
-      id_clerk: id,
-    });
-    
-    console.log(`Usuario creado en la BD: ${id}`);
-    return new Response('', { status: 200 })
+    const cliente = await getClienteByClerkID(id);
+
+    if (cliente) {
+      await updateClienteByClerkID(id, {
+        mail: email_addresses[0]?.email_address,
+        nombre: first_name || "",
+        apellido: last_name || "",
+      });
+
+      console.log(`[Webhook] Usuario actualizado en BD: ${id}`);
+    }
+
+    return new Response('', { status: 200 });
   }
+
+  // Fallback para cualquier otro evento suscripto
+  return new Response('', { status: 200 });
 }
 
