@@ -1,4 +1,6 @@
 import BotonLogIn from "./components/BotonLogIn";
+import Lazy from "./components/lazyProvisioning";
+
 
 export default function Home() {
   return (
@@ -21,7 +23,7 @@ export default function Home() {
             Tu plataforma de servicios técnicos
           </p>
         </div>
-
+        <Lazy/>
         <BotonLogIn />
       </div>
     </main>
