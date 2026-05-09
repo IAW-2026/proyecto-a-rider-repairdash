@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { getClienteClerkID } from "../lib/actions/clientes";
+import { getClienteClerkID } from "@/lib/actions/clientes";
 
 export default function BotonIrAlMenu() {
     const router = useRouter();

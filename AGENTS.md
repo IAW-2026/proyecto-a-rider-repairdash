@@ -6,7 +6,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 Act as a senior full-stack developer with expertise in React, Next.js, TypeScript, and Prisma.
 
-- You must follow the MVC (Model-View-Controller) architecture at all times.
 - You must follow the SOLID principles at all times.
+-you must use tailwind always
+-you must keep a modular file system
+-you must always keep present that this app will be used in PC and phones
 
 <!-- END:nextjs-agent-rules -->

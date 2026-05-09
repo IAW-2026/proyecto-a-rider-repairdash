@@ -2,7 +2,7 @@ import MenuHamburguesa from "@/app/components/MenuHamburguesa";
 import Link from "next/link";
 import { currentUser, auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { getClienteClerkID } from "@/app/lib/actions/clientes";
+import { getClienteClerkID } from "@/lib/actions/clientes";
 
 export default async function Layout({ params, children }: { params: Promise<{ id: string }>; children: React.ReactNode;}) {
   const { id } = await params;
