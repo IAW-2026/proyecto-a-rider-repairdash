@@ -1,6 +1,6 @@
 import BotonNuevoTrabajo from "@/app/components/BotonNuevoTrabajo";
 import ViajeEnCurso from "@/app/components/viajeEnCurso";
-import {getUltimos4Cliente } from "@/app/lib/actions/viajes";
+import {getUltimos4Cliente } from "@/lib/actions/viajes";
 import { Suspense } from "react";
 import MenuSkeleton from "@/app/components/skeletons/MenuSkeleton";
 

@@ -1,6 +1,6 @@
 "use server";
 
-import { getClienteById, getClienteByClerkID, createCliente } from "@/app/lib/queries/clientes";
+import { getClienteById, getClienteByClerkID, createCliente } from "../queries/clientes";
 
 // Helper: convierte el Decimal de Prisma a un number plano serializable
 function serializeCliente(cliente: NonNullable<Awaited<ReturnType<typeof getClienteByClerkID>>>) {

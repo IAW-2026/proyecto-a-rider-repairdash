@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { nuevoTrabajo } from "@/app/lib/actions/nuevoTrabajo";
+import { nuevoTrabajo } from "@/lib/actions/nuevoTrabajo";
 
-import { PRECIOS, PrecioconDescuento } from "@/app/lib/services/pricing";
+import { PRECIOS, PrecioconDescuento } from "@/lib/services/pricing";
 import BotonAgregarDestino from "./BotonAgregarDestino";
 export default function FormularioNuevoTrabajo({id, ubicaciones}: {id: string, ubicaciones: any[]}) {
   const router = useRouter();

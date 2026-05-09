@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useAuth, useUser } from "@clerk/nextjs";
-import { getClienteClerkID, crearCliente } from "@/app/lib/actions/clientes";
+import { getClienteClerkID, crearCliente } from "@/lib/actions/clientes";
 
 /**
  * Componente invisible de Lazy Provisioning.

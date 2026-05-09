@@ -1,4 +1,4 @@
-// Barrel export — importá desde "@/app/lib/queries" directamente
+// Barrel export — importá desde "@/lib/queries" directamente
 export * from "./clientes";
 export * from "./viajes";
 export * from "./pagos";

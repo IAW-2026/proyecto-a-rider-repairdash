@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { cancelarViaje, getEstadoViaje } from "@/app/lib/actions/viajes";
-import { cancelarPago } from "../lib/actions/pagos";
+import { cancelarViaje, getEstadoViaje } from "@/lib/actions/viajes";
+import { cancelarPago } from "@/lib/actions/pagos";
 import BotonConformidad from "./BotonConformidad";
 import BotonDisconformidad from "./BotonDisconformidad";
 

@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation";
-import { nuevaUbicacion } from "@/app/lib/actions/nuevaUbicacion";
+import { nuevaUbicacion } from "@/lib/actions/nuevaUbicacion";
 
 export default function FormularioNuevaUbicacion({id}: {id: string}) {
   const router = useRouter();

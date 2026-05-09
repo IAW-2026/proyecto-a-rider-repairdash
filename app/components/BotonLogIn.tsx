@@ -1,7 +1,7 @@
 "use client"
 import { useRouter } from "next/navigation";
 import { Show, UserButton } from '@clerk/nextjs';
-import { getClienteClerkID } from "../lib/actions/clientes";
+import { getClienteClerkID } from "@/lib/actions/clientes";
 import { useAuth } from "@clerk/nextjs";
 import BotonIrAlMenu from "./botonIrAlMenu";
 
