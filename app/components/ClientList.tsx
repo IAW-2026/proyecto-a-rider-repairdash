@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { eliminarClienteCompleto } from "@/lib/actions/clientes";
 import Link from "next/link";
 import { toast } from "sonner";
-
+import Refresh from "./refresh";
 interface Client {
     id_cliente: number;
     nombre: string | null;
@@ -18,6 +18,11 @@ export default function ClientList({ initialClients }: { initialClients: Client[
     const [clients, setClients] = useState(initialClients);
     const [search, setSearch] = useState("");
     const [deletingId, setDeletingId] = useState<number | null>(null);
+
+
+    useEffect(() => {
+        setClients(initialClients);
+    }, [initialClients]);
 
     const filteredClients = clients.filter(c => 
         (c.nombre?.toLowerCase() || "").includes(search.toLowerCase()) ||
@@ -58,7 +63,7 @@ export default function ClientList({ initialClients }: { initialClients: Client[
             className: "border-red-500/20 bg-brand-surface",
         });
     };
-
+    
     return (
         <div className="w-full space-y-10">
             {/* Buscador Rectangular */}
