@@ -109,7 +109,7 @@ export default function ClientList({ initialClients }: { initialClients: Client[
                             {/* Botón Viajes */}
                             <Link 
                                 href={`/admin/clientes/${cliente.id_cliente}/viajes`}
-                                className="h-14 px-8 bg-brand-surface border border-brand-purple/20 text-brand-text text-sm font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-brand-purple/20 hover:border-brand-accent transition-all group-hover:scale-105 shadow-xl"
+                                className="h-10 px-5 bg-brand-surface border border-brand-purple/20 text-brand-text text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-brand-purple/20 hover:border-brand-accent transition-all group-hover:scale-105 shadow-lg"
                             >
                                 <span>🚕</span>
                                 <span>Viajes</span>
@@ -118,7 +118,7 @@ export default function ClientList({ initialClients }: { initialClients: Client[
                             {/* Botón Editar */}
                             <Link 
                                 href={`/admin/clientes/${cliente.id_cliente}/edit`}
-                                className="h-14 px-8 bg-brand-surface border border-brand-purple/20 text-brand-text text-sm font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-brand-purple/20 hover:border-brand-accent transition-all group-hover:scale-105 shadow-xl"
+                                className="h-10 px-5 bg-brand-surface border border-brand-purple/20 text-brand-text text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-brand-purple/20 hover:border-brand-accent transition-all group-hover:scale-105 shadow-lg"
                             >
                                 <span>✏️</span>
                                 <span>Editar</span>
@@ -128,7 +128,7 @@ export default function ClientList({ initialClients }: { initialClients: Client[
                             <button 
                                 onClick={() => confirmDelete(cliente.id_cliente, cliente.nombre || "este cliente", cliente.id_clerk)}
                                 disabled={deletingId === cliente.id_cliente}
-                                className="h-14 px-8 bg-red-500/5 border border-red-500/20 text-red-500 text-sm font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-red-500/20 transition-all group-hover:scale-105 shadow-xl"
+                                className="h-10 px-5 bg-red-500/5 border border-red-500/20 text-red-500 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-red-500/20 transition-all group-hover:scale-105 shadow-lg"
                             >
                                 <span>{deletingId === cliente.id_cliente ? "⏳" : "🗑️"}</span>
                                 <span>Eliminar</span>
