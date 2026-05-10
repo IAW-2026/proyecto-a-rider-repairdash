@@ -1,5 +1,6 @@
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "sonner";
 import type { Viewport, Metadata } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 
@@ -22,6 +23,18 @@ export default function RootLayout({children}:{
         <ClerkProvider>
         <html lang="es" className={jakarta.className} suppressHydrationWarning>
             <body>
+                <Toaster 
+                    position="top-center" 
+                    richColors 
+                    theme="dark" 
+                    toastOptions={{
+                        style: {
+                            background: 'var(--color-brand-bg)',
+                            border: '1px solid var(--color-brand-purple)',
+                            color: 'var(--color-brand-text)',
+                        },
+                    }}
+                />
                 {children}
             </body>
         </html>
