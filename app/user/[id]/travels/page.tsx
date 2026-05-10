@@ -1,5 +1,5 @@
 import TablaViajes from "@/app/components/TablaViajes";
-import { getViajesPaginadosCliente } from "@/app/lib/actions/viajes";
+import { getViajesPaginadosCliente } from "@/lib/actions/viajes";
 import Link from "next/link";
 import { Suspense } from "react";
 import TravelsSkeleton from "@/app/components/skeletons/TravelsSkeleton";

@@ -1,4 +1,3 @@
-
 /*import { deletePago, deleteViaje, getPagosByViajeId, updateViaje } from "@/lib/queries"
 
 export async function PUT( req:Request){
@@ -8,18 +7,15 @@ export async function PUT( req:Request){
 
     if (!expected) return 500;
     if (received !== expected) return 401;
-    
     const body = await req.json();
     const state = String(body.estado).toLowerCase(); 
     let message = ''
     
     const id_viaje = Number(body.id_viaje);
-    const id_driver = body.driver ? String(body.driver) : null;
     
     switch (state) {
         case "aceptado":
             await updateViaje(id_viaje, {
-                driver: id_driver as string,
                 estado: "aceptado",
             });
             message = "Viaje aceptado";
@@ -32,31 +28,8 @@ export async function PUT( req:Request){
             });
             message = "Viaje cancelado";
             break;
-            
-        case "en camino":
-            await updateViaje(id_viaje, {
-                estado: "en camino",
-            });
-            message = "En camino";
-            break;
-
-        case "finalizado":
-            await updateViaje(id_viaje, {
-                estado: "finalizado",
-            });
-            message = "Finalizado";
-            break;
-
-        case "ha llegado":
-            await updateViaje(id_viaje, {
-                estado: "ha llegado",
-            });
-            message = "Ha llegado";
-            break;
-
-        default:
-            return new Response(JSON.stringify({ message: "Estado no válido" }), { status: 400 });
     }
     return new Response(JSON.stringify({ message }), { status: 200 })
-}*/
-export {};
+}
+*/
+export{};

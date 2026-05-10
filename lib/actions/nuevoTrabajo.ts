@@ -1,6 +1,6 @@
 "use server"
 
-import { crearViajeYPago } from "@/app/lib/actions/viajes";
+import { crearViajeYPago } from "./viajes";
 import { redirect } from "next/navigation";
 
 export async function nuevoTrabajo(formData: FormData){

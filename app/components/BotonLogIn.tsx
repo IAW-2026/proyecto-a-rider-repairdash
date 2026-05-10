@@ -1,22 +1,17 @@
 "use client"
 import { useRouter } from "next/navigation";
 import { Show, UserButton } from '@clerk/nextjs';
-import { getClienteClerkID } from "../lib/actions/clientes";
-import { useAuth } from "@clerk/nextjs";
 import BotonIrAlMenu from "./botonIrAlMenu";
+import { useUser } from "@clerk/nextjs";
+import BotonIrAlMenuAdmin from "./BotonIrAlMenuAdmin";
 
-export default function BotonLogIn() {
+export default function BotonLogIn() {  
+
   const router = useRouter();
-  const { userId } = useAuth();
+  const {user} = useUser();
+  const metadata = user?.publicMetadata;
   
-  const handleIrAlMenu = async () => {
-    if (!userId) return;
-    const id = await getClienteClerkID(userId);
-    if (id?.id_cliente) {
-      router.push(`/user/${id.id_cliente}/menu`);
-    }
-  };
-
+ 
 
   return (
     <div>
@@ -37,7 +32,12 @@ export default function BotonLogIn() {
             <UserButton />
           </div>
         </div>
-        <BotonIrAlMenu />
+        {metadata?.rol === "cliente" ? (
+          <BotonIrAlMenu/>
+        ):
+        <BotonIrAlMenuAdmin/>
+        }
+       
       </div>
     </Show>
     </div>
