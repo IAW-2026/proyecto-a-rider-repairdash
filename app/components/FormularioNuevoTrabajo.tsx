@@ -12,6 +12,12 @@ export default function FormularioNuevoTrabajo({id, ubicaciones}: {id: string, u
   const [destinos, setDestinos] = useState("");
   const precio = PRECIOS[categoria] ?? null;
 
+  //consultar trabajos y precios a driver
+  //validar codigos de descuento del cliente a promotions y una vez usado se elimina el codigo en la base de datos
+  //enviar el formulario al driver
+  //crear el pago y redirigirlo a payment
+
+
   return (
     <div className="py-6">
       <div className="mb-8">

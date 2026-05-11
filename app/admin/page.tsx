@@ -1,10 +1,11 @@
 import { obtenerTodosLosClientes } from "@/lib/actions/clientes";
 import ClientList from "@/app/components/ClientList";
 import Link from "next/link";
+import  refresh  from "@/app/components/refresh";
+import Refresh from "@/app/components/refresh";
 
 export default async function AdminPage() {
     const clientes = await obtenerTodosLosClientes();
-
     return (
         <main className="min-h-screen bg-brand-bg text-brand-text p-4 sm:p-6 lg:p-8 w-full">
             <div className="w-full space-y-12">
@@ -40,10 +41,14 @@ export default async function AdminPage() {
                     <div className="absolute -bottom-40 -right-40 w-[30rem] h-[30rem] bg-brand-purple/5 rounded-full blur-[150px] pointer-events-none animate-pulse" />
 
                     <div className="w-full">
+
                         <ClientList initialClients={clientes} />
                     </div>
                 </section>
+                <Refresh />
             </div>
         </main>
     );
 }
+
+

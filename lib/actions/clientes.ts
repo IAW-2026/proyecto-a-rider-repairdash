@@ -9,7 +9,6 @@ import {
     updateCliente 
 } from "../queries/clientes";
 import { clerkClient } from "@clerk/nextjs/server";
-import { revalidatePath } from "next/cache";
 
 // Helper: convierte el Decimal de Prisma a un number plano serializable
 function serializeCliente(cliente: any) {
@@ -92,7 +91,6 @@ export async function eliminarClienteCompleto(id_cliente: number, id_clerk?: str
         }
     }
     
-    revalidatePath("/admin");
 }
 
 /** Actualizar información básica de un cliente */
@@ -103,6 +101,5 @@ export async function actualizarClienteAction(id: number, data: {
     calificacion?: number;
 }) {
     const updated = await updateCliente(id, data);
-    revalidatePath("/admin");
     return serializeCliente(updated);
 }
