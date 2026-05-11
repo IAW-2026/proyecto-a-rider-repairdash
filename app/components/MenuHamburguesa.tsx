@@ -47,7 +47,7 @@ export default function MenuHamburguesa({ id, nombre, apellido }: { id: string, 
 
           <div className="mt-4 pb-6 mb-6 text-center border-b border-brand-purple/40 flex flex-col items-center">
             <Show when="signed-in">
-              <div className="w-24 h-24 rounded-full border-[3px] border-brand-accent shadow-[0_0_20px_#F500F170] flex items-center justify-center overflow-hidden transition-transform hover:scale-105">
+              <div className="w-24 h-24 flex items-center justify-center overflow-hidden transition-transform hover:scale-105">
                 <div className="scale-[3] origin-center flex items-center justify-center w-full h-full">
                   <UserButton />
                 </div>

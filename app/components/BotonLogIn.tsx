@@ -8,7 +8,7 @@ import BotonIrAlMenuAdmin from "./BotonIrAlMenuAdmin";
 export default function BotonLogIn() {  
 
   const router = useRouter();
-  const {user} = useUser();
+  const {user, isLoaded} = useUser();
   const metadata = user?.publicMetadata;
   
  
@@ -27,12 +27,12 @@ export default function BotonLogIn() {
     </Show>
     <Show when="signed-in">
       <div className="flex flex-col items-center gap-6">
-        <div className="w-20 h-20 rounded-full border-2 border-brand-accent shadow-[0_0_15px_#F500F160] flex items-center justify-center overflow-hidden transition-transform hover:scale-110">
+        <div className="w-20 h-20 flex items-center justify-center overflow-hidden transition-transform hover:scale-110">
           <div className="scale-[2.5] origin-center flex items-center justify-center w-full h-full">
             <UserButton />
           </div>
         </div>
-        {metadata?.rol === "cliente" ? (
+        {metadata?.rol === "cliente" && isLoaded ? (
           <BotonIrAlMenu/>
         ):
         <BotonIrAlMenuAdmin/>
