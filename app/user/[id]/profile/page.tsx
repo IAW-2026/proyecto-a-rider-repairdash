@@ -46,7 +46,7 @@ async function ProfileData({ id }: { id: string }) {
         className="rounded-2xl p-8 flex flex-col items-center gap-4 bg-brand-surface/60 border border-brand-purple/40 backdrop-blur-md"
       >
           <Show when="signed-in">
-              <div className="w-24 h-24 rounded-full border-[3px] border-brand-accent shadow-[0_0_20px_#F500F170] flex items-center justify-center overflow-hidden transition-transform hover:scale-105">
+              <div className="w-24 h-24 flex items-center justify-center overflow-hidden transition-transform hover:scale-105">
                 <div className="scale-[3] origin-center flex items-center justify-center w-full h-full">
                   <UserButton />
                 </div>
