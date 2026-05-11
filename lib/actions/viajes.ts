@@ -42,3 +42,8 @@ export async function crearViajeYPago(formData: FormData){
 export async function getUltimos4Cliente(idCliente: number) {
   return await getUltimos4ViajesCliente(idCliente);
 }
+
+export async function updateEstado(idViaje: number, estado: string) {
+  await updateEstadoViaje(idViaje, estado);
+  revalidatePath('/admin');
+}

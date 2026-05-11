@@ -24,7 +24,7 @@ export default async function Layout({ params, children }: { params: Promise<{ i
     // Si el usuario en la BD no existe, o si el ID de la URL no coincide con su ID real:
     if (!dbUser || dbUser.id_cliente.toString() !== id) {
       // Lo mandamos a /sync para que el sistema lo redirija forzosamente a SU propio panel
-      redirect("/sync");
+      redirect(`/user/${dbUser?.id_cliente}/menu`);
     }
   } else {
     // Si por alguna razón está logueado pero no tiene email

@@ -5,7 +5,6 @@ import { cancelarViaje, getEstadoViaje } from "@/lib/actions/viajes";
 import { cancelarPago } from "@/lib/actions/pagos";
 import BotonConformidad from "./BotonConformidad";
 import BotonDisconformidad from "./BotonDisconformidad";
-import { revalidatePath } from "next/cache";
 
 const STEPS = [
   { id: "pendiente",  label: "Buscando técnico",  icon: "🔍", description: "Estamos buscando al mejor profesional para tu solicitud." },
@@ -33,7 +32,6 @@ export default function ViajeEnCurso({ idViaje }: { idViaje: number }) {
             setPulse(true);
             setTimeout(() => setPulse(false), 800);
             setEstadoActual(nuevoEstado);
-            revalidatePath(`/admin`);
           }
         }
       } catch (e) {
