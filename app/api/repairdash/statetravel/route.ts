@@ -1,6 +1,6 @@
 
 
-/*import { getPagosByViajeId, updateEstadoViaje, asignarDriverViaje } from "../../../../lib/queries"
+import { getPagosByViajeId, updateEstadoViaje, asignarDriverViaje } from "../../../../lib/queries"
 
 export async function PUT( req:Request){
 
@@ -51,5 +51,4 @@ export async function PUT( req:Request){
             return new Response(JSON.stringify({ message: "Estado no válido" }), { status: 400 });
     }
     return new Response(JSON.stringify({ message }), { status: 200 })
-}*/
-export {};
+}
