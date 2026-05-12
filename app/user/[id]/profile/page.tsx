@@ -1,4 +1,5 @@
-import { Show, UserButton } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
+import Image from "next/image";
 import { getClienteID } from "@/lib/actions/clientes";
 import { getViajesByClienteId } from "@/lib/queries/viajes";
 import TablaViajes from "@/app/components/TablaViajes";
@@ -24,9 +25,10 @@ function renderStars(rating: number) {
 }
 
 async function ProfileData({ id }: { id: string }) {
-  const [cliente, viajes] = await Promise.all([
+  const [cliente, viajes, user] = await Promise.all([
     getClienteID(id),
     getViajesByClienteId(Number(id)),
+    currentUser(),
   ]);
 
   const nombre = cliente?.nombre;
@@ -45,13 +47,21 @@ async function ProfileData({ id }: { id: string }) {
       <div
         className="rounded-2xl p-8 flex flex-col items-center gap-4 bg-brand-surface/60 border border-brand-purple/40 backdrop-blur-md"
       >
-          <Show when="signed-in">
-              <div className="w-24 h-24 flex items-center justify-center overflow-hidden transition-transform hover:scale-105">
-                <div className="scale-[3] origin-center flex items-center justify-center w-full h-full">
-                  <UserButton />
-                </div>
-              </div>
-          </Show>
+        <div className="w-24 h-24 flex items-center justify-center overflow-hidden transition-transform hover:scale-105">
+          {user?.imageUrl ? (
+            <Image
+              src={user.imageUrl}
+              alt={`${user.firstName ?? "Usuario"} avatar`}
+              width={96}
+              height={96}
+              priority
+              fetchPriority="high"
+              className="rounded-full"
+            />
+          ) : (
+            <div className="w-24 h-24 rounded-full bg-brand-purple/20" />
+          )}
+        </div>
         
         <div className="text-center">
           <p className="text-xl font-bold text-brand-text">{nombre} {apellido}</p>
