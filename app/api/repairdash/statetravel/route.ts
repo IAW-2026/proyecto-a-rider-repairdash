@@ -1,10 +1,11 @@
 
-/*import { deletePago, deleteViaje, getPagosByViajeId, updateViaje } from "@/lib/queries"
+
+import { getPagosByViajeId, updateEstadoViaje, asignarDriverViaje } from "../../../../lib/queries"
 
 export async function PUT( req:Request){
 
     const expected = process.env.REPAIRDASH_API_KEY;
-    const received = request.headers.get("x-api-key");
+    const received = req.headers.get("x-api-key");
 
     if (!expected) return 500;
     if (received !== expected) return 401;
@@ -18,39 +19,31 @@ export async function PUT( req:Request){
     
     switch (state) {
         case "aceptado":
-            await updateViaje(id_viaje, {
-                driver: id_driver as string,
-                estado: "aceptado",
-            });
+            await updateEstadoViaje(id_viaje, "aceptado");
+            if (id_driver) {
+                await asignarDriverViaje(id_viaje, id_driver);
+            }
             message = "Viaje aceptado";
             break;
 
         case "cancelado":
             const pagos = await getPagosByViajeId(id_viaje);
-            await updateViaje(id_viaje, {
-                estado: "cancelado",
-            });
+            await updateEstadoViaje(id_viaje, "cancelado");
             message = "Viaje cancelado";
             break;
             
         case "en camino":
-            await updateViaje(id_viaje, {
-                estado: "en camino",
-            });
+            await updateEstadoViaje(id_viaje, "en camino");
             message = "En camino";
             break;
 
         case "finalizado":
-            await updateViaje(id_viaje, {
-                estado: "finalizado",
-            });
+            await updateEstadoViaje(id_viaje, "finalizado");
             message = "Finalizado";
             break;
 
         case "ha llegado":
-            await updateViaje(id_viaje, {
-                estado: "ha llegado",
-            });
+            await updateEstadoViaje(id_viaje, "ha llegado");
             message = "Ha llegado";
             break;
 
@@ -58,5 +51,4 @@ export async function PUT( req:Request){
             return new Response(JSON.stringify({ message: "Estado no válido" }), { status: 400 });
     }
     return new Response(JSON.stringify({ message }), { status: 200 })
-}*/
-export {};
+}
