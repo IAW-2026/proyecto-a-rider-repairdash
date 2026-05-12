@@ -7,8 +7,8 @@ export async function PUT( req:Request){
     const expected = process.env.REPAIRDASH_API_KEY;
     const received = req.headers.get("x-api-key");
 
-    if (!expected) return 500;
-    if (received !== expected) return 401;
+    if (!expected) return new Response("Internal Server Error", { status: 500 });
+    if (received !== expected) return new Response("Unauthorized", { status: 401 });
     
     const body = await req.json();
     const state = String(body.estado).toLowerCase(); 
