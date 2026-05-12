@@ -32,10 +32,10 @@ export default function BotonLogIn() {
             <UserButton />
           </div>
         </div>
-        {metadata?.rol === "cliente" && isLoaded ? (
-          <BotonIrAlMenu/>
+        {metadata?.rol === "admin" && isLoaded ? (
+          <BotonIrAlMenuAdmin/>
         ):
-        <BotonIrAlMenuAdmin/>
+        <BotonIrAlMenu/>
         }
        
       </div>
