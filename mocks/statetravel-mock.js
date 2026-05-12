@@ -33,7 +33,9 @@ async function sendState({ endpoint, idViaje, estado, idDriver }) {
 
   const response = await fetch(endpoint, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json",
+                "x-api-key":"REPAIRDASH_API_KEY"
+     },
     body: JSON.stringify(payload),
   });
 
