@@ -7,6 +7,16 @@ import { PRECIOS, PrecioconDescuento } from "@/lib/services/pricing";
 import BotonAgregarDestino from "./BotonAgregarDestino";
 import DistribuirFormulario from "./DistribuirFormulario";
 
+// Mapeo de descuentos disponibles para el usuario.
+// En el futuro se obtendrán desde el microservicio de promotions.
+const DESCUENTOS: any[] = [
+  { id: "001", codigo: "DESC001", valor: 10 },
+  { id: "002", codigo: "DESC002", valor: 20 },
+  { id: "003", codigo: "DESC003", valor: 30 },
+  { id: "004", codigo: "DESC004", valor: 40 },
+  { id: "005", codigo: "DESC005", valor: 50 },
+];
+
 /** Botón submit que se deshabilita y muestra "Cargando..." mientras el formulario procesa */
 function BotonSolicitar() {
   const { pending } = useFormStatus();
@@ -35,7 +45,10 @@ export default function FormularioNuevoTrabajo({id, ubicaciones}: {id: string, u
   const router = useRouter();
   const [categoria, setCategoria] = useState("");
   const [destinos, setDestinos] = useState("");
+  const [descuentoId, setDescuentoId] = useState<string | null>(null);
   const precio = PRECIOS[categoria] ?? null;
+  const descuentoSeleccionado = DESCUENTOS.find((d) => d.id === descuentoId) ?? null;
+  const montoFinal = precio ? PrecioconDescuento(precio.monto, descuentoSeleccionado?.valor ?? 0) : 0;
 
   //consultar trabajos y precios a driver
   //validar codigos de descuento del cliente a promotions y una vez usado se elimina el codigo en la base de datos
@@ -105,12 +118,24 @@ export default function FormularioNuevoTrabajo({id, ubicaciones}: {id: string, u
             </div>
           </div>
 
-          {/* Descuento */}
+          {/* Descuentos disponibles */}
           <div className="flex flex-col gap-1">
-            <label htmlFor="descuento" className="text-base font-semibold text-brand-lavender">¿Tienes descuento?</label>
-            <input id="descuento" type="text" name="descuento" className="w-full px-5 py-3.5 rounded-xl text-base outline-none transition-all bg-brand-bg border border-brand-purple text-brand-text focus:border-brand-accent" placeholder="Codigo de descuento" />
+            <label htmlFor="descuento" className="text-base font-semibold text-brand-lavender">Descuento</label>
+            <select
+              id="descuento"
+              name="descuento"
+              value={descuentoId ?? ""}
+              onChange={(e) => setDescuentoId(e.target.value || null)}
+              className="w-full px-5 py-3.5 rounded-xl text-base outline-none appearance-none cursor-pointer bg-brand-bg border border-brand-purple text-brand-text focus:border-brand-accent transition-colors"
+            >
+              <option value="">Sin descuento</option>
+              {DESCUENTOS.map((d) => (
+                <option key={d.id} value={d.id}>
+                  {d.codigo} — {d.valor}% de descuento
+                </option>
+              ))}
+            </select>
           </div>
-          {/* Consultar codigo de descuento y modificar el precio segun lo que sea el descuento */}
 
           {/* Monto calculado */}
           {precio && (
@@ -121,12 +146,15 @@ export default function FormularioNuevoTrabajo({id, ubicaciones}: {id: string, u
                 </p>
               </div>
               <p className="text-3xl font-extrabold text-brand-text shrink-0">
-                ${PrecioconDescuento(precio.monto, 0).toLocaleString("es-AR")}
+                ${montoFinal.toLocaleString("es-AR")}
+                {descuentoSeleccionado && (
+                  <span className="ml-2 text-sm font-semibold text-brand-accent">-{descuentoSeleccionado.valor}%</span>
+                )}
               </p>
             </div>
           )}
 
-          <input type="hidden" name="monto" value={precio ? PrecioconDescuento(precio.monto, 0) : 0} />
+          <input type="hidden" name="monto" value={montoFinal} />
 
           {/* Adjuntar foto */}
           <div className="flex flex-col gap-1">
