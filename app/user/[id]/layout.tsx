@@ -1,4 +1,5 @@
 import MenuHamburguesa from "@/app/components/MenuHamburguesa";
+import BottomNav from "@/app/components/BottomNav";
 import Link from "next/link";
 import { currentUser, auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
@@ -36,29 +37,19 @@ export default async function Layout({ params, children }: { params: Promise<{ i
 
   return (
     <div className="min-h-screen bg-brand-bg flex flex-col">
-      <header className="fixed top-0 right-0 z-[110] p-2">
+      {/* Hamburguesa: solo en desktop */}
+      <header className="fixed top-0 right-0 z-[110] p-2 hidden sm:block">
         <MenuHamburguesa id={id} nombre={nombre || ""} apellido={apellido || ""} />
       </header>
-      <main className="pt-16 flex-1 flex flex-col items-center">
-        <div className="w-full max-w-screen-xl pr-14 pl-4 sm:px-8">
+
+      <main className="pt-4 sm:pt-16 pb-24 sm:pb-0 flex-1 flex flex-col items-center">
+        <div className="w-full max-w-screen-xl px-4 sm:pr-14 sm:pl-4 sm:px-8">
           {children}
         </div>
       </main>
-      <footer className="w-full py-6 mt-12 border-t border-brand-purple/20 bg-brand-surface/30 flex flex-col sm:flex-row items-center justify-center gap-6 text-brand-muted text-sm font-medium tracking-wide">  
-        <Link 
-          href={`https://wa.me/${process.env.NEXT_PUBLIC_TELEFONO}`}
-          className="hover:text-brand-accent hover:scale-105 transition-all duration-300"
-        >
-          Contactanos por Whatsapp
-        </Link>
-        <span className="hidden sm:inline-block text-brand-purple/50">|</span>
-        <Link 
-          href={`mailto:${process.env.NEXT_PUBLIC_EMAIL}`}
-          className="hover:text-brand-accent hover:scale-105 transition-all duration-300"
-        >
-          Contactanos por Email
-        </Link>
-      </footer>
+
+      {/* Bottom nav: solo en mobile */}
+      <BottomNav id={id} />
     </div>
   );
 }

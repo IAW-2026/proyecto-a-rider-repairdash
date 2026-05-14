@@ -19,7 +19,7 @@ export default function ViajeEnCurso({ idViaje, idCliente, estadoInicial }: { id
   const [pulse, setPulse] = useState(false);
   // Ref para leer siempre el estado actual dentro del callback de Supabase
   // sin necesitar estadoActual en las dependencias del useEffect.
-  const estadoRef = useRef("pendiente");
+  const estadoRef = useRef(estadoInicial.toLowerCase());
 
   // Mantener ref sincronizado con el estado
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function ViajeEnCurso({ idViaje, idCliente, estadoInicial }: { id
         },
         (payload) => {
           const nuevoEstado = (payload.new as { estado?: string }).estado?.toLowerCase();
-          if (nuevoEstado && nuevoEstado !== estadoRef.current) {
+          if (nuevoEstado) {
             setPulse(true);
             setTimeout(() => setPulse(false), 800);
             setEstadoActual(nuevoEstado);
