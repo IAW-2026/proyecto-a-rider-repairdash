@@ -44,7 +44,7 @@ export async function obtenerTodosLosClientes() {
 
         // Si tiene usuario en Clerk, verificamos que su rol sea "cliente"
         const rol = (usuarioClerk.publicMetadata as any)?.rol;
-        return rol === "cliente";
+        return rol === "rider";
     });
 
     return clientesFiltrados.map(serializeCliente);
