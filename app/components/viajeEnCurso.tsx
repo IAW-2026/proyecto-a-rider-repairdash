@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { cancelarViaje, getEstadoViaje } from "@/lib/actions/viajes";
-import { cancelarPago } from "@/lib/actions/pagos";
+import { useEffect, useRef, useState } from "react";
+import { createClient } from "@supabase/supabase-js";
 import BotonConformidad from "./BotonConformidad";
 import BotonDisconformidad from "./BotonDisconformidad";
+import BotonAceptarCancelacion from "./BotonAceptarCancelacion";
+import { supabaseBrowser } from "@/lib/supabaseClient";
 
 const STEPS = [
   { id: "pendiente",  label: "Buscando técnico",  icon: "🔍", description: "Estamos buscando al mejor profesional para tu solicitud." },
@@ -13,55 +14,51 @@ const STEPS = [
   { id: "ha llegado", label: "En tu puerta",       icon: "📍", description: "¡El técnico ha llegado y está listo para comenzar!" },
 ];
 
-export default function ViajeEnCurso({ idViaje }: { idViaje: number }) {
-  const [estadoActual, setEstadoActual] = useState<string>("pendiente");
+export default function ViajeEnCurso({ idViaje, idCliente, estadoInicial }: { idViaje: number, idCliente: number, estadoInicial: string }) {
+  const [estadoActual, setEstadoActual] = useState<string>(estadoInicial.toLowerCase());
   const [pulse, setPulse] = useState(false);
+  // Ref para leer siempre el estado actual dentro del callback de Supabase
+  // sin necesitar estadoActual en las dependencias del useEffect.
+  const estadoRef = useRef("pendiente");
+
+  // Mantener ref sincronizado con el estado
+  useEffect(() => {
+    estadoRef.current = estadoActual;
+  }, [estadoActual]);
 
   useEffect(() => {
-    // Si el viaje ya terminó o se canceló, no hace falta seguir preguntando a la BD
-    if (estadoActual === "cancelado" || estadoActual === "finalizado") {
-      return;
-    }
-
-    const interval = setInterval(async () => {
-      try {
-        const estadoBD = await getEstadoViaje(idViaje);
-        if (estadoBD) {
-          const nuevoEstado = estadoBD.toLowerCase();
-          if (nuevoEstado !== estadoActual) {
+    // Canal creado UNA SOLA VEZ por idViaje.
+    // No usamos estadoActual en las dependencias para evitar que el canal
+    // se desmonte y remonte en cada cambio de estado (gap donde se pierden eventos).
+    const channel = supabaseBrowser
+      .channel(`viaje-${idViaje}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "viajes",
+          filter: `id_viaje=eq.${idViaje}`,
+        },
+        (payload) => {
+          const nuevoEstado = (payload.new as { estado?: string }).estado?.toLowerCase();
+          if (nuevoEstado && nuevoEstado !== estadoRef.current) {
             setPulse(true);
             setTimeout(() => setPulse(false), 800);
             setEstadoActual(nuevoEstado);
           }
         }
-      } catch (e) {
-        console.error("Error en polling:", e);
-      }
-    }, 5000);
+      )
+      .subscribe((status) => {
+        console.info(`[Realtime] viaje-${idViaje}: ${status}`);
+      });
 
-    return () => clearInterval(interval);
-  }, [idViaje, estadoActual]);
+    return () => {
+      supabaseBrowser.removeChannel(channel);
+    };
+  }, [idViaje]); // ← solo se recrea si cambia el viaje
 
-  // Manejo de limpieza cuando el estado es cancelado
-  useEffect(() => {
-    if (estadoActual === "cancelado") {
-      const limpiarDatos = async () => {
-        try {
-          await cancelarViaje(idViaje);
-          await cancelarPago(idViaje);
-          console.log("Viaje y pago eliminados tras cancelación.");
-          
-          // Esperamos 4 segundos para que el usuario vea el mensaje antes de recargar
-          setTimeout(() => {
-            window.location.reload();
-          }, 4000);
-        } catch (e) {
-          console.error("Error al limpiar datos tras cancelación:", e);
-        }
-      };
-      limpiarDatos();
-    }
-  }, [estadoActual, idViaje]);
+
 
   if (estadoActual === "cancelado") {
     return (
@@ -75,6 +72,7 @@ export default function ViajeEnCurso({ idViaje }: { idViaje: number }) {
             Este servicio técnico ha sido cancelado y ya no está en curso.
           </p>
         </div>
+        <BotonAceptarCancelacion idViaje={idViaje} />
       </div>
     );
   }
@@ -94,8 +92,8 @@ export default function ViajeEnCurso({ idViaje }: { idViaje: number }) {
             Este servicio técnico ha sido finalizado y ya no está en curso.
           </p>
         </div>
-        <BotonConformidad />
-        <BotonDisconformidad />
+        <BotonConformidad idViaje={idViaje} />
+        <BotonDisconformidad idViaje={idViaje} idCliente={idCliente}/>
       </div>
     );
   }

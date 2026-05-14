@@ -66,14 +66,11 @@ export async function createPago(data: {
 /** Actualizar un pago */
 export async function updatePago(
   id: number,
-  data: {
-    monto?: number;
-    id_viaje?: number;
-  }
+  estado: string
 ) {
-  return prisma.pagos.update({
-    where: { id_pago: id },
-    data,
+  return prisma.pagos.updateMany({
+    where: { id_viaje: id },
+    data: { estado },
   });
 }
 
