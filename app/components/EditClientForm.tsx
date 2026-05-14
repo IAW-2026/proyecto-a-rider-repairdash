@@ -73,9 +73,6 @@ export default function EditClientForm({ cliente }: { cliente: any }) {
                         className="w-full bg-brand-surface/50 border border-brand-purple/10 rounded-2xl px-8 py-6 text-brand-muted/40 cursor-not-allowed italic text-lg"
                         value={formData.mail}
                     />
-                    <div className="absolute inset-y-0 right-8 flex items-center">
-                        <span className="text-[10px] font-black text-brand-purple/30 tracking-[0.2em]">SISTEMA • READ ONLY</span>
-                    </div>
                 </div>
             </div>
 
