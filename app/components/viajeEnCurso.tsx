@@ -117,6 +117,23 @@ export default function ViajeEnCurso({ idViaje, idCliente, estadoInicial }: { id
     );
   }
 
+  
+  if (estadoActual === "concluido") {
+    return (
+      <div className="w-full rounded-3xl p-8 bg-green-900/20 border border-green-500/40 flex flex-col items-center gap-5 text-center shadow-[0_0_40px_#10b98120] animate-[fadeIn_0.5s_ease-out]">
+        <div className="size-20 rounded-full bg-green-500/20 border border-green-500/40 flex items-center justify-center text-4xl">
+          🎉
+        </div>
+        <div>
+          <h2 className="text-3xl font-semibold text-green-400 tracking-tight">¡Gracias por confirmar!</h2>
+          <p className="text-brand-text/70 text-sm mt-2 max-w-xs mx-auto">
+            Actualizando tu historial...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
  
   const currentIndex = STEPS.findIndex((s) => s.id === estadoActual);
   const activeIndex = currentIndex === -1 ? 0 : currentIndex;
