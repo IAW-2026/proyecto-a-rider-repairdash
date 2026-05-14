@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { eliminarClienteCompleto } from "@/lib/actions/clientes";
 import Link from "next/link";
 import { toast } from "sonner";
-import Refresh from "./refresh";
+import { supabaseBrowser } from "@/lib/supabaseClient";
+
 interface Client {
     id_cliente: number;
     nombre: string | null;
@@ -19,12 +20,51 @@ export default function ClientList({ initialClients }: { initialClients: Client[
     const [search, setSearch] = useState("");
     const [deletingId, setDeletingId] = useState<number | null>(null);
 
-
+    // Sincronizar si el server component recarga initialClients
     useEffect(() => {
         setClients(initialClients);
     }, [initialClients]);
 
-    const filteredClients = clients.filter(c => 
+    // Supabase Realtime: tabla cliente
+    useEffect(() => {
+        const channel = supabaseBrowser
+            .channel("admin-clientes")
+            .on(
+                "postgres_changes",
+                { event: "*", schema: "public", table: "cliente" },
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (payload: any) => {
+                    const { eventType, new: newRow, old: oldRow } = payload;
+                    if (eventType === "INSERT") {
+                        const nuevo = newRow as Client;
+                        setClients((prev) =>
+                            prev.some((c) => c.id_cliente === nuevo.id_cliente)
+                                ? prev
+                                : [nuevo, ...prev]
+                        );
+                    } else if (eventType === "UPDATE") {
+                        const actualizado = newRow as Client;
+                        setClients((prev) =>
+                            prev.map((c) =>
+                                c.id_cliente === actualizado.id_cliente ? actualizado : c
+                            )
+                        );
+                    } else if (eventType === "DELETE") {
+                        const eliminado = oldRow as { id_cliente: number };
+                        setClients((prev) =>
+                            prev.filter((c) => c.id_cliente !== eliminado.id_cliente)
+                        );
+                    }
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabaseBrowser.removeChannel(channel);
+        };
+    }, []);
+
+    const filteredClients = clients.filter(c =>
         (c.nombre?.toLowerCase() || "").includes(search.toLowerCase()) ||
         (c.apellido?.toLowerCase() || "").includes(search.toLowerCase()) ||
         c.mail.toLowerCase().includes(search.toLowerCase())

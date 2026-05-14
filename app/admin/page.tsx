@@ -1,8 +1,7 @@
 import { obtenerTodosLosClientes } from "@/lib/actions/clientes";
 import ClientList from "@/app/components/ClientList";
 import Link from "next/link";
-import  refresh  from "@/app/components/refresh";
-import Refresh from "@/app/components/refresh";
+
 
 export default async function AdminPage() {
     const clientes = await obtenerTodosLosClientes();
@@ -45,7 +44,6 @@ export default async function AdminPage() {
                         <ClientList initialClients={clientes} />
                     </div>
                 </section>
-                <Refresh />
             </div>
         </main>
     );

@@ -1,6 +1,6 @@
 
 
-import { getPagosByViajeId, updateEstadoViaje, asignarDriverViaje } from "../../../../lib/queries"
+import {  getViajeById, getPagosByViajeId, updateEstadoViaje, asignarDriverViaje } from "../../../../lib/queries"
 
 export async function PUT( req:Request){
 
@@ -16,6 +16,11 @@ export async function PUT( req:Request){
     
     const id_viaje = Number(body.id_viaje);
     const id_driver = body.driver ? String(body.driver) : null;
+
+    const estadoActual = (await getViajeById(id_viaje))?.estado?.toLowerCase();
+    if (estadoActual === "cancelado" || estadoActual === "concluido" || estadoActual === "finalizado") {
+        return new Response(JSON.stringify({ message: "El viaje ya no esta activo" }), { status: 400 });
+    }
     
     switch (state) {
         case "aceptado":

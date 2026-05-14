@@ -3,6 +3,7 @@ import ViajeEnCurso from "@/app/components/viajeEnCurso";
 import {getUltimos4Cliente } from "@/lib/actions/viajes";
 import { Suspense } from "react";
 import MenuSkeleton from "@/app/components/skeletons/MenuSkeleton";
+import ActualizarEstadoViaje from "@/app/mocks/actualizarEstadoViaje";
 
 async function MenuData({ id }: { id: string }) {
   // Obtenemos todos los viajes del cliente
@@ -10,12 +11,12 @@ async function MenuData({ id }: { id: string }) {
 
   // Buscamos si tiene algún viaje activo (ni finalizado ni cancelado)
   const viajeActivo = viajes.find(
-    (v) => v.estado && v.estado.toLowerCase() !== "finalizado" && v.estado.toLowerCase() !== "cancelado"
+    (v) => v.estado && v.estado.toLowerCase() !== "concluido"
   );
 
   // Filtramos los viajes que ya son un historial
   const viajesPasados = viajes.filter(
-    (v) => v.estado && (v.estado.toLowerCase() === "finalizado" || v.estado.toLowerCase() === "cancelado")
+    (v) => v.estado && (v.estado.toLowerCase() === "concluido")
   );
 
   return (
@@ -33,7 +34,8 @@ async function MenuData({ id }: { id: string }) {
       {viajeActivo ? (
         // Renderizar el seguimiento si hay un viaje en curso
         <div className="mb-8">
-          <ViajeEnCurso idViaje={viajeActivo.id_viaje} />
+          <ViajeEnCurso idViaje={viajeActivo.id_viaje} idCliente={parseInt(id)} estadoInicial={viajeActivo.estado ?? "pendiente"} />
+          <ActualizarEstadoViaje id={viajeActivo.id_viaje} /> {/* ESTO ES TEMPORAL PARA SIMULAR EL PASAJE DE ESTADOS*/}
         </div>
       ) : (
         // Action card normal si no hay viaje en curso
@@ -58,7 +60,7 @@ async function MenuData({ id }: { id: string }) {
                   <p className="text-brand-text font-bold capitalize">{viaje.tipo_de_trabajo}</p>
                   <p className="text-sm text-brand-muted">{viaje.fecha ? new Date(viaje.fecha).toLocaleDateString() : "Sin fecha"}</p>
                 </div>
-                <span className={`px-3 py-1 text-xs rounded-full ${viaje.estado?.toLowerCase() === 'finalizado' ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300'}`}>
+                <span className="px-3 py-1 text-xs rounded-full bg-green-500/20 text-green-300">
                   {viaje.estado}
                 </span>
               </div>
