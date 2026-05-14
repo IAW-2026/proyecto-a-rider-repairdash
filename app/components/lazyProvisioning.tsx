@@ -32,6 +32,9 @@ export default function Lazy() {
                     userId
                 );
                 console.log(`[Lazy] Usuario creado en BD: ${userId}`);
+                // Refrescamos el objeto de sesión para que Clerk actualice
+                // el publicMetadata (rol) en el cliente sin recargar la página
+                await user.reload();
             }
         };
 
