@@ -1,6 +1,6 @@
 "use server";
 import { deleteViaje, getViajesPaginados, getViajeById, getViajesByClienteId, createViajeConPago, getUltimos4ViajesCliente, updateEstadoViaje } from "../queries/viajes";
-import { revalidatePath } from "next/cache";
+
 
 export async function getEstadoViaje(idViaje: number) {
  const viaja = await getViajeById(idViaje);
@@ -35,7 +35,7 @@ export async function crearViajeYPago(formData: FormData){
     id_ubicacion: parseInt(id_ubicacion),
   });
   
-  revalidatePath('/admin');
+
   return result;
 }
 
@@ -45,5 +45,5 @@ export async function getUltimos4Cliente(idCliente: number) {
 
 export async function updateEstado(idViaje: number, estado: string) {
   await updateEstadoViaje(idViaje, estado);
-  revalidatePath('/admin');
+
 }

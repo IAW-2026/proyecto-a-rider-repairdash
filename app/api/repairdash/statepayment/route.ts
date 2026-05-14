@@ -1,12 +1,14 @@
-/*import { deletePago, deleteViaje, getPagosByViajeId, updateViaje } from "@/lib/queries"
+import { getPagosByViajeId, updateEstadoViaje, asignarDriverViaje, updatePago } from "../../../../lib/queries"
+
 
 export async function PUT( req:Request){
 
     const expected = process.env.REPAIRDASH_API_KEY;
-    const received = request.headers.get("x-api-key");
+    const received = req.headers.get("x-api-key");
 
-    if (!expected) return 500;
-    if (received !== expected) return 401;
+    if (!expected) return new Response("Internal Server Error", { status: 500 });
+    if (received !== expected) return new Response("Unauthorized", { status: 401 });
+    
     const body = await req.json();
     const state = String(body.estado).toLowerCase(); 
     let message = ''
@@ -15,21 +17,16 @@ export async function PUT( req:Request){
     
     switch (state) {
         case "aceptado":
-            await updateViaje(id_viaje, {
-                estado: "aceptado",
-            });
-            message = "Viaje aceptado";
+            await updatePago(id_viaje, "aceptado");
+            await updateEstadoViaje(id_viaje, "aceptado");
+            message = "pago aceptado";
             break;
 
-        case "cancelado":
+        case "rechazado":
             const pagos = await getPagosByViajeId(id_viaje);
-            await updateViaje(id_viaje, {
-                estado: "cancelado",
-            });
-            message = "Viaje cancelado";
+            await updateEstadoViaje(id_viaje, "cancelado");
+            message = "pago rechazado";
             break;
     }
     return new Response(JSON.stringify({ message }), { status: 200 })
 }
-*/
-export{};

@@ -2,10 +2,35 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { nuevoTrabajo } from "@/lib/actions/nuevoTrabajo";
-
+import { useFormStatus } from "react-dom";
 import { PRECIOS, PrecioconDescuento } from "@/lib/services/pricing";
 import BotonAgregarDestino from "./BotonAgregarDestino";
+import DistribuirFormulario from "./DistribuirFormulario";
+
+/** Botón submit que se deshabilita y muestra "Cargando..." mientras el formulario procesa */
+function BotonSolicitar() {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-base tracking-wide transition-all duration-200
+                 bg-[linear-gradient(135deg,var(--color-brand-accent),var(--color-brand-purple))] text-brand-text shadow-[0_0_16px_#F500F150]
+                 hover:scale-[1.02] active:scale-95
+                 disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
+    >
+      {pending ? (
+        <>
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+          Cargando...
+        </>
+      ) : (
+        "Solicitar"
+      )}
+    </button>
+  );
+}
+
 export default function FormularioNuevoTrabajo({id, ubicaciones}: {id: string, ubicaciones: any[]}) {
   const router = useRouter();
   const [categoria, setCategoria] = useState("");
@@ -16,7 +41,6 @@ export default function FormularioNuevoTrabajo({id, ubicaciones}: {id: string, u
   //validar codigos de descuento del cliente a promotions y una vez usado se elimina el codigo en la base de datos
   //enviar el formulario al driver
   //crear el pago y redirigirlo a payment
-
 
   return (
     <div className="py-6">
@@ -30,7 +54,7 @@ export default function FormularioNuevoTrabajo({id, ubicaciones}: {id: string, u
       </div>
 
       <div className="rounded-2xl p-6 bg-brand-surface/60 border border-brand-purple/40 backdrop-blur-md">
-          <form className="flex flex-col gap-5" action={nuevoTrabajo}>
+        <form className="flex flex-col gap-5" action={DistribuirFormulario}>
           <input type="hidden" name="id" value={id} />
 
           {/* Categoría */}
@@ -52,7 +76,7 @@ export default function FormularioNuevoTrabajo({id, ubicaciones}: {id: string, u
             </select>
           </div>
 
-          {/*Destinos */}
+          {/* Destinos */}
           <div className="flex flex-col gap-1">
             <label htmlFor="id_ubicacion" className="text-base font-semibold text-brand-lavender">Destinos</label>
             <select
@@ -81,17 +105,14 @@ export default function FormularioNuevoTrabajo({id, ubicaciones}: {id: string, u
             </div>
           </div>
 
-          {/*Descuento*/}
+          {/* Descuento */}
           <div className="flex flex-col gap-1">
             <label htmlFor="descuento" className="text-base font-semibold text-brand-lavender">¿Tienes descuento?</label>
             <input id="descuento" type="text" name="descuento" className="w-full px-5 py-3.5 rounded-xl text-base outline-none transition-all bg-brand-bg border border-brand-purple text-brand-text focus:border-brand-accent" placeholder="Codigo de descuento" />
           </div>
-          {/*Consultar codigo de descuento y modificar el precio segun lo que sea el descuento, de no existir el codigo no se aplica ningun descuento*/ }
-          {/*descuento = fetch (app/promotions/codigo), hardcodeo el descuento a 0 por ahora*/}
-          
+          {/* Consultar codigo de descuento y modificar el precio segun lo que sea el descuento */}
 
-            
-          {/* Monto calculado — aparece al seleccionar una categoría */}
+          {/* Monto calculado */}
           {precio && (
             <div className="rounded-xl p-5 flex items-center justify-between gap-4 bg-[linear-gradient(135deg,#F500F110,#8D62A515)] border border-brand-accent/30">
               <div>
@@ -104,11 +125,10 @@ export default function FormularioNuevoTrabajo({id, ubicaciones}: {id: string, u
               </p>
             </div>
           )}
-          
-          {/* Input oculto seguro para enviar al backend (solo si hay precio y en formato crudo, no localizado) */}
+
           <input type="hidden" name="monto" value={precio ? PrecioconDescuento(precio.monto, 0) : 0} />
-          
-          {/*Adjuntar foto*/}
+
+          {/* Adjuntar foto */}
           <div className="flex flex-col gap-1">
             <label htmlFor="foto" className="text-base font-semibold text-brand-lavender">Adjuntar foto</label>
             <input
@@ -136,12 +156,7 @@ export default function FormularioNuevoTrabajo({id, ubicaciones}: {id: string, u
 
           {/* Botones */}
           <div className="flex gap-3 mt-2">
-            <button
-              type="submit"
-              className="flex-1 py-3.5 rounded-xl font-bold text-base tracking-wide transition-all duration-200 hover:scale-[1.02] active:scale-95 bg-[linear-gradient(135deg,var(--color-brand-accent),var(--color-brand-purple))] text-brand-text shadow-[0_0_16px_#F500F150]"
-            >
-              Solicitar
-            </button>
+            <BotonSolicitar />
             <button
               type="button"
               onClick={() => router.push(`/user/${id}/menu`)}
