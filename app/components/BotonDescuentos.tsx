@@ -3,11 +3,11 @@ import { useRouter } from "next/navigation";
 
 export default function BotonDescuentos({ id, pathname }: { id: string; pathname: string }) {
   const router = useRouter();
-  const isActive = pathname === `/user/${id}/promotions`;
+  const isActive = pathname === `/mocks/promotions`;
 
   return (
     <button
-      onClick={() => router.push(`/user/${id}/promotions`)}
+      onClick={() => router.push(`/mocks/promotions`)}
       className={`w-full text-left px-5 py-3.5 rounded-xl font-semibold text-base flex items-center gap-3 transition-all duration-200 border-l-[3px] ${
         isActive 
           ? "bg-[linear-gradient(135deg,#F500F120,#8D62A520)] text-brand-text border-brand-accent" 

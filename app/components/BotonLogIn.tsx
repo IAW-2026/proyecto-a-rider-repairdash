@@ -1,4 +1,5 @@
 "use client"
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Show, UserButton } from '@clerk/nextjs';
 import BotonIrAlMenu from "./botonIrAlMenu";
@@ -10,8 +11,16 @@ export default function BotonLogIn() {
   const router = useRouter();
   const {user, isLoaded} = useUser();
   const metadata = user?.publicMetadata;
+  const [showFallback, setShowFallback] = useState(false);
+
+  useEffect(() => {
+    // Le damos 2.5s a lazyProvisioning para que cree el usuario y haga user.reload()
+    if (isLoaded && user && !metadata?.rol) {
+      const timer = setTimeout(() => setShowFallback(true), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoaded, user, metadata?.rol]);
   
- 
 
   return (
     <div>
@@ -32,10 +41,21 @@ export default function BotonLogIn() {
             <UserButton />
           </div>
         </div>
-        {metadata?.rol === "admin-rider" && isLoaded ? (
-          <BotonIrAlMenuAdmin/>
-        ):
-        <BotonIrAlMenu/>
+        {!isLoaded ? null
+          : metadata?.rol === "admin-rider" ? (
+            <BotonIrAlMenuAdmin />
+          ) : metadata?.rol === "rider" ? (
+            <BotonIrAlMenu />
+          ) : (!metadata?.rol && !showFallback) ? (
+            <div className="flex flex-col items-center gap-2">
+              <div className="w-7 h-7 rounded-full border-2 border-[var(--color-brand-lavender)] border-t-transparent animate-spin" />
+              <span className="text-xs text-[var(--color-brand-muted)] font-medium tracking-wide">Cargando...</span>
+            </div>
+          ) : (
+            <p className="font-[family-name:var(--font-main)] text-sm sm:text-base font-medium text-[var(--color-brand-lavender)] text-center tracking-wide leading-relaxed px-4 drop-shadow-[0_0_8px_#C392DD80]">
+              Para iniciar sesión, creá una nueva cuenta como Rider
+            </p>
+          )
         }
        
       </div>
