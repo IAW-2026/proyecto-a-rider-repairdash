@@ -69,7 +69,7 @@ export default function MenuHamburguesa({ id, nombre, apellido }: { id: string, 
 
           {/* Footer */}
           <div className="mt-auto pt-4 border-t border-brand-purple/40">
-            <p className="text-sm text-center text-brand-purple">RepairDash v1.0.1</p>
+            <p className="text-sm text-center text-brand-purple">RepairDash v2.0.0</p>
           </div>
         </div>
       </div>

@@ -23,14 +23,6 @@ export default async function AdminPage() {
                             Visualización completa de usuarios con rol de cliente.
                         </p>
                     </div>
-                    
-                    {/* Contador sin el contenedor "globo" */}
-                    <div className="flex items-center gap-10">
-                        <div className="text-center">
-                            <span className="block text-5xl font-black text-brand-accent tabular-nums">{clientes.length}</span>
-                            <span className="text-[10px] uppercase font-black tracking-[0.3em] text-brand-muted/80">Clientes Listados</span>
-                        </div>
-                    </div>
                 </header>
 
                 {/* Main Content - Full Width */}
