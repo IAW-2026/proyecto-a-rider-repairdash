@@ -21,7 +21,7 @@ const FLUJO_ESTADOS: EstadoViaje[] = [
 ];
 
 const ESTADOS_TERMINALES: EstadoViaje[] = ["finalizado", "cancelado", "concluido"];
-const INTERVALO_MS = 50_000;
+const INTERVALO_MS = 10_000;
 
 /**
  * Probabilidad de que el driver cancele el viaje en cada tick.
