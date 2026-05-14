@@ -49,8 +49,27 @@ export default function ViajeEnCurso({ idViaje, idCliente, estadoInicial }: { id
           }
         }
       )
-      .subscribe((status) => {
+      .subscribe(async (status) => {
         console.info(`[Realtime] viaje-${idViaje}: ${status}`);
+
+        // Al conectar, sincronizar por si hubo cambios mientras se establecía la conexión
+        if (status === "SUBSCRIBED") {
+          try {
+            const { data } = await supabaseBrowser
+              .from("viajes")
+              .select("estado")
+              .eq("id_viaje", idViaje)
+              .single();
+
+            const estadoDB = data?.estado?.toLowerCase();
+            if (estadoDB && estadoDB !== estadoRef.current) {
+              console.info(`[Realtime] Sync al conectar: ${estadoRef.current} → ${estadoDB}`);
+              setEstadoActual(estadoDB);
+            }
+          } catch (e) {
+            console.error("[Realtime] Error en sync inicial:", e);
+          }
+        }
       });
 
     return () => {
