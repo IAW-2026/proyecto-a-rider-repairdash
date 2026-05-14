@@ -72,7 +72,7 @@ export async function crearCliente(mail: string, calificacion: number, nombre: s
         id_clerk
     });
     const c = await clerkClient();
-    await c.users.updateUser(id_clerk, { publicMetadata: { rol: "cliente" } });
+    await c.users.updateUser(id_clerk, { publicMetadata: { rol: "rider" } });
     return serializeCliente(cliente);
 }
 
