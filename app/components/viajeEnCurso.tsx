@@ -19,7 +19,7 @@ export default function ViajeEnCurso({ idViaje, idCliente, estadoInicial }: { id
   const [pulse, setPulse] = useState(false);
   // Ref para leer siempre el estado actual dentro del callback de Supabase
   // sin necesitar estadoActual en las dependencias del useEffect.
-  const estadoRef = useRef("pendiente");
+  const estadoRef = useRef(estadoInicial.toLowerCase());
 
   // Mantener ref sincronizado con el estado
   useEffect(() => {
@@ -42,15 +42,34 @@ export default function ViajeEnCurso({ idViaje, idCliente, estadoInicial }: { id
         },
         (payload) => {
           const nuevoEstado = (payload.new as { estado?: string }).estado?.toLowerCase();
-          if (nuevoEstado && nuevoEstado !== estadoRef.current) {
+          if (nuevoEstado) {
             setPulse(true);
             setTimeout(() => setPulse(false), 800);
             setEstadoActual(nuevoEstado);
           }
         }
       )
-      .subscribe((status) => {
+      .subscribe(async (status) => {
         console.info(`[Realtime] viaje-${idViaje}: ${status}`);
+
+        // Al conectar, sincronizar por si hubo cambios mientras se establecía la conexión
+        if (status === "SUBSCRIBED") {
+          try {
+            const { data } = await supabaseBrowser
+              .from("viajes")
+              .select("estado")
+              .eq("id_viaje", idViaje)
+              .single();
+
+            const estadoDB = data?.estado?.toLowerCase();
+            if (estadoDB && estadoDB !== estadoRef.current) {
+              console.info(`[Realtime] Sync al conectar: ${estadoRef.current} → ${estadoDB}`);
+              setEstadoActual(estadoDB);
+            }
+          } catch (e) {
+            console.error("[Realtime] Error en sync inicial:", e);
+          }
+        }
       });
 
     return () => {
