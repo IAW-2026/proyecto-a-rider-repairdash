@@ -290,11 +290,14 @@ export default async function Menu({
   const { id } = await params;
   return (
     <div className="py-2 sm:py-4 max-w-5xl mx-auto w-full px-4 relative">
-      <nav className="fixed top-0 left-0 right-0 z-[110] sm:hidden">
-        <div className="absolute right-4 top-2 z-50 sm:top-4 sm:right-6 scale-[1.5] sm:scale-[2] origin-top-right">
-          <UserButton />
+      <nav className="fixed top-0 left-0 right-0 z-[110] pointer-events-none sm:hidden">
+        <div className="max-w-5xl mx-auto w-full relative px-4">
+          <div className="absolute right-4 top-2 sm:top-4 sm:right-6 scale-[1.5] sm:scale-[2] origin-top-right pointer-events-auto">
+            <UserButton />
+          </div>
         </div>
       </nav>
+
       <PageHeader
         eyebrow="Inicio"
         size="large"
