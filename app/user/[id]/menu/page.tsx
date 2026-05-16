@@ -288,10 +288,13 @@ export default async function Menu({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  
   return (
-    <div className="py-2 sm:py-4 max-w-5xl mx-auto w-full px-4">
-      <div className="sm:hidden fixed top-2 right-4 z-[110] scale-[1.5] origin-top-right">
-        <UserButton />
+    <div className="py-2 sm:py-4 max-w-5xl mx-auto w-full px-4 relative">
+      <div className="absolute top-0 right-4 sm:hidden w-20 h-20 flex items-center justify-center overflow-hidden">
+        <div className="scale-[1.6] origin-center flex items-center justify-center w-full h-full">
+          <UserButton />
+        </div>
       </div>
 
       <PageHeader
