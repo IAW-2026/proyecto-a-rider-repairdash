@@ -1,15 +1,15 @@
 export default function MenuSkeleton() {
   return (
-    <div className="py-2 sm:py-4 max-w-5xl mx-auto w-full">
-      {/* Header */}
-      <div className="mb-6 flex flex-col gap-2">
-        <div className="h-3.5 w-20 rounded skeleton-shimmer" />
-        <div className="h-8 w-56 rounded-md skeleton-shimmer" />
-        <div className="h-4 w-72 rounded skeleton-shimmer" />
-      </div>
-
+    <div className="w-full animate-pulse">
       {/* Hero / Viaje en curso */}
-      <div className="mb-6 h-44 rounded-2xl bg-rd-surface border border-rd-border skeleton-shimmer" />
+      <div className="mb-6 min-h-[200px] sm:min-h-[172px] rounded-2xl border border-rd-border-3 relative overflow-hidden">
+        <div 
+          className="absolute inset-0 skeleton-shimmer" 
+          style={{
+            background: "linear-gradient(135deg, rgba(217,64,204,0.18), rgba(141,98,165,0.10))"
+          }}
+        />
+      </div>
 
       {/* Recent jobs */}
       <div className="mt-8">

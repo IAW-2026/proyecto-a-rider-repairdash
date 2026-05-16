@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, cache } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -27,33 +27,29 @@ const fmtFecha = (f?: Date | string | null) => {
   });
 };
 
-async function MenuData({ id }: { id: string }) {
-  const [viajes, user] = await Promise.all([
-    getViajesByClienteId(parseInt(id)),
-    currentUser(),
-  ]);
+const getCachedViajes = cache((id: number) => getViajesByClienteId(id));
 
+async function UserGreeting() {
+  const user = await currentUser();
+  return <>{user?.firstName ? `Hola, ${user.firstName}` : "Menú principal"}</>;
+}
+
+async function MenuDescription({ id }: { id: number }) {
+  const viajes = await getCachedViajes(id);
   const viajeActivo = viajes.find(
     (v) => v.estado && v.estado.toLowerCase() !== "concluido",
   );
-  const viajesConcluidos = viajes.filter(
-    (v) => v.estado && v.estado.toLowerCase() === "concluido",
-  );
-  const viajesPasados = viajesConcluidos.slice(0, 4);
+  return <>{viajeActivo ? "Seguimiento en vivo de tu servicio." : "¿Qué necesitás hoy?"}</>;
+}
 
-  const totalGastado = viajesConcluidos.reduce((acc, v) => {
-    const monto = v.pagos?.[0]?.monto;
-    if (monto == null) return acc;
-    const n = Number(typeof monto === "number" || typeof monto === "string" ? monto : String(monto));
-    return Number.isNaN(n) ? acc : acc + n;
-  }, 0);
-  const cantidadRealizados = viajesConcluidos.length;
-
-  const saludo = user?.firstName
-    ? `Hola, ${user.firstName}`
-    : "Menú principal";
-
-  const kpis = (
+function Kpis({
+  totalGastado,
+  cantidadRealizados,
+}: {
+  totalGastado: number;
+  cantidadRealizados: number;
+}) {
+  return (
     <div className="grid grid-cols-2 lg:grid-cols-1 gap-3">
       <div className="rounded-xl p-5 bg-rd-surface border border-rd-border flex flex-col gap-3">
         <div className="flex items-center justify-between">
@@ -92,26 +88,41 @@ async function MenuData({ id }: { id: string }) {
       </div>
     </div>
   );
+}
+
+async function MenuContent({ idStr }: { idStr: string }) {
+  const id = parseInt(idStr);
+  const viajes = await getCachedViajes(id);
+
+  const viajeActivo = viajes.find(
+    (v) => v.estado && v.estado.toLowerCase() !== "concluido",
+  );
+  const viajesConcluidos = viajes.filter(
+    (v) => v.estado && v.estado.toLowerCase() === "concluido",
+  );
+  const viajesPasados = viajesConcluidos.slice(0, 4);
+
+  const totalGastado = viajesConcluidos.reduce((acc, v) => {
+    const monto = v.pagos?.[0]?.monto;
+    if (monto == null) return acc;
+    const n = Number(typeof monto === "number" || typeof monto === "string" ? monto : String(monto));
+    return Number.isNaN(n) ? acc : acc + n;
+  }, 0);
+  const cantidadRealizados = viajesConcluidos.length;
+
+  const kpis = (
+    <Kpis totalGastado={totalGastado} cantidadRealizados={cantidadRealizados} />
+  );
 
   return (
-    <div className="py-2 sm:py-4 max-w-5xl mx-auto w-full">
-      <PageHeader
-        eyebrow="Inicio"
-        title={saludo}
-        description={
-          viajeActivo
-            ? "Seguimiento en vivo de tu servicio."
-            : "¿Qué necesitás hoy?"
-        }
-      />
-
+    <>
       {viajeActivo ? (
         <>
           <div className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-4 items-start">
             <section className="space-y-4">
               <ViajeEnCurso
                 idViaje={viajeActivo.id_viaje}
-                idCliente={parseInt(id)}
+                idCliente={id}
                 estadoInicial={viajeActivo.estado ?? "pendiente"}
               />
               {/* Mock temporal para simular transiciones de estado en dev */}
@@ -132,14 +143,14 @@ async function MenuData({ id }: { id: string }) {
         </>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-3 mb-6 items-stretch">
-          <section
-            className="rounded-2xl p-6 sm:p-7 flex flex-col sm:flex-row sm:items-stretch gap-5 border border-rd-border-3"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(217,64,204,0.18), rgba(141,98,165,0.10))",
-            }}
-          >
-            <div className="flex-1 min-w-0 flex flex-col justify-center">
+          <section className="relative overflow-hidden rounded-2xl p-6 sm:p-7 flex flex-col sm:flex-row sm:items-stretch gap-5 border border-rd-border-3 group min-h-[200px] sm:min-h-[172px]">
+            <div 
+              className="absolute inset-0 pointer-events-none transition-opacity duration-300 group-hover:opacity-80" 
+              style={{
+                background: "linear-gradient(135deg, rgba(217,64,204,0.18), rgba(141,98,165,0.10))",
+              }}
+            />
+            <div className="relative z-10 flex-1 min-w-0 flex flex-col justify-center">
               <h2 className="text-xl font-bold text-rd-text">Nuevo trabajo</h2>
               <p className="text-sm text-rd-muted mt-1 leading-relaxed">
                 Solicitá un servicio técnico verificado en minutos.
@@ -148,7 +159,7 @@ async function MenuData({ id }: { id: string }) {
             <Button
               href={`/user/${id}/solicitudTrabajoActual`}
               size="lg"
-              className="sm:!h-auto sm:self-stretch"
+              className="relative z-10 sm:!h-auto sm:self-stretch"
             >
               Solicitar
               <ArrowRight size={16} strokeWidth={1.75} />
@@ -266,8 +277,7 @@ async function MenuData({ id }: { id: string }) {
           })}
         </div>
       </section>
-
-    </div>
+    </>
   );
 }
 
@@ -278,8 +288,24 @@ export default async function Menu({
 }) {
   const { id } = await params;
   return (
-    <Suspense fallback={<MenuSkeleton />}>
-      <MenuData id={id} />
-    </Suspense>
+    <div className="py-2 sm:py-4 max-w-5xl mx-auto w-full">
+      <PageHeader
+        eyebrow="Inicio"
+        size="large"
+        title={
+          <Suspense fallback="Menú principal">
+            <UserGreeting />
+          </Suspense>
+        }
+        description={
+          <Suspense fallback="¿Qué necesitás hoy?">
+            <MenuDescription id={parseInt(id)} />
+          </Suspense>
+        }
+      />
+      <Suspense fallback={<MenuSkeleton />}>
+        <MenuContent idStr={id} />
+      </Suspense>
+    </div>
   );
 }

@@ -14,19 +14,7 @@ async function TravelsData({ id, page }: { id: string; page?: string }) {
   );
 
   return (
-    <div className="py-2 sm:py-4 max-w-6xl mx-auto w-full">
-      <PageHeader
-        eyebrow="Cliente · Historial"
-        title="Trabajos realizados"
-        description="Historial completo de tus servicios técnicos."
-        actions={
-          <Button href={`/user/${id}/solicitudTrabajoActual`}>
-            <Plus size={15} strokeWidth={1.75} />
-            Nuevo trabajo
-          </Button>
-        }
-      />
-
+    <>
       <div className="min-h-[400px]">
         <TablaViajes filas={viajes} />
       </div>
@@ -83,7 +71,7 @@ async function TravelsData({ id, page }: { id: string; page?: string }) {
           )}
         </nav>
       )}
-    </div>
+    </>
   );
 }
 
@@ -97,8 +85,22 @@ export default async function Travels({
   const { id } = await params;
   const resolved = await searchParams;
   return (
-    <Suspense fallback={<TravelsSkeleton />}>
-      <TravelsData id={id} page={resolved.page} />
-    </Suspense>
+    <div className="py-2 sm:py-4 max-w-6xl mx-auto w-full">
+      <PageHeader
+        eyebrow="Cliente · Historial"
+        size="large"
+        title="Trabajos realizados"
+        description="Historial completo de tus servicios técnicos."
+        actions={
+          <Button href={`/user/${id}/solicitudTrabajoActual`}>
+            <Plus size={15} strokeWidth={1.75} />
+            Nuevo trabajo
+          </Button>
+        }
+      />
+      <Suspense fallback={<TravelsSkeleton />}>
+        <TravelsData id={id} page={resolved.page} />
+      </Suspense>
+    </div>
   );
 }

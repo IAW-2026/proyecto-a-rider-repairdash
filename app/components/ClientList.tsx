@@ -25,6 +25,8 @@ export default function ClientList({
   const [clients, setClients] = useState(initialClients);
   const [search, setSearch] = useState("");
   const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 15;
 
   useEffect(() => {
     setClients(initialClients);
@@ -73,6 +75,16 @@ export default function ClientList({
       (c.nombre?.toLowerCase() || "").includes(search.toLowerCase()) ||
       (c.apellido?.toLowerCase() || "").includes(search.toLowerCase()) ||
       c.mail.toLowerCase().includes(search.toLowerCase()),
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
+
+  const totalPages = Math.ceil(filteredClients.length / itemsPerPage);
+  const paginatedClients = filteredClients.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   const executeDelete = async (id: number, clerkId?: string | null) => {
@@ -144,7 +156,7 @@ export default function ClientList({
             </tr>
           </thead>
           <tbody>
-            {filteredClients.map((c) => {
+            {paginatedClients.map((c) => {
               const fullName = `${c.nombre ?? ""} ${c.apellido ?? ""}`.trim();
               return (
                 <tr
@@ -237,7 +249,7 @@ export default function ClientList({
             })}
           </tbody>
         </table>
-        {filteredClients.length === 0 && (
+        {paginatedClients.length === 0 && (
           <div className="py-16 text-center text-sm text-rd-muted">
             Sin resultados
           </div>
@@ -246,7 +258,7 @@ export default function ClientList({
 
       {/* Mobile: cards */}
       <div className="md:hidden flex flex-col gap-2">
-        {filteredClients.map((c) => {
+        {paginatedClients.map((c) => {
           const fullName = `${c.nombre ?? ""} ${c.apellido ?? ""}`.trim();
           return (
             <div
@@ -316,12 +328,34 @@ export default function ClientList({
             </div>
           );
         })}
-        {filteredClients.length === 0 && (
+        {paginatedClients.length === 0 && (
           <div className="py-12 text-center text-sm text-rd-muted">
             Sin resultados
           </div>
         )}
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between py-4 px-2 mt-4">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 text-sm font-semibold text-rd-text-2 disabled:opacity-50 transition-opacity"
+          >
+            ← Anterior
+          </button>
+          <span className="text-sm text-rd-muted">
+            Página {currentPage} de {totalPages}
+          </span>
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 text-sm font-semibold text-rd-text-2 disabled:opacity-50 transition-opacity"
+          >
+            Siguiente →
+          </button>
+        </div>
+      )}
     </div>
   );
 }

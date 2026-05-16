@@ -6,13 +6,15 @@ import { currentUser } from "@clerk/nextjs/server";
 import { getClienteID } from "@/lib/actions/clientes";
 import { getViajesByClienteId } from "@/lib/queries/viajes";
 import TablaViajes from "@/app/components/TablaViajes";
-import ProfileSkeleton from "@/app/components/skeletons/ProfileSkeleton";
+import IdentityCardSkeleton from "@/app/components/skeletons/IdentityCardSkeleton";
+import ProfileHistorySkeleton from "@/app/components/skeletons/ProfileHistorySkeleton";
+
 import {
   PageHeader,
   Stars,
-  Pill,
   Avatar,
   Button,
+  cn,
 } from "@/app/components/ui";
 
 const fmtMonto = (m?: unknown) => {
@@ -22,20 +24,10 @@ const fmtMonto = (m?: unknown) => {
   return "$ " + num.toLocaleString("es-AR");
 };
 
-const fmtFecha = (f?: Date | string | null) => {
-  if (!f) return "Sin fecha";
-  const d = typeof f === "string" ? new Date(f) : f;
-  return d.toLocaleDateString("es-AR", {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-  });
-};
 
-async function ProfileData({ id }: { id: string }) {
-  const [cliente, viajes, user] = await Promise.all([
+async function ProfileIdentityCard({ id }: { id: string }) {
+  const [cliente, user] = await Promise.all([
     getClienteID(id),
-    getViajesByClienteId(Number(id)),
     currentUser(),
   ]);
 
@@ -44,134 +36,182 @@ async function ProfileData({ id }: { id: string }) {
   const fullName = `${nombre} ${apellido}`.trim();
   const email = user?.primaryEmailAddress?.emailAddress ?? "";
   const calificacion = Number(cliente?.calificacion ?? 0);
-  const ultimos4 = viajes.slice(0, 4);
 
   return (
-    <div className="py-2 sm:py-4 max-w-6xl mx-auto w-full">
-      <PageHeader
-        eyebrow="Cliente · Perfil"
-        title="Mi perfil"
-        description="Información de tu cuenta y resumen de actividad."
-      />
+    <div 
+      className="rounded-2xl p-6 sm:p-7 border border-rd-border flex flex-col items-center text-center relative overflow-hidden"
+      style={{
+        background: "linear-gradient(180deg, var(--color-rd-surface) 0%, var(--color-rd-bg-2) 100%)"
+      }}
+    >
+      {user?.imageUrl ? (
+        <Image
+          src={user.imageUrl}
+          alt={`${fullName} avatar`}
+          width={96}
+          height={96}
+          priority
+          fetchPriority="high"
+          className="w-[72px] h-[72px] sm:w-24 sm:h-24 rounded-full relative z-10"
+        />
+      ) : (
+        <Avatar name={fullName} size={72} className="sm:w-24 sm:h-24" />
+      )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-5 lg:gap-6">
-        {/* Identity card */}
-        <div className="rounded-2xl p-6 sm:p-7 bg-rd-surface border border-rd-border flex flex-col items-center text-center">
-          {user?.imageUrl ? (
-            <Image
-              src={user.imageUrl}
-              alt={`${fullName} avatar`}
-              width={96}
-              height={96}
-              priority
-              fetchPriority="high"
-              className="rounded-full"
-            />
-          ) : (
-            <Avatar name={fullName} size={96} />
-          )}
+      <h2 className="text-xl sm:text-2xl font-bold text-rd-text mt-4 tracking-tight relative z-10">
+        {fullName}
+      </h2>
+      {email && (
+        <p className="text-sm text-rd-muted mt-1 break-all relative z-10">{email}</p>
+      )}
 
-          <h2 className="text-xl sm:text-2xl font-bold text-rd-text mt-4 tracking-tight">
-            {fullName}
-          </h2>
-          {email && (
-            <p className="text-sm text-rd-muted mt-1 break-all">{email}</p>
-          )}
-
-          {calificacion > 0 && (
-            <div className="mt-4 px-4 py-3 rounded-xl bg-rd-bg-2 border border-rd-border flex flex-col items-center gap-1.5">
-              <Stars value={calificacion} size={16} />
-              <div className="text-sm font-semibold tabular-rd text-rd-text">
-                {calificacion.toFixed(1)}
-                <span className="text-rd-muted font-normal"> / 5</span>
-              </div>
-            </div>
-          )}
-
-          <Button
-            href="https://proyecto-a-payments-repairdash-lvnq2cmkm.vercel.app/driver"
-            className="w-full mt-5"
-          >
-            <CreditCard size={16} strokeWidth={1.75} />
-            Ver balance y pagos
-          </Button>
-
-          <div className="w-full mt-5 pt-4 border-t border-rd-border-2 text-xs text-rd-muted">
-            <div className="flex justify-between py-1">
-              <span>ID cliente</span>
-              <span className="font-mono-rd text-rd-text-2">#{id}</span>
-            </div>
-            <div className="flex justify-between py-1 items-center">
-              <span>Clerk</span>
-              <span className="text-rd-ok inline-flex items-center gap-1.5">
-                <CheckCircle2 size={12} strokeWidth={2} />
-                Sincronizado
-              </span>
-            </div>
+      {calificacion > 0 && (
+        <div className="mt-4 px-4 py-3 rounded-xl bg-rd-bg-2/50 border border-rd-border flex flex-col items-center gap-1.5 relative z-10">
+          <Stars value={calificacion} size={16} />
+          <div className="text-sm font-semibold tabular-rd text-rd-text">
+            {calificacion.toFixed(1)}
+            <span className="text-rd-muted font-normal"> / 5</span>
           </div>
         </div>
+      )}
 
-        {/* Right column */}
-        <div className="flex flex-col gap-5">
-          <section>
-            <div className="flex items-baseline justify-between mb-3">
-              <h2 className="text-lg sm:text-xl font-bold text-rd-text">
-                Últimos 4 viajes
-              </h2>
-              <Link
-                href={`/user/${id}/travels`}
-                className="text-xs text-rd-accent-soft font-semibold hover:underline"
-              >
-                Ver todos →
-              </Link>
-            </div>
+      <Button
+        href="https://proyecto-a-payments-repairdash-lvnq2cmkm.vercel.app/driver"
+        className="w-full mt-5 relative z-10"
+      >
+        <CreditCard size={16} strokeWidth={1.75} />
+        Ver balance y pagos
+      </Button>
 
-            {ultimos4.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {ultimos4.map((v) => (
-                  <article
-                    key={v.id_viaje}
-                    className="rounded-xl p-4 bg-rd-bg-2 border border-rd-border"
-                  >
-                    <div className="flex justify-between items-center mb-2">
-                      <Pill tone="mute" size="sm">
-                        {v.estado ?? "—"}
-                      </Pill>
-                      <span className="font-mono-rd text-[10.5px] text-rd-muted">
-                        #{v.id_viaje}
-                      </span>
-                    </div>
-                    <div className="font-bold text-sm capitalize text-rd-text">
-                      {v.tipo_de_trabajo}
-                    </div>
-                    <div className="text-[11.5px] text-rd-muted mt-1">
-                      {(v.driver ?? "Sin trabajador")} · {fmtFecha(v.fecha)}
-                    </div>
-                    <div className="mt-2 font-bold text-sm tabular-rd text-rd-text">
-                      {fmtMonto(v.pagos?.[0]?.monto)}
-                    </div>
-                  </article>
-                ))}
-              </div>
-            ) : (
-              <div className="rounded-xl p-6 text-center bg-rd-bg-2 border border-rd-border text-sm text-rd-muted">
-                Aún no hay viajes recientes.
-              </div>
-            )}
-          </section>
-
+        <div className="flex justify-between py-1">
+          <span>ID cliente</span>
+          <span className="font-mono-rd text-rd-text-2">#{id}</span>
         </div>
-      </div>
-
-      <section className="mt-6">
-        <h2 className="text-lg sm:text-xl font-bold text-rd-text mb-3">
-          Historial completo
-        </h2>
-        <TablaViajes filas={viajes} />
-      </section>
     </div>
   );
 }
+
+
+
+async function ProfileHistory({ id }: { id: string }) {
+  const viajes = await getViajesByClienteId(Number(id));
+
+  // Preparar datos para el gráfico de barras (últimos 6 meses)
+  const viajesPorMes = new Map<string, number>();
+  const mesesLabels = [];
+  
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date();
+    d.setMonth(d.getMonth() - i);
+    // Español corto: "Ene", "Feb", etc.
+    const key = d.toLocaleString("es-AR", { month: "short" }).replace(".", "");
+    mesesLabels.push(key);
+    viajesPorMes.set(key, 0);
+  }
+
+  // Filtrar y contar solo viajes de los últimos 6 meses
+  const seisMesesAtras = new Date();
+  seisMesesAtras.setMonth(seisMesesAtras.getMonth() - 5);
+  seisMesesAtras.setDate(1);
+
+  viajes.forEach((v) => {
+    if (v.fecha) {
+      const d = typeof v.fecha === "string" ? new Date(v.fecha) : v.fecha;
+      if (d >= seisMesesAtras) {
+        const key = d.toLocaleString("es-AR", { month: "short" }).replace(".", "");
+        if (viajesPorMes.has(key)) {
+          viajesPorMes.set(key, viajesPorMes.get(key)! + 1);
+        }
+      }
+    }
+  });
+
+  const chartData = mesesLabels.map((m) => ({
+    mes: m.charAt(0).toUpperCase() + m.slice(1),
+    cantidad: viajesPorMes.get(m)!,
+  }));
+  const maxViajes = Math.max(...chartData.map((d) => d.cantidad), 1);
+
+  return (
+    <>
+      <div className="flex flex-col gap-5">
+        <section className="rounded-2xl p-6 bg-rd-surface border border-rd-border">
+          <div className="flex items-baseline justify-between mb-2">
+            <h2 className="text-lg sm:text-xl font-bold text-rd-text">
+              Actividad reciente
+            </h2>
+            <Link
+              href={`/user/${id}/travels`}
+              className="text-xs text-rd-accent-soft font-semibold hover:underline"
+            >
+              Ver detalles →
+            </Link>
+          </div>
+
+          <p className="text-sm text-rd-muted mb-6">
+            Cantidad de viajes solicitados en los últimos 6 meses.
+          </p>
+
+          <div className="flex items-end justify-between h-44 w-full pt-2 border-b border-rd-border-2">
+            {chartData.map((d, i) => {
+              const isZero = d.cantidad === 0;
+              const heightPct = isZero ? 4 : (d.cantidad / maxViajes) * 100;
+              
+              return (
+                <div key={i} className="flex flex-col items-center flex-1 gap-2 group">
+                  <div
+                    className={cn(
+                      "text-[12px] font-bold tabular-rd transition-colors",
+                      isZero ? "text-transparent" : "text-rd-text"
+                    )}
+                  >
+                    {d.cantidad}
+                  </div>
+                  <div className="w-full px-1 sm:px-2 flex justify-center">
+                    <div 
+                      className="w-full max-w-[32px] sm:max-w-[40px] bg-rd-bg-2 border border-rd-border-2 rounded-t-xl overflow-hidden relative flex flex-col justify-end"
+                      style={{ height: "120px" }}
+                    >
+                      <div
+                        className="w-full rounded-t-xl transition-all duration-1000 origin-bottom"
+                        style={{
+                          height: `${heightPct}%`,
+                          background: "linear-gradient(to top, var(--color-rd-purple), var(--color-rd-accent))",
+                          opacity: isZero ? 0 : 1,
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="text-[10px] sm:text-xs font-semibold text-rd-muted mt-1 mb-2">
+                    {d.mes}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      </div>
+
+      <section className="mt-6 lg:col-span-2">
+        <div className="flex items-baseline justify-between mb-3">
+          <h2 className="text-lg sm:text-xl font-bold text-rd-text">
+            Historial reciente
+          </h2>
+          {viajes.length > 10 && (
+            <Link
+              href={`/user/${id}/travels`}
+              className="text-sm text-rd-accent-soft font-semibold hover:underline"
+            >
+              Ver todo →
+            </Link>
+          )}
+        </div>
+        <TablaViajes filas={viajes.slice(0, 10)} />
+      </section>
+    </>
+  );
+}
+
 
 export default async function Profile({
   params,
@@ -180,8 +220,23 @@ export default async function Profile({
 }) {
   const { id } = await params;
   return (
-    <Suspense fallback={<ProfileSkeleton />}>
-      <ProfileData id={id} />
-    </Suspense>
+    <div className="py-2 sm:py-4 max-w-6xl mx-auto w-full">
+      <PageHeader
+        eyebrow="Cliente · Perfil"
+        size="large"
+        title="Perfil de cuenta"
+        description="Información de tu cuenta y resumen de actividad."
+      />
+      
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-5 lg:gap-6">
+        <Suspense fallback={<IdentityCardSkeleton />}>
+          <ProfileIdentityCard id={id} />
+        </Suspense>
+        
+        <Suspense fallback={<ProfileHistorySkeleton />}>
+          <ProfileHistory id={id} />
+        </Suspense>
+      </div>
+    </div>
   );
 }

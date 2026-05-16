@@ -1,12 +1,17 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { UserButton, Show } from "@clerk/nextjs";
+import dynamic from "next/dynamic";
 import { Wrench } from "lucide-react";
 import BotonMenu from "./BotonMenu";
 import BotonProfile from "./BotonProfile";
 import BotonTravel from "./BotonTravel";
 import BotonDescuentos from "./BotonDescuentos";
+
+const LazyUserButton = dynamic(
+  () => import("@clerk/nextjs").then((mod) => mod.UserButton),
+  { ssr: false }
+);
 
 export default function MenuHamburguesa({
   id,
@@ -36,13 +41,11 @@ export default function MenuHamburguesa({
       </div>
 
       <div className="mt-5 pb-5 mb-4 text-center border-b border-rd-border-2 flex flex-col items-center">
-        <Show when="signed-in">
-          <div className="w-20 h-20 flex items-center justify-center overflow-hidden">
-            <div className="scale-[2.6] origin-center flex items-center justify-center w-full h-full">
-              <UserButton />
-            </div>
+        <div className="w-20 h-20 flex items-center justify-center overflow-hidden">
+          <div className="scale-[2.6] origin-center flex items-center justify-center w-full h-full">
+            <LazyUserButton />
           </div>
-        </Show>
+        </div>
         {(nombre || apellido) && (
           <h2 className="text-base font-bold text-rd-text mt-3 px-1 break-words">
             {nombre} {apellido}

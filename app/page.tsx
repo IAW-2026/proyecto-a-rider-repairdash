@@ -66,7 +66,7 @@ export default function Home() {
       </div>
 
       <div className="absolute bottom-4 left-0 right-0 text-center text-[11px] text-rd-muted">
-        © 2026 RepairDash · IAW UTN
+        © 2026 RepairDash
       </div>
     </main>
   );
