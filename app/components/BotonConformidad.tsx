@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Check, Loader2 } from "lucide-react";
 import { updateEstado } from "@/lib/actions/viajes";
 
 interface BotonConformidadProps {
@@ -17,32 +18,22 @@ export default function BotonConformidad({ idViaje }: BotonConformidadProps) {
       window.location.reload();
     } catch (e) {
       console.error("Error al concluir viaje:", e);
-    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="w-full">
-      <button
-        onClick={handleClick}
-        disabled={loading}
-        className="w-full rounded-2xl p-6 flex items-center justify-center gap-3
-                   bg-emerald-500/10 border border-emerald-500/30
-                   text-emerald-400 font-semibold text-base
-                   transition-all hover:bg-emerald-500/20 hover:border-emerald-400/60
-                   active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
-      >
-        {loading ? (
-          <span className="h-4 w-4 animate-spin rounded-full border-2 border-emerald-400 border-t-transparent" />
-        ) : (
-          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-          </svg>
-        )}
-        {loading ? "Procesando..." : "Acepto el servicio"}
-      </button>
-    </div>
+    <button
+      onClick={handleClick}
+      disabled={loading}
+      className="w-full rounded-xl px-5 py-3.5 flex items-center justify-center gap-2 bg-rd-ok text-[#0d2419] font-semibold text-[15px] transition-colors hover:bg-rd-ok/90 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-ok focus-visible:ring-offset-2 focus-visible:ring-offset-rd-bg"
+    >
+      {loading ? (
+        <Loader2 size={16} strokeWidth={2} className="animate-spin" />
+      ) : (
+        <Check size={16} strokeWidth={2} />
+      )}
+      {loading ? "Procesando…" : "Confirmar conformidad"}
+    </button>
   );
-  // luego avisar conformidad al driver
 }

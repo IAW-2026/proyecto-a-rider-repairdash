@@ -1,28 +1,36 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { Suspense } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { CreditCard, CheckCircle2 } from "lucide-react";
+import { currentUser } from "@clerk/nextjs/server";
 import { getClienteID } from "@/lib/actions/clientes";
 import { getViajesByClienteId } from "@/lib/queries/viajes";
 import TablaViajes from "@/app/components/TablaViajes";
-import { Suspense } from "react";
 import ProfileSkeleton from "@/app/components/skeletons/ProfileSkeleton";
-import Link from "next/link";
+import {
+  PageHeader,
+  Stars,
+  Pill,
+  Avatar,
+  Button,
+} from "@/app/components/ui";
 
-function renderStars(rating: number) {
-  const normalized = Math.max(0, Math.min(5, rating));
+const fmtMonto = (m?: unknown) => {
+  if (m == null) return "—";
+  const num = Number(typeof m === "number" || typeof m === "string" ? m : String(m));
+  if (Number.isNaN(num)) return "—";
+  return "$ " + num.toLocaleString("es-AR");
+};
 
-  return Array.from({ length: 5 }, (_, index) => {
-    const filled = normalized >= index + 1;
-    return (
-      <span
-        key={index}
-        className={`text-2xl ${filled ? "text-amber-400" : "text-brand-purple/30"}`}
-        aria-hidden="true"
-      >
-        ★
-      </span>
-    );
+const fmtFecha = (f?: Date | string | null) => {
+  if (!f) return "Sin fecha";
+  const d = typeof f === "string" ? new Date(f) : f;
+  return d.toLocaleDateString("es-AR", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
   });
-}
+};
 
 async function ProfileData({ id }: { id: string }) {
   const [cliente, viajes, user] = await Promise.all([
@@ -31,27 +39,28 @@ async function ProfileData({ id }: { id: string }) {
     currentUser(),
   ]);
 
-  const nombre = cliente?.nombre;
-  const apellido = cliente?.apellido;
+  const nombre = cliente?.nombre ?? user?.firstName ?? "Usuario";
+  const apellido = cliente?.apellido ?? user?.lastName ?? "";
+  const fullName = `${nombre} ${apellido}`.trim();
+  const email = user?.primaryEmailAddress?.emailAddress ?? "";
   const calificacion = Number(cliente?.calificacion ?? 0);
-  const ultimos4Viajes = viajes.slice(0, 4);
-  
-  return (
-    <div className="py-6 space-y-8">
-      {/* Header */}
-      <h1 className="text-4xl font-extrabold tracking-tight text-brand-text">
-        Mi Perfil
-      </h1>
+  const ultimos4 = viajes.slice(0, 4);
 
-      {/* Profile card */}
-      <div
-        className="rounded-2xl p-8 flex flex-col items-center gap-4 bg-brand-surface/60 border border-brand-purple/40 backdrop-blur-md"
-      >
-        <div className="w-24 h-24 flex items-center justify-center overflow-hidden transition-transform hover:scale-105">
+  return (
+    <div className="py-2 sm:py-4 max-w-6xl mx-auto w-full">
+      <PageHeader
+        eyebrow="Cliente · Perfil"
+        title="Mi perfil"
+        description="Información de tu cuenta y resumen de actividad."
+      />
+
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-5 lg:gap-6">
+        {/* Identity card */}
+        <div className="rounded-2xl p-6 sm:p-7 bg-rd-surface border border-rd-border flex flex-col items-center text-center">
           {user?.imageUrl ? (
             <Image
               src={user.imageUrl}
-              alt={`${user.firstName ?? "Usuario"} avatar`}
+              alt={`${fullName} avatar`}
               width={96}
               height={96}
               priority
@@ -59,84 +68,116 @@ async function ProfileData({ id }: { id: string }) {
               className="rounded-full"
             />
           ) : (
-            <div className="w-24 h-24 rounded-full bg-brand-purple/20" />
+            <Avatar name={fullName} size={96} />
           )}
-        </div>
-        
-        <div className="text-center">
-          <p className="text-xl font-bold text-brand-text">{nombre} {apellido}</p>
-        </div>
 
-        {/* pedir las calificcaiones a feedback*/}
-        <div className="flex flex-col items-center gap-2">
-          <div className="flex items-center gap-1" aria-label={`Calificación ${calificacion.toFixed(1)} de 5`}>
-            {renderStars(calificacion)}
-          </div>
-          <p className="text-sm font-semibold text-brand-lavender">
-            Calificación {calificacion.toFixed(1)} / 5
-          </p>
-        </div>
+          <h2 className="text-xl sm:text-2xl font-bold text-rd-text mt-4 tracking-tight">
+            {fullName}
+          </h2>
+          {email && (
+            <p className="text-sm text-rd-muted mt-1 break-all">{email}</p>
+          )}
 
-        <div className="w-full flex flex-col sm:flex-row gap-3 mt-2">
-          <Link
+          {calificacion > 0 && (
+            <div className="mt-4 px-4 py-3 rounded-xl bg-rd-bg-2 border border-rd-border flex flex-col items-center gap-1.5">
+              <Stars value={calificacion} size={16} />
+              <div className="text-sm font-semibold tabular-rd text-rd-text">
+                {calificacion.toFixed(1)}
+                <span className="text-rd-muted font-normal"> / 5</span>
+              </div>
+            </div>
+          )}
+
+          <Button
             href="https://proyecto-a-payments-repairdash-lvnq2cmkm.vercel.app/driver"
-            className="flex-1 inline-flex items-center justify-center rounded-xl px-5 py-3.5 font-bold text-base tracking-wide transition-all duration-200 hover:scale-[1.02] active:scale-95 bg-[linear-gradient(135deg,var(--color-brand-accent),var(--color-brand-purple))] text-brand-text shadow-[0_0_16px_#F500F150]"
+            className="w-full mt-5"
           >
+            <CreditCard size={16} strokeWidth={1.75} />
             Ver balance y pagos
-          </Link>
+          </Button>
+
+          <div className="w-full mt-5 pt-4 border-t border-rd-border-2 text-xs text-rd-muted">
+            <div className="flex justify-between py-1">
+              <span>ID cliente</span>
+              <span className="font-mono-rd text-rd-text-2">#{id}</span>
+            </div>
+            <div className="flex justify-between py-1 items-center">
+              <span>Clerk</span>
+              <span className="text-rd-ok inline-flex items-center gap-1.5">
+                <CheckCircle2 size={12} strokeWidth={2} />
+                Sincronizado
+              </span>
+            </div>
+          </div>
         </div>
 
-        <div
-          className="w-full rounded-xl px-4 py-3 text-center mt-2 bg-brand-accent/10 border border-brand-accent/30"
-        >
-          <p className="text-sm text-brand-lavender">
-            Historial completo y resumen reciente de tus viajes.
-          </p>
+        {/* Right column */}
+        <div className="flex flex-col gap-5">
+          <section>
+            <div className="flex items-baseline justify-between mb-3">
+              <h2 className="text-lg sm:text-xl font-bold text-rd-text">
+                Últimos 4 viajes
+              </h2>
+              <Link
+                href={`/user/${id}/travels`}
+                className="text-xs text-rd-accent-soft font-semibold hover:underline"
+              >
+                Ver todos →
+              </Link>
+            </div>
+
+            {ultimos4.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {ultimos4.map((v) => (
+                  <article
+                    key={v.id_viaje}
+                    className="rounded-xl p-4 bg-rd-bg-2 border border-rd-border"
+                  >
+                    <div className="flex justify-between items-center mb-2">
+                      <Pill tone="mute" size="sm">
+                        {v.estado ?? "—"}
+                      </Pill>
+                      <span className="font-mono-rd text-[10.5px] text-rd-muted">
+                        #{v.id_viaje}
+                      </span>
+                    </div>
+                    <div className="font-bold text-sm capitalize text-rd-text">
+                      {v.tipo_de_trabajo}
+                    </div>
+                    <div className="text-[11.5px] text-rd-muted mt-1">
+                      {(v.driver ?? "Sin trabajador")} · {fmtFecha(v.fecha)}
+                    </div>
+                    <div className="mt-2 font-bold text-sm tabular-rd text-rd-text">
+                      {fmtMonto(v.pagos?.[0]?.monto)}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-xl p-6 text-center bg-rd-bg-2 border border-rd-border text-sm text-rd-muted">
+                Aún no hay viajes recientes.
+              </div>
+            )}
+          </section>
+
         </div>
       </div>
 
-      <section className="space-y-4">
-        <div>
-          <h2 className="text-2xl font-bold text-brand-text">Últimos 4 viajes</h2>
-          <p className="mt-1 text-sm text-brand-purple">Resumen rápido de tus solicitudes más recientes.</p>
-        </div>
-
-        {ultimos4Viajes.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {ultimos4Viajes.map((viaje) => (
-              <article key={viaje.id_viaje} className="rounded-2xl p-5 bg-brand-surface/50 border border-brand-purple/30 backdrop-blur-md shadow-[0_8px_30px_#8D62A510]">
-                <p className="text-sm uppercase tracking-widest text-brand-purple">{viaje.estado ?? "Sin estado"}</p>
-                <h3 className="mt-2 text-lg font-bold text-brand-text capitalize">{viaje.tipo_de_trabajo}</h3>
-                <div className="mt-4 space-y-2 text-sm text-brand-lavender">
-                  <p>Fecha: {viaje.fecha ? new Date(viaje.fecha).toLocaleDateString("es-AR") : "Sin fecha"}</p>
-                  <p>Costo: ${Number(viaje.pagos?.[0]?.monto ?? 0).toLocaleString("es-AR")}</p>
-                  <p>Trabajador: {viaje.driver ?? "Pendiente de asignación"}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <div className="rounded-2xl p-6 text-center bg-brand-surface/40 border border-brand-purple/30 text-brand-purple">
-            Aún no hay viajes recientes.
-          </div>
-        )}
-      </section>
-
-      <section className="space-y-4">
-        <div>
-          <h2 className="text-2xl font-bold text-brand-text">Todos tus viajes</h2>
-          <p className="mt-1 text-sm text-brand-purple">Historial completo de los servicios realizados.</p>
-        </div>
-
-        <div className="rounded-2xl p-4 sm:p-6 bg-brand-surface/40 border border-brand-purple/30 backdrop-blur-md">
-          <TablaViajes filas={viajes} />
-        </div>
+      <section className="mt-6">
+        <h2 className="text-lg sm:text-xl font-bold text-rd-text mb-3">
+          Historial completo
+        </h2>
+        <TablaViajes filas={viajes} />
       </section>
     </div>
   );
 }
 
-export default async function Profile({ params }: { params: Promise<{ id: string }> }) {
+export default async function Profile({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   return (
     <Suspense fallback={<ProfileSkeleton />}>

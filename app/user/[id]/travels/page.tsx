@@ -1,40 +1,53 @@
-import TablaViajes from "@/app/components/TablaViajes";
-import { getViajesPaginadosCliente } from "@/lib/actions/viajes";
-import Link from "next/link";
 import { Suspense } from "react";
+import Link from "next/link";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import TablaViajes from "@/app/components/TablaViajes";
 import TravelsSkeleton from "@/app/components/skeletons/TravelsSkeleton";
+import { getViajesPaginadosCliente } from "@/lib/actions/viajes";
+import { PageHeader, Button, cn } from "@/app/components/ui";
 
-async function TravelsData({ id, page }: { id: string, page?: string }) {
+async function TravelsData({ id, page }: { id: string; page?: string }) {
   const paginaActual = Number(page) || 1;
-  const { viajes, totalPaginas } = await getViajesPaginadosCliente(Number(id), paginaActual);
+  const { viajes, totalPaginas } = await getViajesPaginadosCliente(
+    Number(id),
+    paginaActual,
+  );
 
   return (
-    <div className="py-6">
-      <div className="mb-8">
-        <h1 className="text-4xl font-extrabold tracking-tight text-brand-text">
-          Trabajos realizados
-        </h1>
-        <p className="mt-2 text-base text-brand-purple">
-          Historial de todos tus servicios técnicos.
-        </p>
-      </div>
-      <div className="min-h-[700px]">
+    <div className="py-2 sm:py-4 max-w-6xl mx-auto w-full">
+      <PageHeader
+        eyebrow="Cliente · Historial"
+        title="Trabajos realizados"
+        description="Historial completo de tus servicios técnicos."
+        actions={
+          <Button href={`/user/${id}/solicitudTrabajoActual`}>
+            <Plus size={15} strokeWidth={1.75} />
+            Nuevo trabajo
+          </Button>
+        }
+      />
+
+      <div className="min-h-[400px]">
         <TablaViajes filas={viajes} />
       </div>
 
-      {/* Paginación */}
       {totalPaginas > 1 && (
-        <div className="flex items-center justify-center gap-3 mt-8">
+        <nav
+          className="flex items-center justify-center gap-1.5 mt-6"
+          aria-label="Paginación"
+        >
           {paginaActual > 1 ? (
             <Link
               href={`/user/${id}/travels?page=${paginaActual - 1}`}
-              className="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 hover:scale-105 active:scale-95 bg-brand-surface/60 border border-brand-purple/40 text-brand-lavender hover:border-brand-accent hover:text-brand-text"
+              className="inline-flex items-center gap-1 px-3 h-9 rounded-lg text-xs font-semibold bg-rd-surface border border-rd-border-2 text-rd-text-2 hover:bg-rd-elevated hover:border-rd-border-3 transition-colors"
             >
-              ← Anterior
+              <ChevronLeft size={14} strokeWidth={1.75} />
+              Anterior
             </Link>
           ) : (
-            <span className="px-5 py-2.5 rounded-xl text-sm font-bold bg-brand-surface/20 border border-brand-purple/20 text-brand-purple/30 cursor-not-allowed">
-              ← Anterior
+            <span className="inline-flex items-center gap-1 px-3 h-9 rounded-lg text-xs font-semibold bg-rd-surface/40 border border-rd-border text-rd-subtle cursor-not-allowed">
+              <ChevronLeft size={14} strokeWidth={1.75} />
+              Anterior
             </span>
           )}
 
@@ -42,11 +55,13 @@ async function TravelsData({ id, page }: { id: string, page?: string }) {
             <Link
               key={num}
               href={`/user/${id}/travels?page=${num}`}
-              className={`w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold transition-all duration-200 hover:scale-105 ${
+              className={cn(
+                "w-9 h-9 inline-flex items-center justify-center rounded-lg text-xs font-semibold transition-colors",
                 num === paginaActual
-                  ? "bg-brand-accent text-white shadow-[0_0_16px_#F500F150]"
-                  : "bg-brand-surface/40 border border-brand-purple/30 text-brand-lavender hover:border-brand-accent"
-              }`}
+                  ? "bg-rd-accent text-white"
+                  : "bg-rd-surface border border-rd-border-2 text-rd-text-2 hover:bg-rd-elevated hover:border-rd-border-3",
+              )}
+              aria-current={num === paginaActual ? "page" : undefined}
             >
               {num}
             </Link>
@@ -55,28 +70,35 @@ async function TravelsData({ id, page }: { id: string, page?: string }) {
           {paginaActual < totalPaginas ? (
             <Link
               href={`/user/${id}/travels?page=${paginaActual + 1}`}
-              className="px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 hover:scale-105 active:scale-95 bg-brand-surface/60 border border-brand-purple/40 text-brand-lavender hover:border-brand-accent hover:text-brand-text"
+              className="inline-flex items-center gap-1 px-3 h-9 rounded-lg text-xs font-semibold bg-rd-surface border border-rd-border-2 text-rd-text-2 hover:bg-rd-elevated hover:border-rd-border-3 transition-colors"
             >
-              Siguiente →
+              Siguiente
+              <ChevronRight size={14} strokeWidth={1.75} />
             </Link>
           ) : (
-            <span className="px-5 py-2.5 rounded-xl text-sm font-bold bg-brand-surface/20 border border-brand-purple/20 text-brand-purple/30 cursor-not-allowed">
-              Siguiente →
+            <span className="inline-flex items-center gap-1 px-3 h-9 rounded-lg text-xs font-semibold bg-rd-surface/40 border border-rd-border text-rd-subtle cursor-not-allowed">
+              Siguiente
+              <ChevronRight size={14} strokeWidth={1.75} />
             </span>
           )}
-        </div>
+        </nav>
       )}
     </div>
   );
 }
 
-export default async function Travels({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ page?: string }>;}) {
+export default async function Travels({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ page?: string }>;
+}) {
   const { id } = await params;
-  const resolvedSearchParams = await searchParams;
-  
+  const resolved = await searchParams;
   return (
     <Suspense fallback={<TravelsSkeleton />}>
-      <TravelsData id={id} page={resolvedSearchParams.page} />
+      <TravelsData id={id} page={resolved.page} />
     </Suspense>
   );
 }

@@ -1,28 +1,31 @@
 export default function SolicitudTrabajoActualSkeleton() {
   return (
-    <div className="py-6 animate-pulse">
-      <div className="rounded-3xl p-6 sm:p-10 bg-brand-surface/60 border border-brand-purple/40 backdrop-blur-md shadow-[0_8px_48px_#8D62A520]">
-        <div className="flex flex-col gap-3 mb-10 items-center text-center">
-          <div className="h-10 w-72 bg-brand-surface/80 rounded-xl skeleton-shimmer"></div>
-          <div className="h-5 w-56 bg-brand-surface/50 rounded-lg skeleton-shimmer"></div>
+    <div className="py-2 sm:py-4 max-w-5xl mx-auto w-full">
+      <div className="h-4 w-24 rounded skeleton-shimmer mb-3" />
+      <div className="mb-6 flex flex-col gap-2">
+        <div className="h-3.5 w-44 rounded skeleton-shimmer" />
+        <div className="h-8 w-44 rounded-md skeleton-shimmer" />
+        <div className="h-4 w-80 rounded skeleton-shimmer" />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-6">
+        <div className="rounded-2xl p-6 bg-rd-surface border border-rd-border-2 flex flex-col gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="h-12 rounded-xl skeleton-shimmer" />
+            <div className="h-12 rounded-xl skeleton-shimmer" />
+          </div>
+          <div className="h-28 rounded-xl skeleton-shimmer" />
+          <div className="h-12 rounded-xl skeleton-shimmer" />
+          <div className="h-12 rounded-xl skeleton-shimmer" />
+          <div className="h-20 rounded-xl skeleton-shimmer" />
+          <div className="h-12 rounded-xl skeleton-shimmer mt-2" />
         </div>
 
-        <div className="flex flex-col gap-8">
-          {/* Ubicacion selector skeleton */}
-          <div className="flex flex-col gap-3">
-            <div className="h-6 w-40 bg-brand-surface/80 rounded-lg skeleton-shimmer"></div>
-            <div className="h-14 w-full bg-brand-surface/50 rounded-2xl border border-brand-purple/20 skeleton-shimmer"></div>
-            <div className="h-10 w-56 bg-brand-surface/50 rounded-xl mx-auto mt-2 skeleton-shimmer"></div>
-          </div>
-
-          {/* Tipo de problema skeleton */}
-          <div className="flex flex-col gap-3 mt-4">
-            <div className="h-6 w-48 bg-brand-surface/80 rounded-lg skeleton-shimmer"></div>
-            <div className="h-36 w-full bg-brand-surface/50 rounded-2xl border border-brand-purple/20 skeleton-shimmer"></div>
-          </div>
-
-          {/* Submit button skeleton */}
-          <div className="h-14 w-full bg-brand-accent/30 rounded-2xl mt-6 skeleton-shimmer shadow-[0_0_15px_#F500F130]"></div>
+        <div className="rounded-2xl p-6 bg-rd-surface border border-rd-border h-fit flex flex-col gap-3">
+          <div className="h-3.5 w-28 rounded skeleton-shimmer mb-1" />
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-10 rounded-lg skeleton-shimmer" />
+          ))}
         </div>
       </div>
     </div>

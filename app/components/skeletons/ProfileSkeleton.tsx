@@ -1,14 +1,31 @@
 export default function ProfileSkeleton() {
   return (
-    <div className="py-6 animate-pulse">
-      {/* Header */}
-      <div className="h-10 w-40 bg-brand-surface/60 rounded-xl mb-8 skeleton-shimmer"></div>
+    <div className="py-2 sm:py-4 max-w-6xl mx-auto w-full">
+      <div className="mb-6 flex flex-col gap-2">
+        <div className="h-3.5 w-28 rounded skeleton-shimmer" />
+        <div className="h-8 w-44 rounded-md skeleton-shimmer" />
+        <div className="h-4 w-72 rounded skeleton-shimmer" />
+      </div>
 
-      {/* Profile card */}
-      <div className="rounded-3xl p-10 flex flex-col items-center gap-5 bg-brand-surface/50 border border-brand-purple/30 backdrop-blur-md shadow-[0_8px_30px_#8D62A515]">
-        <div className="w-28 h-28 rounded-full bg-brand-surface/80 border-[4px] border-brand-accent/30 skeleton-shimmer shadow-[0_0_20px_#F500F140]"></div>
-        <div className="h-8 w-56 bg-brand-surface/80 rounded-xl mt-3 skeleton-shimmer"></div>
-        <div className="w-full h-14 rounded-2xl mt-4 bg-brand-accent/10 border border-brand-accent/20 skeleton-shimmer"></div>
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-6">
+        <div className="rounded-2xl p-6 bg-rd-surface border border-rd-border flex flex-col items-center gap-3">
+          <div className="w-24 h-24 rounded-full skeleton-shimmer" />
+          <div className="h-5 w-36 rounded skeleton-shimmer" />
+          <div className="h-3 w-44 rounded skeleton-shimmer" />
+          <div className="h-10 w-full rounded-xl skeleton-shimmer mt-2" />
+        </div>
+
+        <div className="flex flex-col gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {[1, 2, 3, 4].map((i) => (
+              <div
+                key={i}
+                className="h-28 rounded-xl bg-rd-surface border border-rd-border skeleton-shimmer"
+              />
+            ))}
+          </div>
+          <div className="h-72 rounded-2xl bg-rd-surface border border-rd-border skeleton-shimmer" />
+        </div>
       </div>
     </div>
   );
