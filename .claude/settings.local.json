@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:api.anthropic.com)",
+      "Bash(Get-ChildItem -Path \"C:\\\\proyecto-a-rider-repairdash\" -Recurse -Name -Include \"package.json\", \"tailwind.config.*\", \"next.config.*\")",
+      "Bash(Select-Object -First 20)",
+      "PowerShell(Test-Path *)",
+      "PowerShell(Join-Path *)",
+      "Bash(pnpm build *)"
+    ]
+  }
+}

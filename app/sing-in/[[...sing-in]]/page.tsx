@@ -1,41 +1,49 @@
-import { SignIn } from '@clerk/nextjs'
+import { SignIn } from "@clerk/nextjs";
+
+const clerkAppearance = {
+  elements: {
+    rootBox: "flex justify-center w-full",
+    card: "bg-rd-surface border border-rd-border-2 backdrop-blur-xl rounded-2xl p-2 w-full max-w-full",
+    headerTitle: "text-rd-text font-bold text-3xl tracking-tight",
+    headerSubtitle: "text-rd-muted text-sm mt-2",
+    socialButtonsBlockButton:
+      "border-rd-border-2 hover:bg-rd-elevated hover:border-rd-border-3 text-rd-text transition-colors rounded-xl",
+    socialButtonsBlockButtonText: "text-rd-text font-semibold",
+    socialButtonsProviderIcon: "filter invert",
+    dividerLine: "bg-rd-border-2",
+    dividerText: "text-rd-muted",
+    formFieldLabel: "text-rd-text-2 font-semibold text-xs tracking-wide",
+    formFieldInput:
+      "bg-rd-inset border border-rd-border-2 text-rd-text focus:border-rd-accent focus:bg-rd-bg rounded-xl px-3.5 py-3 transition-colors text-sm",
+    formButtonPrimary:
+      "bg-rd-accent hover:bg-[#C932BD] transition-colors text-white font-semibold rounded-xl py-3 mt-2",
+    footerActionText: "text-rd-muted",
+    footerActionLink:
+      "text-rd-accent-soft hover:text-rd-accent transition-colors font-semibold",
+    identityPreviewText: "text-rd-text",
+    identityPreviewEditButton:
+      "text-rd-accent-soft hover:text-rd-accent",
+    formFieldAction:
+      "text-rd-accent-soft hover:text-rd-accent transition-colors",
+    formFieldSuccessText: "text-rd-ok",
+    formFieldErrorText: "text-rd-danger",
+  },
+};
 
 export default function Page() {
   return (
     <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* Elementos decorativos de fondo */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-brand-accent/20 blur-[120px] rounded-full" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-brand-purple/20 blur-[120px] rounded-full" />
+      <div
+        aria-hidden
+        className="absolute inset-0 overflow-hidden pointer-events-none z-0"
+      >
+        <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-rd-accent/15 blur-[120px] rounded-full" />
+        <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-rd-purple/15 blur-[120px] rounded-full" />
       </div>
-      
-      <div className="z-10 w-full max-w-md mx-auto flex justify-center animate-fade-in-up">
-        <SignIn 
-           appearance={{
-             elements: {
-               rootBox: "flex justify-center w-full",
-               card: "bg-brand-surface/60 border border-brand-purple/40 backdrop-blur-xl shadow-2xl rounded-3xl p-2 w-full max-w-full",
-               headerTitle: "text-brand-text font-extrabold text-3xl",
-               headerSubtitle: "text-brand-lavender text-base mt-2",
-               socialButtonsBlockButton: "border-brand-purple/40 hover:bg-brand-purple/20 hover:border-brand-purple text-brand-text transition-all duration-300 rounded-xl",
-               socialButtonsBlockButtonText: "text-brand-text font-semibold",
-               socialButtonsProviderIcon: "filter invert",
-               dividerLine: "bg-brand-purple/30",
-               dividerText: "text-brand-lavender font-medium",
-               formFieldLabel: "text-brand-lavender font-semibold text-sm",
-               formFieldInput: "bg-brand-bg/80 border border-brand-purple text-brand-text focus:border-brand-accent focus:ring-1 focus:ring-brand-accent rounded-xl px-4 py-3.5 transition-colors",
-               formButtonPrimary: "bg-[linear-gradient(135deg,var(--color-brand-accent),var(--color-brand-purple))] hover:scale-[1.02] active:scale-95 transition-all duration-200 shadow-[0_0_16px_#F500F150] text-brand-text font-bold rounded-xl py-3.5 mt-2",
-               footerActionText: "text-brand-lavender",
-               footerActionLink: "text-brand-accent hover:text-brand-purple transition-colors font-bold",
-               identityPreviewText: "text-brand-text",
-               identityPreviewEditButton: "text-brand-accent hover:text-brand-purple",
-               formFieldAction: "text-brand-accent hover:text-brand-purple transition-colors",
-               formFieldSuccessText: "text-green-400",
-               formFieldErrorText: "text-red-400"
-             }
-           }}
-        />
+
+      <div className="z-10 w-full max-w-md mx-auto flex justify-center">
+        <SignIn appearance={clerkAppearance} />
       </div>
     </div>
-  )
+  );
 }

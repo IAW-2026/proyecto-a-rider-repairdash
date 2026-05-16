@@ -1,48 +1,76 @@
+import Link from "next/link";
+import { ChevronLeft, Edit } from "lucide-react";
 import { getViajesCliente } from "@/lib/actions/viajes";
 import { getClienteID } from "@/lib/actions/clientes";
-import Link from "next/link";
 import ViajesList from "@/app/components/ViajesList";
+import { PageHeader, Button, Avatar } from "@/app/components/ui";
 
-export default async function ClienteViajesPage({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params;
-    
-    // Paralelismo para mejor LCP
-    const [cliente, viajes] = await Promise.all([
-        getClienteID(id),
-        getViajesCliente(parseInt(id))
-    ]);
+export default async function ClienteViajesPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const [cliente, viajes] = await Promise.all([
+    getClienteID(id),
+    getViajesCliente(parseInt(id)),
+  ]);
 
-    if (!cliente) {
-        return (
-            <div className="min-h-screen bg-brand-bg flex items-center justify-center text-brand-text w-full">
-                <div className="text-center space-y-6">
-                    <p className="text-3xl font-black">Cliente no encontrado</p>
-                    <Link href="/admin" className="px-8 py-3 bg-brand-accent text-white rounded-full font-bold shadow-lg shadow-brand-accent/30 hover:scale-105 transition-all">
-                        Volver al panel
-                    </Link>
-                </div>
-            </div>
-        );
-    }
-
+  if (!cliente) {
     return (
-        <main className="min-h-screen bg-brand-bg text-brand-text p-4 sm:p-8 lg:p-12 w-full">
-            <div className="w-full space-y-12">
-                <header className="flex items-center gap-6 py-4">
-                    <Link href="/admin" className="w-12 h-12 bg-brand-surface border border-brand-purple/30 flex items-center justify-center hover:border-brand-accent transition-all shadow-lg text-2xl">
-                        ⬅️
-                    </Link>
-                    <div>
-                        <h1 className="text-4xl sm:text-5xl font-black tracking-tight bg-gradient-to-r from-brand-accent to-brand-lavender bg-clip-text text-transparent">
-                            Historial de {cliente.nombre}
-                        </h1>
-                        <p className="text-brand-muted text-lg font-medium">{cliente.mail}</p>
-                    </div>
-                </header>
-
-
-                <ViajesList initialViajes={viajes} idCliente={parseInt(id)} />
-            </div>
-        </main>
+      <div className="w-full min-h-[60vh] flex items-center justify-center">
+        <div className="text-center space-y-4 max-w-sm">
+          <h2 className="text-2xl font-bold text-rd-text">
+            Cliente no encontrado
+          </h2>
+          <Button href="/admin">Volver al panel</Button>
+        </div>
+      </div>
     );
+  }
+
+  const fullName = `${cliente.nombre ?? ""} ${cliente.apellido ?? ""}`.trim();
+
+  return (
+    <div className="w-full max-w-7xl mx-auto">
+      <Link
+        href="/admin"
+        className="inline-flex items-center gap-1 text-sm text-rd-text-2 hover:text-rd-text transition-colors mb-3"
+      >
+        <ChevronLeft size={16} strokeWidth={1.75} />
+        Volver a clientes
+      </Link>
+
+      <PageHeader
+        eyebrow={`Admin · Cliente #${cliente.id_cliente}`}
+        title={`Historial de ${cliente.nombre ?? ""}`.trim()}
+        description={cliente.mail}
+        actions={
+          <Button
+            href={`/admin/clientes/${cliente.id_cliente}/edit`}
+            variant="secondary"
+          >
+            <Edit size={15} strokeWidth={1.75} />
+            Editar cliente
+          </Button>
+        }
+      />
+
+      <div className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-5 lg:gap-6">
+        <ViajesList initialViajes={viajes} idCliente={parseInt(id)} />
+
+        <aside className="rounded-2xl p-5 sm:p-6 bg-rd-surface border border-rd-border h-fit">
+          <div className="flex items-center gap-3.5">
+            <Avatar name={fullName || "Cliente"} size={56} online={!!cliente.id_clerk} />
+            <div className="min-w-0">
+              <div className="font-bold text-rd-text truncate">{fullName}</div>
+              <div className="text-[12px] text-rd-muted truncate">
+                {cliente.mail}
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
 }
