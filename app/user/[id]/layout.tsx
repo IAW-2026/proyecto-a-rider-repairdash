@@ -34,7 +34,6 @@ export default async function Layout({
 }) {
   const { id } = await params;
 
-  // Verificación rápida con caché JWT (rápido, no bloquea TTFB de forma notoria)
   const { userId } = await auth();
   if (!userId) {
     redirect("/");
