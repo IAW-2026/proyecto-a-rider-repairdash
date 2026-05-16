@@ -1,146 +1,242 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { Suspense } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { CreditCard, CheckCircle2 } from "lucide-react";
+import { currentUser } from "@clerk/nextjs/server";
 import { getClienteID } from "@/lib/actions/clientes";
 import { getViajesByClienteId } from "@/lib/queries/viajes";
 import TablaViajes from "@/app/components/TablaViajes";
-import { Suspense } from "react";
-import ProfileSkeleton from "@/app/components/skeletons/ProfileSkeleton";
-import Link from "next/link";
+import IdentityCardSkeleton from "@/app/components/skeletons/IdentityCardSkeleton";
+import ProfileHistorySkeleton from "@/app/components/skeletons/ProfileHistorySkeleton";
 
-function renderStars(rating: number) {
-  const normalized = Math.max(0, Math.min(5, rating));
+import {
+  PageHeader,
+  Stars,
+  Avatar,
+  Button,
+  cn,
+} from "@/app/components/ui";
 
-  return Array.from({ length: 5 }, (_, index) => {
-    const filled = normalized >= index + 1;
-    return (
-      <span
-        key={index}
-        className={`text-2xl ${filled ? "text-amber-400" : "text-brand-purple/30"}`}
-        aria-hidden="true"
-      >
-        ★
-      </span>
-    );
-  });
-}
+const fmtMonto = (m?: unknown) => {
+  if (m == null) return "—";
+  const num = Number(typeof m === "number" || typeof m === "string" ? m : String(m));
+  if (Number.isNaN(num)) return "—";
+  return "$ " + num.toLocaleString("es-AR");
+};
 
-async function ProfileData({ id }: { id: string }) {
-  const [cliente, viajes, user] = await Promise.all([
+
+async function ProfileIdentityCard({ id }: { id: string }) {
+  const [cliente, user] = await Promise.all([
     getClienteID(id),
-    getViajesByClienteId(Number(id)),
     currentUser(),
   ]);
 
-  const nombre = cliente?.nombre;
-  const apellido = cliente?.apellido;
+  const nombre = cliente?.nombre ?? user?.firstName ?? "Usuario";
+  const apellido = cliente?.apellido ?? user?.lastName ?? "";
+  const fullName = `${nombre} ${apellido}`.trim();
+  const email = user?.primaryEmailAddress?.emailAddress ?? "";
   const calificacion = Number(cliente?.calificacion ?? 0);
-  const ultimos4Viajes = viajes.slice(0, 4);
-  
+
   return (
-    <div className="py-6 space-y-8">
-      {/* Header */}
-      <h1 className="text-4xl font-extrabold tracking-tight text-brand-text">
-        Mi Perfil
-      </h1>
+    <div 
+      className="rounded-2xl p-6 sm:p-7 border border-rd-border flex flex-col items-center text-center relative overflow-hidden"
+      style={{
+        background: "linear-gradient(180deg, var(--color-rd-surface) 0%, var(--color-rd-bg-2) 100%)"
+      }}
+    >
+      {user?.imageUrl ? (
+        <Image
+          src={user.imageUrl}
+          alt={`${fullName} avatar`}
+          width={96}
+          height={96}
+          priority
+          fetchPriority="high"
+          className="w-[72px] h-[72px] sm:w-24 sm:h-24 rounded-full relative z-10"
+        />
+      ) : (
+        <Avatar name={fullName} size={72} className="sm:w-24 sm:h-24" />
+      )}
 
-      {/* Profile card */}
-      <div
-        className="rounded-2xl p-8 flex flex-col items-center gap-4 bg-brand-surface/60 border border-brand-purple/40 backdrop-blur-md"
+      <h2 className="text-xl sm:text-2xl font-bold text-rd-text mt-4 tracking-tight relative z-10">
+        {fullName}
+      </h2>
+      {email && (
+        <p className="text-sm text-rd-muted mt-1 break-all relative z-10">{email}</p>
+      )}
+
+      {calificacion > 0 && (
+        <div className="mt-4 px-4 py-3 rounded-xl bg-rd-bg-2/50 border border-rd-border flex flex-col items-center gap-1.5 relative z-10">
+          <Stars value={calificacion} size={16} />
+          <div className="text-sm font-semibold tabular-rd text-rd-text">
+            {calificacion.toFixed(1)}
+            <span className="text-rd-muted font-normal"> / 5</span>
+          </div>
+        </div>
+      )}
+
+      <Button
+        href="https://proyecto-a-payments-repairdash-lvnq2cmkm.vercel.app/driver"
+        className="w-full mt-5 relative z-10"
       >
-        <div className="w-24 h-24 flex items-center justify-center overflow-hidden transition-transform hover:scale-105">
-          {user?.imageUrl ? (
-            <Image
-              src={user.imageUrl}
-              alt={`${user.firstName ?? "Usuario"} avatar`}
-              width={96}
-              height={96}
-              priority
-              fetchPriority="high"
-              className="rounded-full"
-            />
-          ) : (
-            <div className="w-24 h-24 rounded-full bg-brand-purple/20" />
-          )}
-        </div>
-        
-        <div className="text-center">
-          <p className="text-xl font-bold text-brand-text">{nombre} {apellido}</p>
-        </div>
+        <CreditCard size={16} strokeWidth={1.75} />
+        Ver balance y pagos
+      </Button>
 
-        {/* pedir las calificcaiones a feedback*/}
-        <div className="flex flex-col items-center gap-2">
-          <div className="flex items-center gap-1" aria-label={`Calificación ${calificacion.toFixed(1)} de 5`}>
-            {renderStars(calificacion)}
-          </div>
-          <p className="text-sm font-semibold text-brand-lavender">
-            Calificación {calificacion.toFixed(1)} / 5
-          </p>
+        <div className="flex justify-between py-1">
+          <span>ID cliente</span>
+          <span className="font-mono-rd text-rd-text-2">#{id}</span>
         </div>
-
-        <div className="w-full flex flex-col sm:flex-row gap-3 mt-2">
-          <Link
-            href="https://proyecto-a-payments-repairdash-lvnq2cmkm.vercel.app/driver"
-            className="flex-1 inline-flex items-center justify-center rounded-xl px-5 py-3.5 font-bold text-base tracking-wide transition-all duration-200 hover:scale-[1.02] active:scale-95 bg-[linear-gradient(135deg,var(--color-brand-accent),var(--color-brand-purple))] text-brand-text shadow-[0_0_16px_#F500F150]"
-          >
-            Ver balance y pagos
-          </Link>
-        </div>
-
-        <div
-          className="w-full rounded-xl px-4 py-3 text-center mt-2 bg-brand-accent/10 border border-brand-accent/30"
-        >
-          <p className="text-sm text-brand-lavender">
-            Historial completo y resumen reciente de tus viajes.
-          </p>
-        </div>
-      </div>
-
-      <section className="space-y-4">
-        <div>
-          <h2 className="text-2xl font-bold text-brand-text">Últimos 4 viajes</h2>
-          <p className="mt-1 text-sm text-brand-purple">Resumen rápido de tus solicitudes más recientes.</p>
-        </div>
-
-        {ultimos4Viajes.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {ultimos4Viajes.map((viaje) => (
-              <article key={viaje.id_viaje} className="rounded-2xl p-5 bg-brand-surface/50 border border-brand-purple/30 backdrop-blur-md shadow-[0_8px_30px_#8D62A510]">
-                <p className="text-sm uppercase tracking-widest text-brand-purple">{viaje.estado ?? "Sin estado"}</p>
-                <h3 className="mt-2 text-lg font-bold text-brand-text capitalize">{viaje.tipo_de_trabajo}</h3>
-                <div className="mt-4 space-y-2 text-sm text-brand-lavender">
-                  <p>Fecha: {viaje.fecha ? new Date(viaje.fecha).toLocaleDateString("es-AR") : "Sin fecha"}</p>
-                  <p>Costo: ${Number(viaje.pagos?.[0]?.monto ?? 0).toLocaleString("es-AR")}</p>
-                  <p>Trabajador: {viaje.driver ?? "Pendiente de asignación"}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <div className="rounded-2xl p-6 text-center bg-brand-surface/40 border border-brand-purple/30 text-brand-purple">
-            Aún no hay viajes recientes.
-          </div>
-        )}
-      </section>
-
-      <section className="space-y-4">
-        <div>
-          <h2 className="text-2xl font-bold text-brand-text">Todos tus viajes</h2>
-          <p className="mt-1 text-sm text-brand-purple">Historial completo de los servicios realizados.</p>
-        </div>
-
-        <div className="rounded-2xl p-4 sm:p-6 bg-brand-surface/40 border border-brand-purple/30 backdrop-blur-md">
-          <TablaViajes filas={viajes} />
-        </div>
-      </section>
     </div>
   );
 }
 
-export default async function Profile({ params }: { params: Promise<{ id: string }> }) {
+
+
+async function ProfileHistory({ id }: { id: string }) {
+  const viajes = await getViajesByClienteId(Number(id));
+
+  // Preparar datos para el gráfico de barras (últimos 6 meses)
+  const viajesPorMes = new Map<string, number>();
+  const mesesLabels = [];
+  
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date();
+    d.setMonth(d.getMonth() - i);
+    // Español corto: "Ene", "Feb", etc.
+    const key = d.toLocaleString("es-AR", { month: "short" }).replace(".", "");
+    mesesLabels.push(key);
+    viajesPorMes.set(key, 0);
+  }
+
+  // Filtrar y contar solo viajes de los últimos 6 meses
+  const seisMesesAtras = new Date();
+  seisMesesAtras.setMonth(seisMesesAtras.getMonth() - 5);
+  seisMesesAtras.setDate(1);
+
+  viajes.forEach((v) => {
+    if (v.fecha) {
+      const d = typeof v.fecha === "string" ? new Date(v.fecha) : v.fecha;
+      if (d >= seisMesesAtras) {
+        const key = d.toLocaleString("es-AR", { month: "short" }).replace(".", "");
+        if (viajesPorMes.has(key)) {
+          viajesPorMes.set(key, viajesPorMes.get(key)! + 1);
+        }
+      }
+    }
+  });
+
+  const chartData = mesesLabels.map((m) => ({
+    mes: m.charAt(0).toUpperCase() + m.slice(1),
+    cantidad: viajesPorMes.get(m)!,
+  }));
+  const maxViajes = Math.max(...chartData.map((d) => d.cantidad), 1);
+
+  return (
+    <>
+      <div className="flex flex-col gap-5">
+        <section className="rounded-2xl p-6 bg-rd-surface border border-rd-border">
+          <div className="flex items-baseline justify-between mb-2">
+            <h2 className="text-lg sm:text-xl font-bold text-rd-text">
+              Actividad reciente
+            </h2>
+            <Link
+              href={`/user/${id}/travels`}
+              className="text-xs text-rd-accent-soft font-semibold hover:underline"
+            >
+              Ver detalles →
+            </Link>
+          </div>
+
+          <p className="text-sm text-rd-muted mb-6">
+            Cantidad de viajes solicitados en los últimos 6 meses.
+          </p>
+
+          <div className="flex items-end justify-between h-44 w-full pt-2 border-b border-rd-border-2">
+            {chartData.map((d, i) => {
+              const isZero = d.cantidad === 0;
+              const heightPct = isZero ? 4 : (d.cantidad / maxViajes) * 100;
+              
+              return (
+                <div key={i} className="flex flex-col items-center flex-1 gap-2 group">
+                  <div
+                    className={cn(
+                      "text-[12px] font-bold tabular-rd transition-colors",
+                      isZero ? "text-transparent" : "text-rd-text"
+                    )}
+                  >
+                    {d.cantidad}
+                  </div>
+                  <div className="w-full px-1 sm:px-2 flex justify-center">
+                    <div 
+                      className="w-full max-w-[32px] sm:max-w-[40px] bg-rd-bg-2 border border-rd-border-2 rounded-t-xl overflow-hidden relative flex flex-col justify-end"
+                      style={{ height: "120px" }}
+                    >
+                      <div
+                        className="w-full rounded-t-xl transition-all duration-1000 origin-bottom"
+                        style={{
+                          height: `${heightPct}%`,
+                          background: "linear-gradient(to top, var(--color-rd-purple), var(--color-rd-accent))",
+                          opacity: isZero ? 0 : 1,
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="text-[10px] sm:text-xs font-semibold text-rd-muted mt-1 mb-2">
+                    {d.mes}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      </div>
+
+      <section className="mt-6 lg:col-span-2">
+        <div className="flex items-baseline justify-between mb-3">
+          <h2 className="text-lg sm:text-xl font-bold text-rd-text">
+            Historial reciente
+          </h2>
+          {viajes.length > 10 && (
+            <Link
+              href={`/user/${id}/travels`}
+              className="text-sm text-rd-accent-soft font-semibold hover:underline"
+            >
+              Ver todo →
+            </Link>
+          )}
+        </div>
+        <TablaViajes filas={viajes.slice(0, 10)} />
+      </section>
+    </>
+  );
+}
+
+
+export default async function Profile({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   return (
-    <Suspense fallback={<ProfileSkeleton />}>
-      <ProfileData id={id} />
-    </Suspense>
+    <div className="py-2 sm:py-4 max-w-6xl mx-auto w-full">
+      <PageHeader
+        eyebrow="Cliente · Perfil"
+        size="large"
+        title="Perfil de cuenta"
+        description="Información de tu cuenta y resumen de actividad."
+      />
+      
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-5 lg:gap-6">
+        <Suspense fallback={<IdentityCardSkeleton />}>
+          <ProfileIdentityCard id={id} />
+        </Suspense>
+        
+        <Suspense fallback={<ProfileHistorySkeleton />}>
+          <ProfileHistory id={id} />
+        </Suspense>
+      </div>
+    </div>
   );
 }

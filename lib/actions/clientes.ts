@@ -43,7 +43,7 @@ export async function obtenerTodosLosClientes() {
         if (!usuarioClerk) return true; 
 
         // Si tiene usuario en Clerk, verificamos que su rol sea "cliente"
-        const rol = (usuarioClerk.publicMetadata as any)?.rol;
+        const rol = (usuarioClerk.publicMetadata as any)?.role;
         return rol === "rider";
     });
 
@@ -72,7 +72,7 @@ export async function crearCliente(mail: string, calificacion: number, nombre: s
         id_clerk
     });
     const c = await clerkClient();
-    await c.users.updateUser(id_clerk, { publicMetadata: { rol: "rider" } });
+    await c.users.updateUser(id_clerk, { publicMetadata: { role: "rider" } });
     return serializeCliente(cliente);
 }
 

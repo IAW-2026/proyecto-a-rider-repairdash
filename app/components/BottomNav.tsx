@@ -2,12 +2,21 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Home, Briefcase, User, Tag } from "lucide-react";
+import { cn } from "@/app/components/ui";
 
-const NAV_ITEMS = [
-  { label: "Inicio",      icon: "🏠", href: (id: string) => `/user/${id}/menu`       },
-  { label: "Mis viajes",  icon: "🗂️", href: (id: string) => `/user/${id}/travels`    },
-  { label: "Perfil",      icon: "👤", href: (id: string) => `/user/${id}/profile`     },
-  { label: "Promo",       icon: "💰", href: (id: string) => `/user/${id}/promotions`  },
+type Item = {
+  label: string;
+  Icon: typeof Home;
+  href: (id: string) => string;
+  disabled?: boolean;
+};
+
+const NAV_ITEMS: Item[] = [
+  { label: "Inicio", Icon: Home, href: (id) => `/user/${id}/menu` },
+  { label: "Mis viajes", Icon: Briefcase, href: (id) => `/user/${id}/travels` },
+  { label: "Perfil", Icon: User, href: (id) => `/user/${id}/profile` },
+  { label: "Promos", Icon: Tag, href: (id) => `/mocks/promotions?id=${id}` },
 ];
 
 export default function BottomNav({ id }: { id: string }) {
@@ -15,48 +24,56 @@ export default function BottomNav({ id }: { id: string }) {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-[110] sm:hidden">
-      {/* Glassmorphism bar */}
-      <div className="bg-brand-surface/80 backdrop-blur-xl border-t border-brand-purple/30 shadow-[0_-4px_30px_#27103350]">
+      <div
+        className="bg-rd-bg/90 backdrop-blur-xl border-t border-rd-border-2"
+        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      >
         <ul className="flex items-stretch">
-          {NAV_ITEMS.map((item) => {
-            const href = item.href(id);
-            const isActive = pathname === href;
+          {NAV_ITEMS.map(({ label, Icon, href, disabled }) => {
+            const target = href(id);
+            const isActive = !disabled && pathname === target;
+            const content = (
+              <span
+                className={cn(
+                  "relative flex flex-col items-center justify-center gap-1 py-3 w-full transition-colors",
+                  isActive
+                    ? "text-rd-accent-soft"
+                    : disabled
+                      ? "text-rd-subtle"
+                      : "text-rd-muted hover:text-rd-text-2",
+                )}
+              >
+                {isActive && (
+                  <span className="absolute top-0 left-1/2 -translate-x-1/2 w-7 h-0.5 bg-rd-accent rounded-full" />
+                )}
+                <Icon size={20} strokeWidth={1.75} />
+                <span
+                  className="text-[10.5px] font-semibold"
+                  style={{ letterSpacing: "0.08em" }}
+                >
+                  {label}
+                </span>
+              </span>
+            );
 
             return (
-              <li key={item.label} className="flex-1">
-                <Link
-                  href={href}
-                  className={`relative flex flex-col items-center justify-center gap-1 py-3 w-full transition-all duration-200 active:scale-95 ${
-                    isActive ? "text-brand-accent" : "text-brand-purple/60"
-                  }`}
-                >
-                  {/* Indicador activo */}
-                  {isActive && (
-                    <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-brand-accent rounded-full shadow-[0_0_8px_#F500F1]" />
-                  )}
-
+              <li key={label} className="flex-1">
+                {disabled ? (
                   <span
-                    className={`text-2xl leading-none transition-transform duration-200 ${
-                      isActive ? "scale-110" : "scale-100"
-                    }`}
+                    aria-disabled
+                    className="cursor-not-allowed pointer-events-none block"
                   >
-                    {item.icon}
+                    {content}
                   </span>
-                  <span
-                    className={`text-[10px] font-bold uppercase tracking-widest ${
-                      isActive ? "text-brand-accent" : "text-brand-purple/50"
-                    }`}
-                  >
-                    {item.label}
-                  </span>
-                </Link>
+                ) : (
+                  <Link href={target} className="block">
+                    {content}
+                  </Link>
+                )}
               </li>
             );
           })}
         </ul>
-
-        {/* Safe area para iPhone */}
-        <div className="h-safe-bottom bg-transparent" style={{ height: "env(safe-area-inset-bottom)" }} />
       </div>
     </nav>
   );

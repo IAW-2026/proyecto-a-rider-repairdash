@@ -1,193 +1,361 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { eliminarClienteCompleto } from "@/lib/actions/clientes";
 import Link from "next/link";
 import { toast } from "sonner";
+import { Briefcase, Edit, Trash2, Loader2 } from "lucide-react";
+import { eliminarClienteCompleto } from "@/lib/actions/clientes";
 import { supabaseBrowser } from "@/lib/supabaseClient";
+import { Avatar, Pill, Stars, cn } from "@/app/components/ui";
 
 interface Client {
-    id_cliente: number;
-    nombre: string | null;
-    apellido: string | null;
-    mail: string;
-    id_clerk: string | null;
-    calificacion: number | null;
+  id_cliente: number;
+  nombre: string | null;
+  apellido: string | null;
+  mail: string;
+  id_clerk: string | null;
+  calificacion: number | null;
 }
 
-export default function ClientList({ initialClients }: { initialClients: Client[] }) {
-    const [clients, setClients] = useState(initialClients);
-    const [search, setSearch] = useState("");
-    const [deletingId, setDeletingId] = useState<number | null>(null);
+export default function ClientList({
+  initialClients,
+}: {
+  initialClients: Client[];
+}) {
+  const [clients, setClients] = useState(initialClients);
+  const [search, setSearch] = useState("");
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 15;
 
-    // Sincronizar si el server component recarga initialClients
-    useEffect(() => {
-        setClients(initialClients);
-    }, [initialClients]);
+  useEffect(() => {
+    setClients(initialClients);
+  }, [initialClients]);
 
-    // Supabase Realtime: tabla cliente
-    useEffect(() => {
-        const channel = supabaseBrowser
-            .channel("admin-clientes")
-            .on(
-                "postgres_changes",
-                { event: "*", schema: "public", table: "cliente" },
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (payload: any) => {
-                    const { eventType, new: newRow, old: oldRow } = payload;
-                    if (eventType === "INSERT") {
-                        const nuevo = newRow as Client;
-                        setClients((prev) =>
-                            prev.some((c) => c.id_cliente === nuevo.id_cliente)
-                                ? prev
-                                : [nuevo, ...prev]
-                        );
-                    } else if (eventType === "UPDATE") {
-                        const actualizado = newRow as Client;
-                        setClients((prev) =>
-                            prev.map((c) =>
-                                c.id_cliente === actualizado.id_cliente ? actualizado : c
-                            )
-                        );
-                    } else if (eventType === "DELETE") {
-                        const eliminado = oldRow as { id_cliente: number };
-                        setClients((prev) =>
-                            prev.filter((c) => c.id_cliente !== eliminado.id_cliente)
-                        );
-                    }
-                }
-            )
-            .subscribe();
+  useEffect(() => {
+    const channel = supabaseBrowser
+      .channel("admin-clientes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "cliente" },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (payload: any) => {
+          const { eventType, new: newRow, old: oldRow } = payload;
+          if (eventType === "INSERT") {
+            const nuevo = newRow as Client;
+            setClients((prev) =>
+              prev.some((c) => c.id_cliente === nuevo.id_cliente)
+                ? prev
+                : [nuevo, ...prev],
+            );
+          } else if (eventType === "UPDATE") {
+            const actualizado = newRow as Client;
+            setClients((prev) =>
+              prev.map((c) =>
+                c.id_cliente === actualizado.id_cliente ? actualizado : c,
+              ),
+            );
+          } else if (eventType === "DELETE") {
+            const eliminado = oldRow as { id_cliente: number };
+            setClients((prev) =>
+              prev.filter((c) => c.id_cliente !== eliminado.id_cliente),
+            );
+          }
+        },
+      )
+      .subscribe();
 
-        return () => {
-            supabaseBrowser.removeChannel(channel);
-        };
-    }, []);
-
-    const filteredClients = clients.filter(c =>
-        (c.nombre?.toLowerCase() || "").includes(search.toLowerCase()) ||
-        (c.apellido?.toLowerCase() || "").includes(search.toLowerCase()) ||
-        c.mail.toLowerCase().includes(search.toLowerCase())
-    );
-
-    const executeDelete = async (id: number, clerkId?: string | null) => {
-        setDeletingId(id);
-        const promise = eliminarClienteCompleto(id, clerkId);
-        
-        toast.promise(promise, {
-            loading: 'Eliminando cliente...',
-            success: () => {
-                setClients(prev => prev.filter(c => c.id_cliente !== id));
-                setDeletingId(null);
-                return 'Cliente eliminado correctamente de la base de datos y Clerk';
-            },
-            error: () => {
-                setDeletingId(null);
-                return 'No se pudo eliminar al cliente.';
-            },
-        });
+    return () => {
+      supabaseBrowser.removeChannel(channel);
     };
+  }, []);
 
-    const confirmDelete = (id: number, nombre: string, clerkId?: string | null) => {
-        toast(`¿Eliminar a ${nombre}?`, {
-            description: "Esta acción borrará todos sus viajes y su cuenta de acceso de forma permanente.",
-            action: {
-                label: "Confirmar Borrado",
-                onClick: () => executeDelete(id, clerkId),
-            },
-            cancel: {
-                label: "Cancelar",
-                onClick: () => {},
-            },
-            duration: 10000,
-            className: "border-red-500/20 bg-brand-surface",
-        });
-    };
-    
-    return (
-        <div className="w-full space-y-10">
-            {/* Buscador Rectangular */}
-            <div className="relative w-full">
-                <input
-                    type="text"
-                    placeholder="Filtrar por nombre o email..."
-                    className="w-full bg-transparent border-b-2 border-brand-purple/20 px-4 py-6 text-2xl font-medium text-brand-text placeholder-brand-muted/30 focus:outline-none focus:border-brand-accent transition-all tabular-nums"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
-            </div>
+  const filteredClients = clients.filter(
+    (c) =>
+      (c.nombre?.toLowerCase() || "").includes(search.toLowerCase()) ||
+      (c.apellido?.toLowerCase() || "").includes(search.toLowerCase()) ||
+      c.mail.toLowerCase().includes(search.toLowerCase()),
+  );
 
-            {/* Listado Rectangular - Sin globos */}
-            <div className="grid grid-cols-1 gap-1">
-                {filteredClients.map((cliente) => (
-                    <div 
-                        key={cliente.id_cliente}
-                        className="group flex flex-col lg:flex-row lg:items-center justify-between gap-8 py-10 border-b border-brand-purple/10 hover:bg-brand-accent/5 px-4 transition-all duration-300"
-                    >
-                        <div className="flex items-center gap-8">
-                            <div className="w-20 h-20 bg-brand-surface border border-brand-purple/30 flex items-center justify-center text-3xl font-black text-brand-accent shadow-2xl relative">
-                                {cliente.nombre?.[0] || "👤"}
-                                <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-brand-accent border-4 border-brand-bg rounded-full shadow-[0_0_10px_#F500F1]" />
-                            </div>
-                            <div className="min-w-0">
-                                <h3 className="font-black text-3xl text-brand-text tracking-tighter uppercase">
-                                    {cliente.nombre} {cliente.apellido}
-                                </h3>
-                                <p className="text-lg text-brand-muted font-medium mb-4">{cliente.mail}</p>
-                                <div className="flex flex-wrap gap-3">
-                                    {cliente.id_clerk && (
-                                        <span className="text-[10px] font-black bg-brand-accent/10 text-brand-accent px-3 py-1 border border-brand-accent/20 tracking-widest uppercase">
-                                            CLERK • ACTIVE
-                                        </span>
-                                    )}
-                                    <span className="text-[10px] font-black bg-brand-purple/10 text-brand-lavender px-3 py-1 border border-brand-purple/20 tracking-widest uppercase">
-                                        ID: {cliente.id_cliente}
-                                    </span>
-                                    <span className="text-[10px] font-black bg-brand-bg text-brand-text px-3 py-1 border border-brand-purple/20 tracking-widest uppercase">
-                                        ⭐ {Number(cliente.calificacion || 0).toFixed(1)}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search]);
 
-                        <div className="flex flex-wrap items-center gap-4">
-                            {/* Botón Viajes */}
-                            <Link 
-                                href={`/admin/clientes/${cliente.id_cliente}/viajes`}
-                                className="h-10 px-5 bg-brand-surface border border-brand-purple/20 text-brand-text text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-brand-purple/20 hover:border-brand-accent transition-all group-hover:scale-105 shadow-lg"
-                            >
-                                <span>🚕</span>
-                                <span>Viajes</span>
-                            </Link>
+  const totalPages = Math.ceil(filteredClients.length / itemsPerPage);
+  const paginatedClients = filteredClients.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
-                            {/* Botón Editar */}
-                            <Link 
-                                href={`/admin/clientes/${cliente.id_cliente}/edit`}
-                                className="h-10 px-5 bg-brand-surface border border-brand-purple/20 text-brand-text text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-brand-purple/20 hover:border-brand-accent transition-all group-hover:scale-105 shadow-lg"
-                            >
-                                <span>✏️</span>
-                                <span>Editar</span>
-                            </Link>
+  const executeDelete = async (id: number, clerkId?: string | null) => {
+    setDeletingId(id);
+    const promise = eliminarClienteCompleto(id, clerkId);
 
-                            {/* Botón Eliminar */}
-                            <button 
-                                onClick={() => confirmDelete(cliente.id_cliente, cliente.nombre || "este cliente", cliente.id_clerk)}
-                                disabled={deletingId === cliente.id_cliente}
-                                className="h-10 px-5 bg-red-500/5 border border-red-500/20 text-red-500 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-red-500/20 transition-all group-hover:scale-105 shadow-lg"
-                            >
-                                <span>{deletingId === cliente.id_cliente ? "⏳" : "🗑️"}</span>
-                                <span>Eliminar</span>
-                            </button>
-                        </div>
-                    </div>
-                ))}
+    toast.promise(promise, {
+      loading: "Eliminando cliente…",
+      success: () => {
+        setClients((prev) => prev.filter((c) => c.id_cliente !== id));
+        setDeletingId(null);
+        return "Cliente eliminado correctamente de la base de datos y Clerk";
+      },
+      error: () => {
+        setDeletingId(null);
+        return "No se pudo eliminar al cliente.";
+      },
+    });
+  };
 
-                {filteredClients.length === 0 && (
-                    <div className="text-center py-32 border-2 border-dashed border-brand-purple/10">
-                        <p className="text-brand-muted text-2xl font-black uppercase tracking-widest opacity-30">Sin resultados</p>
-                    </div>
-                )}
-            </div>
+  const confirmDelete = (
+    id: number,
+    nombre: string,
+    clerkId?: string | null,
+  ) => {
+    toast(`¿Eliminar a ${nombre}?`, {
+      description:
+        "Esta acción borrará todos sus viajes y su cuenta de acceso de forma permanente.",
+      action: {
+        label: "Confirmar",
+        onClick: () => executeDelete(id, clerkId),
+      },
+      cancel: { label: "Cancelar", onClick: () => {} },
+      duration: 10000,
+    });
+  };
+
+  return (
+    <div className="w-full">
+      {/* Search bar */}
+      <div className="flex flex-wrap items-center gap-3 mb-5">
+        <div className="flex-1 max-w-md min-w-[240px]">
+          <input
+            type="text"
+            placeholder="Filtrar por nombre o email…"
+            className="w-full px-3.5 py-2.5 rounded-xl text-sm bg-rd-inset border border-rd-border-2 text-rd-text placeholder:text-rd-subtle focus:border-rd-accent focus:bg-rd-bg focus:outline-none transition-colors"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
-    );
+        <Pill tone="mute">{filteredClients.length} resultados</Pill>
+      </div>
+
+      {/* Desktop / tablet: tabla */}
+      <div className="hidden md:block rounded-2xl overflow-hidden border border-rd-border bg-rd-surface">
+        <table className="w-full border-collapse">
+          <thead className="bg-rd-bg-2">
+            <tr>
+              {["Cliente", "Email", "Estado", "Calificación", "ID", ""].map(
+                (h) => (
+                  <th
+                    key={h}
+                    className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-[0.14em] text-rd-muted"
+                  >
+                    {h}
+                  </th>
+                ),
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {paginatedClients.map((c) => {
+              const fullName = `${c.nombre ?? ""} ${c.apellido ?? ""}`.trim();
+              return (
+                <tr
+                  key={c.id_cliente}
+                  className="border-b border-rd-border last:border-b-0 hover:bg-rd-elevated/40 transition-colors"
+                >
+                  <td className="px-4 py-3.5">
+                    <div className="flex items-center gap-3">
+                      <Avatar name={fullName || "Cliente"} size={36} online={!!c.id_clerk} />
+                      <div className="min-w-0">
+                        <div className="font-semibold text-[13.5px] text-rd-text truncate">
+                          {fullName || "Sin nombre"}
+                        </div>
+                        <div className="font-mono-rd text-[11px] text-rd-muted">
+                          cliente · activo
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3.5 text-sm text-rd-text-2 truncate max-w-xs">
+                    {c.mail}
+                  </td>
+                  <td className="px-4 py-3.5">
+                    {c.id_clerk ? (
+                      <Pill tone="ok" dot>
+                        Clerk activo
+                      </Pill>
+                    ) : (
+                      <Pill tone="warn" dot>
+                        Sin sync
+                      </Pill>
+                    )}
+                  </td>
+                  <td className="px-4 py-3.5">
+                    <div className="flex items-center gap-2">
+                      <Stars value={Number(c.calificacion ?? 0)} size={12} />
+                      <span className="tabular-rd text-[12.5px] text-rd-text-2">
+                        {Number(c.calificacion ?? 0).toFixed(1)}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3.5 font-mono-rd text-[11.5px] text-rd-muted">
+                    #{c.id_cliente}
+                  </td>
+                  <td className="px-4 py-3.5">
+                    <div className="flex justify-end gap-1.5">
+                      <Link
+                        href={`/admin/clientes/${c.id_cliente}/viajes`}
+                        className="inline-flex items-center gap-1 h-8 px-2.5 rounded-lg text-[11px] font-semibold bg-rd-elevated text-rd-text-2 hover:bg-rd-surface hover:text-rd-text border border-rd-border-2 transition-colors"
+                      >
+                        <Briefcase size={13} strokeWidth={1.75} />
+                        Viajes
+                      </Link>
+                      <Link
+                        href={`/admin/clientes/${c.id_cliente}/edit`}
+                        className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-rd-elevated text-rd-text-2 hover:bg-rd-surface hover:text-rd-text border border-rd-border-2 transition-colors"
+                        aria-label="Editar"
+                      >
+                        <Edit size={13} strokeWidth={1.75} />
+                      </Link>
+                      <button
+                        onClick={() =>
+                          confirmDelete(
+                            c.id_cliente,
+                            fullName || "este cliente",
+                            c.id_clerk,
+                          )
+                        }
+                        disabled={deletingId === c.id_cliente}
+                        className={cn(
+                          "inline-flex items-center justify-center w-8 h-8 rounded-lg border transition-colors",
+                          "bg-rd-danger-bg border-rd-danger/30 text-rd-danger hover:border-rd-danger/50 disabled:opacity-50 disabled:cursor-not-allowed",
+                        )}
+                        aria-label="Eliminar"
+                      >
+                        {deletingId === c.id_cliente ? (
+                          <Loader2
+                            size={13}
+                            strokeWidth={2}
+                            className="animate-spin"
+                          />
+                        ) : (
+                          <Trash2 size={13} strokeWidth={1.75} />
+                        )}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        {paginatedClients.length === 0 && (
+          <div className="py-16 text-center text-sm text-rd-muted">
+            Sin resultados
+          </div>
+        )}
+      </div>
+
+      {/* Mobile: cards */}
+      <div className="md:hidden flex flex-col gap-2">
+        {paginatedClients.map((c) => {
+          const fullName = `${c.nombre ?? ""} ${c.apellido ?? ""}`.trim();
+          return (
+            <div
+              key={c.id_cliente}
+              className="rounded-xl p-4 bg-rd-surface border border-rd-border"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <Avatar name={fullName || "Cliente"} size={40} online={!!c.id_clerk} />
+                <div className="min-w-0 flex-1">
+                  <div className="font-bold text-sm text-rd-text truncate">
+                    {fullName || "Sin nombre"}
+                  </div>
+                  <div className="text-[11.5px] text-rd-muted truncate">
+                    {c.mail}
+                  </div>
+                </div>
+                <span className="font-mono-rd text-[10.5px] text-rd-muted">
+                  #{c.id_cliente}
+                </span>
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5">
+                {c.id_clerk ? (
+                  <Pill tone="ok" size="sm">
+                    Clerk
+                  </Pill>
+                ) : (
+                  <Pill tone="warn" size="sm">
+                    Sin sync
+                  </Pill>
+                )}
+                <Pill tone="mute" size="sm">
+                  ★ {Number(c.calificacion ?? 0).toFixed(1)}
+                </Pill>
+              </div>
+              <div className="flex gap-1.5 mt-3">
+                <Link
+                  href={`/admin/clientes/${c.id_cliente}/viajes`}
+                  className="flex-1 inline-flex items-center justify-center gap-1 h-9 rounded-lg text-xs font-semibold bg-rd-elevated text-rd-text-2 border border-rd-border-2"
+                >
+                  <Briefcase size={13} strokeWidth={1.75} /> Viajes
+                </Link>
+                <Link
+                  href={`/admin/clientes/${c.id_cliente}/edit`}
+                  className="flex-1 inline-flex items-center justify-center gap-1 h-9 rounded-lg text-xs font-semibold bg-rd-elevated text-rd-text-2 border border-rd-border-2"
+                >
+                  <Edit size={13} strokeWidth={1.75} /> Editar
+                </Link>
+                <button
+                  onClick={() =>
+                    confirmDelete(
+                      c.id_cliente,
+                      fullName || "este cliente",
+                      c.id_clerk,
+                    )
+                  }
+                  disabled={deletingId === c.id_cliente}
+                  className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-rd-danger-bg border border-rd-danger/30 text-rd-danger"
+                  aria-label="Eliminar"
+                >
+                  {deletingId === c.id_cliente ? (
+                    <Loader2 size={13} strokeWidth={2} className="animate-spin" />
+                  ) : (
+                    <Trash2 size={13} strokeWidth={1.75} />
+                  )}
+                </button>
+              </div>
+            </div>
+          );
+        })}
+        {paginatedClients.length === 0 && (
+          <div className="py-12 text-center text-sm text-rd-muted">
+            Sin resultados
+          </div>
+        )}
+      </div>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between py-4 px-2 mt-4">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 text-sm font-semibold text-rd-text-2 disabled:opacity-50 transition-opacity"
+          >
+            ← Anterior
+          </button>
+          <span className="text-sm text-rd-muted">
+            Página {currentPage} de {totalPages}
+          </span>
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 text-sm font-semibold text-rd-text-2 disabled:opacity-50 transition-opacity"
+          >
+            Siguiente →
+          </button>
+        </div>
+      )}
+    </div>
+  );
 }

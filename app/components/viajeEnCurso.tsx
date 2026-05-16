@@ -1,35 +1,76 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+import {
+  Search,
+  User,
+  Truck,
+  MapPin,
+  Check,
+  CheckCircle2,
+  XCircle,
+  Sparkles,
+} from "lucide-react";
 import BotonConformidad from "./BotonConformidad";
 import BotonDisconformidad from "./BotonDisconformidad";
 import BotonAceptarCancelacion from "./BotonAceptarCancelacion";
+import { Pill } from "@/app/components/ui";
 import { supabaseBrowser } from "@/lib/supabaseClient";
 
-const STEPS = [
-  { id: "pendiente",  label: "Buscando técnico",  icon: "🔍", description: "Estamos buscando al mejor profesional para tu solicitud." },
-  { id: "aceptado",   label: "Técnico asignado",  icon: "👷", description: "Un profesional ha aceptado tu solicitud y está en camino." },
-  { id: "en camino",  label: "En camino",          icon: "🚗", description: "El técnico se dirige a tu ubicación ahora mismo." },
-  { id: "ha llegado", label: "En tu puerta",       icon: "📍", description: "¡El técnico ha llegado y está listo para comenzar!" },
+type StepDef = {
+  id: "pendiente" | "aceptado" | "en camino" | "ha llegado";
+  label: string;
+  Icon: typeof Search;
+  description: string;
+};
+
+const STEPS: StepDef[] = [
+  {
+    id: "pendiente",
+    label: "Buscando técnico",
+    Icon: Search,
+    description: "Estamos buscando al mejor profesional para tu solicitud.",
+  },
+  {
+    id: "aceptado",
+    label: "Técnico asignado",
+    Icon: User,
+    description: "Un profesional aceptó tu solicitud y se está organizando.",
+  },
+  {
+    id: "en camino",
+    label: "En camino",
+    Icon: Truck,
+    description: "El técnico se dirige a tu ubicación ahora mismo.",
+  },
+  {
+    id: "ha llegado",
+    label: "En tu puerta",
+    Icon: MapPin,
+    description: "¡El técnico llegó y está listo para comenzar!",
+  },
 ];
 
-export default function ViajeEnCurso({ idViaje, idCliente, estadoInicial }: { idViaje: number, idCliente: number, estadoInicial: string }) {
-  const [estadoActual, setEstadoActual] = useState<string>(estadoInicial.toLowerCase());
+export default function ViajeEnCurso({
+  idViaje,
+  idCliente,
+  estadoInicial,
+}: {
+  idViaje: number;
+  idCliente: number;
+  estadoInicial: string;
+}) {
+  const [estadoActual, setEstadoActual] = useState<string>(
+    estadoInicial.toLowerCase(),
+  );
   const [pulse, setPulse] = useState(false);
-  // Ref para leer siempre el estado actual dentro del callback de Supabase
-  // sin necesitar estadoActual en las dependencias del useEffect.
   const estadoRef = useRef(estadoInicial.toLowerCase());
 
-  // Mantener ref sincronizado con el estado
   useEffect(() => {
     estadoRef.current = estadoActual;
   }, [estadoActual]);
 
   useEffect(() => {
-    // Canal creado UNA SOLA VEZ por idViaje.
-    // No usamos estadoActual en las dependencias para evitar que el canal
-    // se desmonte y remonte en cada cambio de estado (gap donde se pierden eventos).
     const channel = supabaseBrowser
       .channel(`viaje-${idViaje}`)
       .on(
@@ -41,18 +82,18 @@ export default function ViajeEnCurso({ idViaje, idCliente, estadoInicial }: { id
           filter: `id_viaje=eq.${idViaje}`,
         },
         (payload) => {
-          const nuevoEstado = (payload.new as { estado?: string }).estado?.toLowerCase();
+          const nuevoEstado = (
+            payload.new as { estado?: string }
+          ).estado?.toLowerCase();
           if (nuevoEstado) {
             setPulse(true);
             setTimeout(() => setPulse(false), 800);
             setEstadoActual(nuevoEstado);
           }
-        }
+        },
       )
       .subscribe(async (status) => {
         console.info(`[Realtime] viaje-${idViaje}: ${status}`);
-
-        // Al conectar, sincronizar por si hubo cambios mientras se establecía la conexión
         if (status === "SUBSCRIBED") {
           try {
             const { data } = await supabaseBrowser
@@ -63,7 +104,9 @@ export default function ViajeEnCurso({ idViaje, idCliente, estadoInicial }: { id
 
             const estadoDB = data?.estado?.toLowerCase();
             if (estadoDB && estadoDB !== estadoRef.current) {
-              console.info(`[Realtime] Sync al conectar: ${estadoRef.current} → ${estadoDB}`);
+              console.info(
+                `[Realtime] Sync al conectar: ${estadoRef.current} → ${estadoDB}`,
+              );
               setEstadoActual(estadoDB);
             }
           } catch (e) {
@@ -75,143 +118,167 @@ export default function ViajeEnCurso({ idViaje, idCliente, estadoInicial }: { id
     return () => {
       supabaseBrowser.removeChannel(channel);
     };
-  }, [idViaje]); // ← solo se recrea si cambia el viaje
-
-
+  }, [idViaje]);
 
   if (estadoActual === "cancelado") {
     return (
-      <div className="w-full rounded-3xl p-8 bg-red-900/20 border border-red-500/40 flex flex-col items-center gap-5 text-center shadow-[0_0_40px_#ef444420] animate-[fadeIn_0.5s_ease-out]">
-        <div className="w-20 h-20 rounded-full bg-red-500/20 border border-red-500/40 flex items-center justify-center text-4xl animate-bounce">
-          ❌
+      <div className="w-full rounded-2xl p-6 sm:p-7 bg-gradient-to-b from-rd-danger-bg to-rd-surface border border-rd-danger/30 flex flex-col sm:flex-row sm:items-center gap-5">
+        <div className="w-14 h-14 shrink-0 rounded-xl bg-rd-danger-bg border border-rd-danger/40 grid place-items-center text-rd-danger">
+          <XCircle size={28} strokeWidth={1.75} />
         </div>
-        <div>
-          <h2 className="text-3xl font-extrabold text-red-400 tracking-tight">Servicio Cancelado</h2>
-          <p className="text-brand-text/70 text-sm mt-2 max-w-xs mx-auto">
-            Este servicio técnico ha sido cancelado y ya no está en curso.
+        <div className="flex-1 min-w-0">
+          <h2 className="text-xl font-bold text-rd-danger tracking-tight">
+            Servicio cancelado
+          </h2>
+          <p className="text-rd-muted text-sm mt-1 leading-relaxed">
+            Este servicio técnico fue cancelado y ya no está en curso.
           </p>
         </div>
-        <BotonAceptarCancelacion idViaje={idViaje} />
+        <div className="sm:w-auto w-full sm:min-w-[180px]">
+          <BotonAceptarCancelacion idViaje={idViaje} />
+        </div>
       </div>
     );
   }
 
-  if (estadoActual === "finalizado"){
-    
-
+  if (estadoActual === "finalizado") {
     return (
-
-      <div className="w-full rounded-3xl p-8 bg-green-900/20 border border-green-500/40 flex flex-col items-center gap-5 text-center shadow-[0_0_40px_#ef444420] animate-[fadeIn_0.5s_ease-out]">
-        <div className="w-20 h-20 rounded-full bg-green-500/20 border border-green-500/40 flex items-center justify-center text-4xl animate-bounce">
-          ✅
+      <div className="w-full rounded-2xl p-6 sm:p-7 bg-gradient-to-b from-rd-ok-bg to-rd-surface border border-rd-ok/30 flex flex-col sm:flex-row sm:items-center gap-5">
+        <div className="w-14 h-14 shrink-0 rounded-xl bg-rd-ok grid place-items-center text-[#0d2419]">
+          <CheckCircle2 size={28} strokeWidth={1.75} />
         </div>
-        <div>
-          <h2 className="text-3xl font-extrabold text-green-400 tracking-tight">Servicio Finalizado</h2>
-          <p className="text-brand-text/70 text-sm mt-2 max-w-xs mx-auto">
-            Este servicio técnico ha sido finalizado y ya no está en curso.
+        <div className="flex-1 min-w-0">
+          <h2 className="text-xl font-bold text-rd-ok tracking-tight">
+            Servicio finalizado
+          </h2>
+          <p className="text-rd-muted text-sm mt-1 leading-relaxed">
+            ¿Quedaste conforme con el trabajo? Confirmá para cerrar el servicio.
           </p>
         </div>
-        <BotonConformidad idViaje={idViaje} />
-        <BotonDisconformidad idViaje={idViaje} idCliente={idCliente}/>
+        <div className="flex flex-col gap-2 w-full sm:w-auto sm:min-w-[200px]">
+          <BotonConformidad idViaje={idViaje} />
+          <BotonDisconformidad idViaje={idViaje} idCliente={idCliente} />
+        </div>
       </div>
     );
   }
 
-  
   if (estadoActual === "concluido") {
     return (
-      <div className="w-full rounded-3xl p-8 bg-green-900/20 border border-green-500/40 flex flex-col items-center gap-5 text-center shadow-[0_0_40px_#10b98120] animate-[fadeIn_0.5s_ease-out]">
-        <div className="size-20 rounded-full bg-green-500/20 border border-green-500/40 flex items-center justify-center text-4xl">
-          🎉
+      <div className="w-full rounded-2xl p-6 sm:p-7 bg-gradient-to-b from-rd-ok-bg to-rd-surface border border-rd-ok/30 flex flex-col sm:flex-row sm:items-center gap-5">
+        <div className="w-14 h-14 shrink-0 rounded-xl bg-rd-ok/20 border border-rd-ok/40 grid place-items-center text-rd-ok">
+          <Sparkles size={26} strokeWidth={1.75} />
         </div>
-        <div>
-          <h2 className="text-3xl font-semibold text-green-400 tracking-tight">¡Gracias por confirmar!</h2>
-          <p className="text-brand-text/70 text-sm mt-2 max-w-xs mx-auto">
-            Actualizando tu historial...
+        <div className="flex-1 min-w-0">
+          <h2 className="text-xl font-bold text-rd-ok tracking-tight">
+            ¡Gracias por confirmar!
+          </h2>
+          <p className="text-rd-muted text-sm mt-1 leading-relaxed">
+            Actualizando tu historial…
           </p>
         </div>
       </div>
     );
   }
 
- 
   const currentIndex = STEPS.findIndex((s) => s.id === estadoActual);
   const activeIndex = currentIndex === -1 ? 0 : currentIndex;
   const totalSteps = STEPS.length;
-  const lineProgressPercentage = totalSteps > 1 ? (activeIndex / (totalSteps - 1)) * 100 : 0;
+  const lineProgressPercentage =
+    totalSteps > 1 ? (activeIndex / (totalSteps - 1)) * 100 : 0;
 
   return (
-    <div className={`w-full rounded-3xl p-6 sm:p-10 bg-brand-surface/80 border border-brand-purple/40 backdrop-blur-md shadow-[0_8px_48px_#8D62A520] transition-all duration-500 ${pulse ? "shadow-[0_8px_60px_#F500F150]" : ""}`}>
-
+    <div
+      className={`w-full rounded-2xl p-6 sm:p-7 bg-rd-surface border border-rd-border-2 transition-colors duration-300 ${
+        pulse ? "ring-2 ring-rd-accent/40" : ""
+      }`}
+    >
       {/* Header */}
-      <div className="flex items-center justify-between mb-10">
+      <div className="flex items-center justify-between mb-7">
         <div>
-          <h2 className="text-3xl font-extrabold text-brand-text tracking-tight">Estado del servicio</h2>
-          <p/>
+          <h2 className="text-xl sm:text-2xl font-bold text-rd-text tracking-tight">
+            Estado del servicio
+          </h2>
+          <p className="text-xs text-rd-muted mt-1">Seguimiento en vivo</p>
         </div>
-        {/* Indicador "en vivo" */}
-        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-brand-accent/10 border border-brand-accent/30">
-          <span className="w-1 h-1 rounded-full bg-brand-accent animate-ping inline-block" />
-          <span className="text-xs font-bold text-brand-accent uppercase tracking-widest">En vivo</span>
-        </div>
+        <Pill tone="accent" dot pulse>
+          En vivo
+        </Pill>
       </div>
 
       {/* Stepper */}
-      <div className="flex flex-col relative">
-        {/* Línea de fondo */}
-        <div className="absolute left-7 top-7 bottom-7 w-0.5 bg-brand-purple/20 rounded-full z-0" />
-
-        {/* Línea activa animada */}
+      <div className="relative pl-1">
         <div
-          className="absolute left-7 top-7 w-0.5 bg-gradient-to-b from-brand-accent to-brand-purple rounded-full z-0 transition-all duration-700 ease-out shadow-[0_0_10px_#F500F1]"
-          style={{ height: `calc(${lineProgressPercentage}% + 0.5px)` }}
+          className="absolute left-[25px] top-[26px] bottom-[26px] w-[2px] bg-rd-border-2 rounded-full z-0"
+          aria-hidden
+        />
+        <div
+          className="absolute left-[25px] top-[26px] w-[2px] rounded-full z-0 transition-[height] duration-500 ease-out bg-gradient-to-b from-rd-accent to-rd-purple"
+          style={{ height: `calc(${lineProgressPercentage}% - 6px)` }}
+          aria-hidden
         />
 
         {STEPS.map((step, index) => {
           const isCompleted = index < activeIndex;
-          const isCurrent   = index === activeIndex;
+          const isCurrent = index === activeIndex;
+          const Icon = step.Icon;
+          const isLast = index === STEPS.length - 1;
 
           return (
             <div
               key={step.id}
-              className="flex gap-6 relative z-10 mb-10 last:mb-0"
+              className={`flex gap-4 sm:gap-5 relative z-10 ${isLast ? "" : "mb-7"}`}
             >
-              {/* Círculo / Icono */}
               <div
-                className={`w-14 h-14 shrink-0 rounded-full flex items-center justify-center text-2xl transition-all duration-500 ${
+                className={`w-[50px] h-[50px] shrink-0 rounded-full grid place-items-center transition-all duration-300 border ${
                   isCurrent
-                    ? `bg-brand-accent shadow-[0_0_28px_#F500F190] scale-110 ring-4 ring-brand-bg ${pulse ? "animate-bounce" : ""}`
+                    ? "bg-rd-accent border-rd-accent text-white"
                     : isCompleted
-                    ? "bg-brand-lavender text-brand-bg scale-100 shadow-md"
-                    : "bg-brand-bg border border-brand-purple/30 text-brand-purple/30 scale-95"
+                      ? "bg-rd-elevated border-rd-border-3 text-rd-accent-soft"
+                      : "bg-rd-bg border-rd-border text-rd-subtle"
                 }`}
+                style={
+                  isCurrent
+                    ? {
+                        boxShadow:
+                          "0 0 0 5px var(--color-rd-bg), 0 0 0 6px var(--color-rd-accent-dim)",
+                      }
+                    : { boxShadow: "0 0 0 5px var(--color-rd-bg)" }
+                }
               >
-                {step.icon}
+                {isCompleted ? (
+                  <Check size={20} strokeWidth={2} />
+                ) : (
+                  <Icon size={20} strokeWidth={1.75} />
+                )}
               </div>
 
-              {/* Textos */}
-              <div className="flex flex-col justify-center gap-1">
-                <div className="flex items-center gap-3">
+              <div className="pt-1 flex flex-col gap-1">
+                <div className="flex items-center gap-2 flex-wrap">
                   <h3
-                    className={`text-xl font-bold transition-colors duration-300 ${
-                      isCurrent ? "text-brand-text" : isCompleted ? "text-brand-lavender" : "text-brand-purple/40"
+                    className={`text-[15px] font-bold transition-colors ${
+                      isCurrent
+                        ? "text-rd-text"
+                        : isCompleted
+                          ? "text-rd-text-2"
+                          : "text-rd-subtle"
                     }`}
                   >
                     {step.label}
                   </h3>
-                  {isCompleted && (
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-brand-lavender/20 text-brand-lavender border border-brand-lavender/30 font-semibold">
-                      Listo
-                    </span>
-                  )}
                   {isCurrent && (
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-brand-accent/20 text-brand-accent border border-brand-accent/40 font-semibold animate-pulse">
+                    <Pill tone="accent" size="sm">
                       Ahora
-                    </span>
+                    </Pill>
+                  )}
+                  {isCompleted && (
+                    <Pill tone="ok" size="sm">
+                      Listo
+                    </Pill>
                   )}
                 </div>
                 {isCurrent && (
-                  <p className="text-sm text-brand-muted leading-relaxed max-w-xs">
+                  <p className="text-xs text-rd-muted leading-relaxed max-w-xs">
                     {step.description}
                   </p>
                 )}
@@ -221,15 +288,17 @@ export default function ViajeEnCurso({ idViaje, idCliente, estadoInicial }: { id
         })}
       </div>
 
-      {/* Barra de progreso horizontal inferior */}
-      <div className="mt-10 pt-8 border-t border-brand-purple/20">
-        <div className="flex justify-between text-xs text-brand-muted mb-2 font-medium">
+      {/* Progress bar */}
+      <div className="mt-7 pt-5 border-t border-rd-border">
+        <div className="flex justify-between text-[11.5px] text-rd-muted mb-2 font-medium">
           <span>Progreso</span>
-          <span className="text-brand-accent font-bold">{Math.round(lineProgressPercentage)}%</span>
+          <span className="text-rd-accent-soft font-bold tabular-rd">
+            {Math.round(lineProgressPercentage)}%
+          </span>
         </div>
-        <div className="h-2 w-full bg-brand-bg rounded-full overflow-hidden">
+        <div className="h-1.5 w-full bg-rd-bg rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-brand-accent to-brand-purple rounded-full transition-all duration-700 ease-out shadow-[0_0_8px_#F500F1]"
+            className="h-full bg-gradient-to-r from-rd-accent to-rd-purple rounded-full transition-[width] duration-500 ease-out"
             style={{ width: `${lineProgressPercentage}%` }}
           />
         </div>
