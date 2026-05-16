@@ -53,7 +53,6 @@ export default function ViajesList({
   initialViajes,
   idCliente,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialViajes: any[];
   idCliente: number;
 }) {
@@ -74,7 +73,6 @@ export default function ViajesList({
           table: "viajes",
           filter: `id_cliente=eq.${idCliente}`,
         },
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (payload: any) => {
           const { eventType, new: newRow, old: oldRow } = payload;
           if (eventType === "INSERT") {
