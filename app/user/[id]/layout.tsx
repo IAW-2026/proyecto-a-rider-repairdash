@@ -49,7 +49,7 @@ export default async function Layout({
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0 sm:mr-[220px]">
-        <main className="pt-4 sm:pt-8 pb-24 sm:pb-10 flex-1 flex flex-col items-center">
+        <main className="pt-4 sm:pt-8 pb-[calc(5.5rem+env(safe-area-inset-bottom))] sm:pb-10 flex-1 flex flex-col items-center">
           <div className="w-full max-w-screen-xl px-4 sm:px-8">
             {children}
           </div>
