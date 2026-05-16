@@ -71,7 +71,7 @@ export async function nuevaUbicacion(formData: FormData) {
     }
   }
 
-  if (encontrado){
+  if (!encontrado){
 
   // 3. Guardar y redirigir
   await crearUbicacion(formData);

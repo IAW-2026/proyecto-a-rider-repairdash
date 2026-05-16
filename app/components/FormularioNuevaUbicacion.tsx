@@ -51,8 +51,7 @@ export default function FormularioNuevaUbicacion({ id }: { id: string }) {
               label="Ciudad"
               name="ciudad"
               required
-              placeholder="Ej. CABA, Argentina"
-              defaultValue="CABA, Argentina"
+              placeholder="Ej. CABA"
             />
           </div>
 
