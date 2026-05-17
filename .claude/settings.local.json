@@ -6,7 +6,32 @@
       "Bash(Select-Object -First 20)",
       "PowerShell(Test-Path *)",
       "PowerShell(Join-Path *)",
-      "Bash(pnpm build *)"
+      "Bash(pnpm build *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\proyecto-a-rider-repairdash\" -Directory)",
+      "Bash(Select-Object Name)",
+      "Bash(Get-ChildItem -Path \"C:\\\\proyecto-a-rider-repairdash\\\\app\\\\components\" -Recurse -File)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Sort-Object)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\proyecto-a-rider-repairdash\\\\app\\\\components\" -File | Where-Object { $_.Name -match '^[a-z]' } | Select-Object -ExpandProperty Name)",
+      "Bash(git -C \"c:/proyecto-a-rider-repairdash\" ls-files app/generated)",
+      "Bash(pnpm tsc *)",
+      "Bash(pnpm prisma *)",
+      "Bash(git rm *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "PowerShell(Get-Process | Where-Object { $_.ProcessName -match \"node|next\" } | Select-Object Id,ProcessName,Path)",
+      "PowerShell(git mv app/sing-in app/sign-in)",
+      "PowerShell(Rename-Item -Path \"app/sing-in\" -NewName \"sign-in\" -ErrorAction Stop 2>&1)",
+      "PowerShell($inner = Get-ChildItem \"app/sing-in\" -Directory; $inner | ForEach-Object { \"$\\($_.FullName\\) -> children: $\\(\\(Get-ChildItem $_.FullName -File\\).Name -join ', '\\)\" })",
+      "PowerShell($lock = Get-ChildItem \"app\\\\sing-in\" -Recurse -File -ErrorAction SilentlyContinue; foreach \\($f in $lock\\) { try { $s = [System.IO.File]::Open\\($f.FullName, 'Open', 'ReadWrite', 'None'\\); $s.Close\\(\\); \"FREE: $\\($f.Name\\)\" } catch { \"LOCKED: $\\($f.Name\\)\" } })",
+      "PowerShell(New-Item -ItemType Directory -Path \"app/sign-in\" -ErrorAction Stop)",
+      "PowerShell(\"Created app/sign-in\")",
+      "PowerShell(git mv \"app/sing-in/[[...sing-in]]\" \"app/sign-in/[[...sign-in]]\")",
+      "PowerShell(New-Item -ItemType Directory -Path \"app/sign-up\" -ErrorAction Stop)",
+      "PowerShell(git mv \"app/sing-up/[[...sing-up]]\" \"app/sign-up/[[...sign-up]]\")",
+      "PowerShell(\"Done\")",
+      "PowerShell(git add app/sign-in app/sign-up proxy.ts app/components/BotonLogIn.tsx)",
+      "PowerShell(git add -A)"
     ]
   }
 }
