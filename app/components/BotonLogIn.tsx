@@ -25,12 +25,12 @@ export default function BotonLogIn() {
     <div>
       <Show when="signed-out">
         <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
-          <Button onClick={() => router.push("/sing-in")} size="lg">
+          <Button onClick={() => router.push("/sign-in")} size="lg">
             <LogIn size={16} strokeWidth={1.75} />
             Ingresar
           </Button>
           <Button
-            onClick={() => router.push("/sing-up")}
+            onClick={() => router.push("/sign-up")}
             variant="secondary"
             size="lg"
           >
