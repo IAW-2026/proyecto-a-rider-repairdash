@@ -31,7 +31,19 @@
       "PowerShell(git mv \"app/sing-up/[[...sing-up]]\" \"app/sign-up/[[...sign-up]]\")",
       "PowerShell(\"Done\")",
       "PowerShell(git add app/sign-in app/sign-up proxy.ts app/components/BotonLogIn.tsx)",
-      "PowerShell(git add -A)"
+      "PowerShell(git add -A)",
+      "PowerShell(git add app/user lib/actions/distribuirFormulario.ts app/components)",
+      "PowerShell(git add app/user app/components README.md)",
+      "PowerShell(git add app/user app/components)",
+      "PowerShell(git add app/admin app/components)",
+      "PowerShell(New-Item -ItemType Directory -Path \"app/_components\" -ErrorAction Stop)",
+      "PowerShell(git mv \"app/components/botonIrAlMenu.tsx\" \"app/components/BotonIrAlMenu.tmp.tsx\")",
+      "PowerShell(git mv \"app/components/BotonIrAlMenu.tmp.tsx\" \"app/_components/BotonIrAlMenu.tsx\")",
+      "PowerShell(git mv \"app/components/BotonIrAlMenuAdmin.tsx\" \"app/_components/BotonIrAlMenuAdmin.tsx\")",
+      "PowerShell(git mv \"app/components/BotonLogIn.tsx\" \"app/_components/BotonIniciarSesion.tsx\")",
+      "PowerShell(git mv \"app/components/lazyProvisioning.tsx\" \"app/_components/ProvisioningPerezoso.tsx\")",
+      "PowerShell(git add app/_components app/page.tsx app/components)",
+      "PowerShell(git add app/components README.md)"
     ]
   }
 }
