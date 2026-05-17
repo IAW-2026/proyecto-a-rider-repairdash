@@ -1,4 +1,4 @@
-import FormularioNuevaUbicacion from "@/app/components/FormularioNuevaUbicacion";
+import FormularioNuevaUbicacion from "./_components/FormularioNuevaUbicacion";
 
 export default async function SolicitudNuevaUbicacion({params}: {params: Promise<{id: string}>}) {
   const { id } = await params;

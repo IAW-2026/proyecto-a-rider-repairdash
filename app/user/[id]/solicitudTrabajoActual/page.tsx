@@ -1,4 +1,4 @@
-import FormularioNuevoTrabajo from "@/app/components/FormularioNuevoTrabajo";
+import FormularioNuevoTrabajo from "./_components/FormularioNuevoTrabajo";
 import { getUbicacionesPorCliente } from "@/lib/actions/ubicacion";
 import { Suspense } from "react";
 import SolicitudTrabajoActualSkeleton from "@/app/components/skeletons/SolicitudTrabajoActualSkeleton";

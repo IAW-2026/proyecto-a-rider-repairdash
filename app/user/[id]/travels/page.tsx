@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
-import TablaViajes from "@/app/components/TablaViajes";
+import TablaViajes from "../_components/TablaViajes";
 import TravelsSkeleton from "@/app/components/skeletons/TravelsSkeleton";
 import { getViajesPaginadosCliente } from "@/lib/actions/viajes";
 import { PageHeader, Button, cn } from "@/app/components/ui";

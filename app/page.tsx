@@ -1,6 +1,6 @@
 import { Wrench, ShieldCheck, Activity, CheckCircle2 } from "lucide-react";
-import BotonLogIn from "./components/BotonLogIn";
-import Lazy from "./components/lazyProvisioning";
+import BotonIniciarSesion from "./_components/BotonIniciarSesion";
+import ProvisioningPerezoso from "./_components/ProvisioningPerezoso";
 import { Pill } from "./components/ui";
 
 export default function Home() {
@@ -17,7 +17,7 @@ export default function Home() {
       />
 
       <div className="relative z-10 flex flex-col items-center gap-8 px-6 text-center max-w-md w-full">
-        <Lazy />
+        <ProvisioningPerezoso />
 
         <div className="flex flex-col items-center gap-3">
           <div className="w-16 h-16 rounded-2xl grid place-items-center text-white bg-rd-accent">
@@ -43,7 +43,7 @@ export default function Home() {
           </p>
         </div>
 
-        <BotonLogIn />
+        <BotonIniciarSesion />
 
         <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-[11.5px] text-rd-muted">
           <span className="inline-flex items-center gap-1.5">

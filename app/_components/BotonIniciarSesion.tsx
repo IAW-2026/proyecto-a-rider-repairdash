@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import { Show, UserButton, useUser } from "@clerk/nextjs";
 import { LogIn, UserPlus, Loader2 } from "lucide-react";
 import { Button } from "@/app/components/ui";
-import BotonIrAlMenu from "./botonIrAlMenu";
+import BotonIrAlMenu from "./BotonIrAlMenu";
 import BotonIrAlMenuAdmin from "./BotonIrAlMenuAdmin";
 
-export default function BotonLogIn() {
+export default function BotonIniciarSesion() {
   const router = useRouter();
   const { user, isLoaded } = useUser();
   const metadata = user?.publicMetadata as { role?: string } | undefined;
@@ -25,12 +25,12 @@ export default function BotonLogIn() {
     <div>
       <Show when="signed-out">
         <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
-          <Button onClick={() => router.push("/sing-in")} size="lg">
+          <Button onClick={() => router.push("/sign-in")} size="lg">
             <LogIn size={16} strokeWidth={1.75} />
             Ingresar
           </Button>
           <Button
-            onClick={() => router.push("/sing-up")}
+            onClick={() => router.push("/sign-up")}
             variant="secondary"
             size="lg"
           >

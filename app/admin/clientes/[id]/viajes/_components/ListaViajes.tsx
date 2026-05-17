@@ -49,7 +49,7 @@ const fmtFecha = (f?: string | null) => {
   });
 };
 
-export default function ViajesList({
+export default function ListaViajes({
   initialViajes,
   idCliente,
 }: {

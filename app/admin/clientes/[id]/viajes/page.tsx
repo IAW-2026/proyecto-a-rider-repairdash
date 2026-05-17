@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ChevronLeft, Edit } from "lucide-react";
 import { getViajesCliente } from "@/lib/actions/viajes";
 import { getClienteID } from "@/lib/actions/clientes";
-import ViajesList from "@/app/components/ViajesList";
+import ListaViajes from "./_components/ListaViajes";
 import { PageHeader, Button, Avatar } from "@/app/components/ui";
 
 export default async function ClienteViajesPage({
@@ -57,7 +57,7 @@ export default async function ClienteViajesPage({
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-5 lg:gap-6">
-        <ViajesList initialViajes={viajes} idCliente={parseInt(id)} />
+        <ListaViajes initialViajes={viajes} idCliente={parseInt(id)} />
 
         <aside className="rounded-2xl p-5 sm:p-6 bg-rd-surface border border-rd-border h-fit">
           <div className="flex items-center gap-3.5">

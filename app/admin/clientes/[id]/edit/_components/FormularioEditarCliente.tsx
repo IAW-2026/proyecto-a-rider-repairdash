@@ -21,7 +21,7 @@ type Cliente = {
   calificacion?: number | string | null;
 };
 
-export default function EditClientForm({ cliente }: { cliente: Cliente }) {
+export default function FormularioEditarCliente({ cliente }: { cliente: Cliente }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -64,12 +64,6 @@ export default function EditClientForm({ cliente }: { cliente: Cliente }) {
         </p>
 
         <div className="w-full mt-5 pt-5 border-t border-rd-border-2 text-xs text-rd-muted">
-          <div className="flex justify-between py-1 items-center">
-            <span>id_clerk</span>
-            <span className="font-mono-rd text-rd-text-2 truncate max-w-[180px]">
-              {cliente.id_clerk ? cliente.id_clerk : "—"}
-            </span>
-          </div>
           <div className="flex justify-between py-1 items-center">
             <span>Calificación</span>
             <span className="inline-flex items-center gap-1.5 text-rd-text-2">
@@ -123,6 +117,13 @@ export default function EditClientForm({ cliente }: { cliente: Cliente }) {
             step={0.1}
             className="tabular-rd"
             value={formData.calificacion}
+            onKeyDown={(e) => {
+              if (["ArrowUp", "ArrowDown", "Tab", "Enter", "Backspace", "Delete"].includes(e.key)) {
+                return;
+              }
+              e.preventDefault();
+            }}
+            onPaste={(e) => e.preventDefault()}
             onChange={(e) =>
               setFormData({
                 ...formData,
@@ -140,16 +141,6 @@ export default function EditClientForm({ cliente }: { cliente: Cliente }) {
         </div>
 
         <hr className="border-rd-border-2" />
-
-        <div>
-          <h3 className="font-bold text-rd-text mb-1">Zona peligrosa</h3>
-          <p className="text-xs text-rd-muted mb-3">
-            Eliminar el cliente borra sus viajes, pagos, ubicaciones y
-            promociones en cascada. La eliminación se ejecuta desde el listado
-            principal.
-          </p>
-        </div>
-
         <div className="flex flex-col-reverse sm:flex-row gap-3 sm:justify-end">
           <Button
             type="button"
