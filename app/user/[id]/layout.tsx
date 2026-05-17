@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import MenuHamburguesa from "@/app/components/MenuHamburguesa";
-import BottomNav from "@/app/components/BottomNav";
+import MenuHamburguesa from "./_components/MenuHamburguesa";
+import BarraInferior from "./_components/BarraInferior";
 import { currentUser, auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { getClienteClerkID } from "@/lib/actions/clientes";
@@ -57,7 +57,7 @@ export default async function Layout({
       </div>
 
       {/* Bottom nav: solo en mobile */}
-      <BottomNav id={id} />
+      <BarraInferior id={id} />
     </div>
   );
 }

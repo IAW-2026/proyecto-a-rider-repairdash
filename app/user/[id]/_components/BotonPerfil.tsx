@@ -3,7 +3,7 @@
 import { User } from "lucide-react";
 import { NavLink } from "@/app/components/ui";
 
-export default function BotonProfile({
+export default function BotonPerfil({
   id,
   pathname,
 }: {

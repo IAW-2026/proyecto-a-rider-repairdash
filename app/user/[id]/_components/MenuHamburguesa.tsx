@@ -4,8 +4,8 @@ import { usePathname } from "next/navigation";
 import dynamic from "next/dynamic";
 import { Wrench } from "lucide-react";
 import BotonMenu from "./BotonMenu";
-import BotonProfile from "./BotonProfile";
-import BotonTravel from "./BotonTravel";
+import BotonPerfil from "./BotonPerfil";
+import BotonViajes from "./BotonViajes";
 import BotonDescuentos from "./BotonDescuentos";
 
 const LazyUserButton = dynamic(
@@ -59,10 +59,10 @@ export default function MenuHamburguesa({
             <BotonMenu id={id} pathname={pathname} />
           </li>
           <li>
-            <BotonTravel id={id} pathname={pathname} />
+            <BotonViajes id={id} pathname={pathname} />
           </li>
           <li>
-            <BotonProfile id={id} pathname={pathname} />
+            <BotonPerfil id={id} pathname={pathname} />
           </li>
           <li>
             <BotonDescuentos id={id} pathname={pathname} />

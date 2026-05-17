@@ -22,7 +22,7 @@ const NAV_ITEMS: Item[] = [
 
 const HIDE_THRESHOLD = 8;
 
-export default function BottomNav({ id }: { id: string }) {
+export default function BarraInferior({ id }: { id: string }) {
   const pathname = usePathname();
   const [hidden, setHidden] = useState(false);
   const lastYRef = useRef(0);
