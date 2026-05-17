@@ -1,5 +1,5 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@/app/generated/prisma/client";
+import { PrismaClient } from "@/lib/generated/prisma/client";
 
 // Singleton pattern to avoid multiple instances in development (hot-reload)
 const globalForPrisma = globalThis as unknown as {
