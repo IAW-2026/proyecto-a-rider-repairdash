@@ -2,7 +2,7 @@ import { UserButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { Wrench, Users } from "lucide-react";
-import AdminSideRailClient from "@/app/components/AdminSideRailClient";
+import BarraLateralAdmin from "./_components/BarraLateralAdmin";
 import { Pill } from "@/app/components/ui";
 
 const NAV = [
@@ -40,7 +40,7 @@ export default async function AdminLayout({
         </Link>
 
         <nav className="px-3 py-3 flex flex-col gap-1">
-          <AdminSideRailClient items={NAV.map((n) => ({ id: n.id, label: n.label, href: n.href }))} />
+          <BarraLateralAdmin items={NAV.map((n) => ({ id: n.id, label: n.label, href: n.href }))} />
         </nav>
       </aside>
 
@@ -48,7 +48,7 @@ export default async function AdminLayout({
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top bar */}
         <header className="h-16 border-b border-rd-border-2 px-4 sm:px-6 lg:px-8 flex items-center justify-between bg-rd-bg/60 backdrop-blur-md">
-          <AdminSideRailClient
+          <BarraLateralAdmin
             items={NAV.map((n) => ({ id: n.id, label: n.label, href: n.href }))}
             mobile
           />

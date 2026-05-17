@@ -17,7 +17,7 @@ interface Client {
   calificacion: number | null;
 }
 
-export default function ClientList({
+export default function ListaClientes({
   initialClients,
 }: {
   initialClients: Client[];

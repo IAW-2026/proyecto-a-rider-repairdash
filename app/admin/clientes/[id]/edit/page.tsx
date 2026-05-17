@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { getClienteID } from "@/lib/actions/clientes";
-import EditClientForm from "@/app/components/EditClientForm";
+import FormularioEditarCliente from "./_components/FormularioEditarCliente";
 import { PageHeader, Button } from "@/app/components/ui";
 
 export default async function EditClientePage({
@@ -44,7 +44,7 @@ export default async function EditClientePage({
         description={`${cliente.nombre ?? ""} ${cliente.apellido ?? ""}`.trim()}
       />
 
-      <EditClientForm cliente={cliente} />
+      <FormularioEditarCliente cliente={cliente} />
     </div>
   );
 }

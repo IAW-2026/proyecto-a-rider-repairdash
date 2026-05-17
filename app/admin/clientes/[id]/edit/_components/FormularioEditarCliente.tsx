@@ -21,7 +21,7 @@ type Cliente = {
   calificacion?: number | string | null;
 };
 
-export default function EditClientForm({ cliente }: { cliente: Cliente }) {
+export default function FormularioEditarCliente({ cliente }: { cliente: Cliente }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({

@@ -13,7 +13,7 @@ const iconFor = (id: string) => {
   return Users;
 };
 
-export default function AdminSideRailClient({
+export default function BarraLateralAdmin({
   items,
   mobile = false,
 }: {
