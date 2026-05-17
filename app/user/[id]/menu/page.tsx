@@ -10,8 +10,8 @@ import {
   Briefcase,
 } from "lucide-react";
 import { currentUser } from "@clerk/nextjs/server";
-import ViajeEnCurso from "@/app/components/viajeEnCurso";
-import BotonCancelarViaje from "@/app/components/BotonCancelarViaje";
+import ViajeEnCurso from "./_components/ViajeEnCurso";
+import BotonCancelarViaje from "./_components/BotonCancelarViaje";
 import MenuSkeleton from "@/app/components/skeletons/MenuSkeleton";
 import ActualizarEstadoViaje from "@/app/mocks/actualizarEstadoViaje";
 import { getViajesByClienteId } from "@/lib/queries/viajes";

@@ -17,7 +17,7 @@ interface Client {
   calificacion: number | null;
 }
 
-export default function ClientList({
+export default function ListaClientes({
   initialClients,
 }: {
   initialClients: Client[];
@@ -139,7 +139,7 @@ export default function ClientList({
       </div>
 
       {/* Desktop / tablet: tabla */}
-      <div className="hidden md:block rounded-2xl overflow-hidden border border-rd-border bg-rd-surface">
+      <div className="hidden md:block rounded-2x2 overflow-hidden border border-rd-border bg-rd-surface">
         <table className="w-full border-collapse">
           <thead className="bg-rd-bg-2">
             <tr>

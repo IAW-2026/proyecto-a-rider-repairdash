@@ -1,11 +1,11 @@
 import { Suspense } from "react";
 import { obtenerTodosLosClientes } from "@/lib/actions/clientes";
-import ClientList from "@/app/components/ClientList";
+import ListaClientes from "./_components/ListaClientes";
 import { PageHeader } from "@/app/components/ui";
 
 async function AdminClientsData() {
   const clientes = await obtenerTodosLosClientes();
-  return <ClientList initialClients={clientes} />;
+  return <ListaClientes initialClients={clientes} />;
 }
 
 export default function AdminPage() {

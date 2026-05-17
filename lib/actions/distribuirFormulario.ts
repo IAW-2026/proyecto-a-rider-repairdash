@@ -3,7 +3,7 @@
 import { nuevoTrabajo } from "@/lib/actions/nuevoTrabajo";
 import { redirect } from "next/navigation";
 
-export default async function DistribuirFormulario(formData: FormData): Promise<void> {
+export async function distribuirFormulario(formData: FormData): Promise<void> {
   const result = await nuevoTrabajo(formData);  
   const id_viaje = result.id_viaje;
   const id_cliente = result.id_cliente;

@@ -32,7 +32,7 @@ Se mantuvo una separación estricta entre el frontend y el backend dentro del en
 ### 3.2. Sincronización de Usuarios ("Lazy Provisioning")
 
 Aunque usamos Clerk para la autenticación, necesitamos guardar a los usuarios en nuestra propia base de datos (tabla `cliente`) para poder vincularlos con sus respectivos viajes y pagos.
-Para no forzar al usuario a llenar un formulario extra después de registrarse, implementamos un patrón de **"Lazy Provisioning"** (`app/components/lazyProvisioning.tsx`). Este componente sincroniza automáticamente los datos de Clerk con Prisma en segundo plano durante la primera visita del usuario, mostrando estados de carga para evitar saltos extraños en la interfaz visual.
+Para no forzar al usuario a llenar un formulario extra después de registrarse, implementamos un patrón de **"Lazy Provisioning"** (`app/_components/ProvisioningPerezoso.tsx`). Este componente sincroniza automáticamente los datos de Clerk con Prisma en segundo plano durante la primera visita del usuario, mostrando estados de carga para evitar saltos extraños en la interfaz visual.
 
 ### 3.3. Tiempo Real y Actualizaciones (Live Updates)
 

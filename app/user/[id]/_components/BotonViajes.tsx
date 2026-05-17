@@ -3,7 +3,7 @@
 import { Briefcase } from "lucide-react";
 import { NavLink } from "@/app/components/ui";
 
-export default function BotonTravel({
+export default function BotonViajes({
   id,
   pathname,
 }: {

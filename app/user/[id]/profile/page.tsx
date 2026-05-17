@@ -5,7 +5,7 @@ import { CreditCard, CheckCircle2 } from "lucide-react";
 import { currentUser } from "@clerk/nextjs/server";
 import { getClienteID } from "@/lib/actions/clientes";
 import { getViajesByClienteId } from "@/lib/queries/viajes";
-import TablaViajes from "@/app/components/TablaViajes";
+import TablaViajes from "../_components/TablaViajes";
 import IdentityCardSkeleton from "@/app/components/skeletons/IdentityCardSkeleton";
 import ProfileHistorySkeleton from "@/app/components/skeletons/ProfileHistorySkeleton";
 
