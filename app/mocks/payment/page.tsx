@@ -15,7 +15,7 @@ export default async function MockPaymentPage({ searchParams }: Props) {
   const redirectUrl = idCliente ? `/user/${idCliente}/menu` : "/";
 
   return (
-    <main className="relative min-h-screen bg-[#271033] flex items-center justify-center overflow-hidden">
+    <main className="relative min-h-screen bg-[#271033] flex items-center justify-center overflow-hidden px-safe-page">
 
       {/* ── Orbes de fondo ── */}
       <div className="pointer-events-none absolute inset-0">

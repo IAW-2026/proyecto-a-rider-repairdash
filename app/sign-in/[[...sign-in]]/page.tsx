@@ -32,7 +32,7 @@ const clerkAppearance = {
 
 export default function Page() {
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center py-12 px-safe-page sm:px-6 lg:px-8 relative overflow-hidden">
       <div
         aria-hidden
         className="absolute inset-0 overflow-hidden pointer-events-none z-0"

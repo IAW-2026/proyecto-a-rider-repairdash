@@ -8,7 +8,7 @@ export default async function FeedbackPage({
     const { id_cliente } = await searchParams;
 
     return (
-        <main className="min-h-screen bg-brand-bg text-brand-text flex items-center justify-center p-6">
+        <main className="min-h-screen bg-brand-bg text-brand-text flex items-center justify-center py-6 px-safe-page">
             <div className="w-full max-w-md flex flex-col items-center gap-10 text-center">
 
                 {/* Ícono animado */}

@@ -113,3 +113,10 @@ a { color: inherit; text-decoration: none; }
 
 .font-mono-rd { font-family: var(--font-mono); }
 .tabular-rd { font-variant-numeric: tabular-nums; }
+
+/* Padding lateral seguro para páginas standalone (sin layout user/admin).
+   Garantiza un mínimo de 20px + el inset del dispositivo (notch / curvatura). */
+.px-safe-page {
+  padding-left: max(1.25rem, env(safe-area-inset-left));
+  padding-right: max(1.25rem, env(safe-area-inset-right));
+}

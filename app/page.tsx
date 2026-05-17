@@ -16,7 +16,7 @@ export default function Home() {
         className="absolute -bottom-32 -right-32 w-[420px] h-[420px] rounded-full opacity-20 blur-[120px] pointer-events-none bg-rd-purple"
       />
 
-      <div className="relative z-10 flex flex-col items-center gap-8 px-6 text-center max-w-md w-full">
+      <div className="relative z-10 flex flex-col items-center gap-8 px-safe-page text-center max-w-md w-full">
         <ProvisioningPerezoso />
 
         <div className="flex flex-col items-center gap-3">
