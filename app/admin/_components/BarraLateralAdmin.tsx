@@ -50,6 +50,11 @@ export default function BarraLateralAdmin({
             "lg:hidden fixed inset-y-0 left-0 z-[100] w-72 bg-rd-bg-2 border-r border-rd-border-2 flex flex-col transform transition-transform duration-300",
             open ? "translate-x-0" : "-translate-x-full",
           )}
+          style={{
+            paddingLeft: "env(safe-area-inset-left)",
+            paddingTop: "env(safe-area-inset-top)",
+            paddingBottom: "env(safe-area-inset-bottom)",
+          }}
         >
           <div className="flex items-center justify-between px-4 pt-5 pb-5 border-b border-rd-border">
             <div className="flex items-center gap-2.5">
