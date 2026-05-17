@@ -47,7 +47,7 @@ export default async function AdminLayout({
       {/* Main column */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top bar */}
-        <header className="h-16 border-b border-rd-border-2 px-4 sm:px-6 lg:px-8 flex items-center justify-between bg-rd-bg/60 backdrop-blur-md">
+        <header className="h-16 border-b border-rd-border-2 pl-[max(1.25rem,env(safe-area-inset-left))] pr-[max(1.25rem,env(safe-area-inset-right))] sm:px-6 lg:px-8 flex items-center justify-between bg-rd-bg/60 backdrop-blur-md">
           <BarraLateralAdmin
             items={NAV.map((n) => ({ id: n.id, label: n.label, href: n.href }))}
             mobile
@@ -68,7 +68,7 @@ export default async function AdminLayout({
           </div>
         </header>
 
-        <main className="flex-1 px-4 sm:px-6 lg:px-9 py-6 lg:py-7">{children}</main>
+        <main className="flex-1 pl-[max(1.25rem,env(safe-area-inset-left))] pr-[max(1.25rem,env(safe-area-inset-right))] sm:px-6 lg:px-9 py-6 lg:py-7">{children}</main>
       </div>
     </div>
   );

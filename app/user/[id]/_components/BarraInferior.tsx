@@ -63,7 +63,11 @@ export default function BarraInferior({ id }: { id: string }) {
     >
       <div
         className="bg-rd-bg/90 backdrop-blur-xl border-t border-rd-border-2"
-        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+        style={{
+          paddingBottom: "env(safe-area-inset-bottom)",
+          paddingLeft: "env(safe-area-inset-left)",
+          paddingRight: "env(safe-area-inset-right)",
+        }}
       >
         <ul className="flex items-stretch">
           {NAV_ITEMS.map(({ label, Icon, href, disabled }) => {
