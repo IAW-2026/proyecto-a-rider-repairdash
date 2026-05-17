@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { PRECIOS, PrecioconDescuento } from "@/lib/services/pricing";
 import BotonAgregarDestino from "./BotonAgregarDestino";
-import DistribuirFormulario from "./DistribuirFormulario";
+import { distribuirFormulario } from "@/lib/actions/distribuirFormulario";
 import { PageHeader, Select, Textarea, Button, Pill } from "@/app/components/ui";
 
 type Ubicacion = {
@@ -90,7 +90,7 @@ export default function FormularioNuevoTrabajo({
 
       <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-5 lg:gap-6">
         <form
-          action={DistribuirFormulario}
+          action={distribuirFormulario}
           className="rounded-2xl p-5 sm:p-7 bg-rd-surface border border-rd-border-2 flex flex-col gap-5"
         >
           <input type="hidden" name="id" value={id} />
