@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import { Show, UserButton, useUser } from "@clerk/nextjs";
 import { LogIn, UserPlus, Loader2 } from "lucide-react";
 import { Button } from "@/app/components/ui";
-import BotonIrAlMenu from "./botonIrAlMenu";
+import BotonIrAlMenu from "./BotonIrAlMenu";
 import BotonIrAlMenuAdmin from "./BotonIrAlMenuAdmin";
 
-export default function BotonLogIn() {
+export default function BotonIniciarSesion() {
   const router = useRouter();
   const { user, isLoaded } = useUser();
   const metadata = user?.publicMetadata as { role?: string } | undefined;
