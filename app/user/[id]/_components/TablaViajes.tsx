@@ -56,13 +56,13 @@ export default function TablaViajes({ filas }: { filas: ViajeRow[] }) {
   }
 
   return (
-    <div className="rounded-xl border border-rd-border bg-rd-surface overflow-hidden">
+    <div className="border border-rd-border bg-rd-surface overflow-hidden">
       {/* Desktop / tablet: tabla con scroll horizontal cuando hace falta */}
       <div className="hidden sm:block w-full overflow-x-auto">
         <table className="w-full min-w-[860px] table-fixed border-collapse">
           <colgroup>
-            <col className="w-[34%]" />
-            <col className="w-[16%]" />
+            <col className="w-[26%]" />
+            <col className="w-[24%]" />
             <col className="w-[22%]" />
             <col className="w-[14%]" />
             <col className="w-[14%]" />
@@ -75,7 +75,7 @@ export default function TablaViajes({ filas }: { filas: ViajeRow[] }) {
                     key={h}
                     className={`py-4 text-left text-[11px] font-bold uppercase tracking-[0.14em] text-rd-muted whitespace-nowrap ${
                       i === 0
-                        ? "pl-8 lg:pl-10 pr-4"
+                        ? "pl-40 lg:pl-48 pr-4"
                         : i === 4
                           ? "pr-8 lg:pr-10 pl-4"
                           : "px-4 lg:px-5"

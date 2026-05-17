@@ -139,7 +139,7 @@ export default function ListaClientes({
       </div>
 
       {/* Desktop / tablet: tabla */}
-      <div className="hidden md:block rounded-2xl overflow-hidden border border-rd-border bg-rd-surface">
+      <div className="hidden md:block rounded-2x2 overflow-hidden border border-rd-border bg-rd-surface">
         <table className="w-full border-collapse">
           <thead className="bg-rd-bg-2">
             <tr>
