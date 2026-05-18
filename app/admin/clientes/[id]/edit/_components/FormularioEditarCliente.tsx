@@ -116,14 +116,7 @@ export default function FormularioEditarCliente({ cliente }: { cliente: Cliente 
             max={5}
             step={0.1}
             className="tabular-rd"
-            value={formData.calificacion}
-            onKeyDown={(e) => {
-              if (["ArrowUp", "ArrowDown", "Tab", "Enter", "Backspace", "Delete"].includes(e.key)) {
-                return;
-              }
-              e.preventDefault();
-            }}
-            onPaste={(e) => e.preventDefault()}
+            value={formData.calificacion === 0 ? "" : formData.calificacion}
             onChange={(e) =>
               setFormData({
                 ...formData,
