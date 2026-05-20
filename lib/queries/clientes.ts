@@ -30,7 +30,6 @@ export async function getClienteConRelaciones(id: number) {
     include: {
       viajes: true,
       ubicacion: true,
-      promociones: true,
     },
   });
 }
