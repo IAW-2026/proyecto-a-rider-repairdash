@@ -53,7 +53,6 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   cliente: 'cliente',
   pagos: 'pagos',
-  promociones: 'promociones',
   ubicacion: 'ubicacion',
   viajes: 'viajes'
 } as const
@@ -94,15 +93,6 @@ export const PagosScalarFieldEnum = {
 } as const
 
 export type PagosScalarFieldEnum = (typeof PagosScalarFieldEnum)[keyof typeof PagosScalarFieldEnum]
-
-
-export const PromocionesScalarFieldEnum = {
-  id_promocion: 'id_promocion',
-  id_cliente: 'id_cliente',
-  codigo_descuento: 'codigo_descuento'
-} as const
-
-export type PromocionesScalarFieldEnum = (typeof PromocionesScalarFieldEnum)[keyof typeof PromocionesScalarFieldEnum]
 
 
 export const UbicacionScalarFieldEnum = {

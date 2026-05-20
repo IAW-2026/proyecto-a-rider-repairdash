@@ -17,7 +17,7 @@ export default function AdminPage() {
         title="Panel de clientes"
         description="Visualización completa de usuarios con rol de cliente."
       />
-      <Suspense fallback={<div className="py-12 text-center text-sm text-rd-muted animate-pulse">Cargando base de datos...</div>}>
+      <Suspense fallback={<div className="py-12 text-center text-sm text-rd-muted animate-pulse">Cargando clientes....</div>}>
         <AdminClientsData />
       </Suspense>
     </div>

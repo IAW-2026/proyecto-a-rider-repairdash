@@ -15,7 +15,6 @@ model cliente {
   nombre       String?       @db.VarChar
   apellido     String?       @db.VarChar
   id_clerk     String?       @unique @db.VarChar
-  promociones  promociones[]
   ubicacion    ubicacion[]
   viajes       viajes[]
 }
@@ -27,14 +26,6 @@ model pagos {
   monto    Decimal @db.Decimal(10, 2)
   estado   String? @db.VarChar
   viajes   viajes? @relation(fields: [id_viaje], references: [id_viaje], onDelete: Cascade, onUpdate: NoAction)
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model promociones {
-  id_promocion     Int      @id @default(autoincrement())
-  id_cliente       Int?
-  codigo_descuento String   @db.VarChar(50)
-  cliente          cliente? @relation(fields: [id_cliente], references: [id_cliente], onDelete: Cascade, onUpdate: NoAction)
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.

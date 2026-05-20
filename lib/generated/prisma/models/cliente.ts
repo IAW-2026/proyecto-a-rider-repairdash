@@ -228,7 +228,6 @@ export type clienteWhereInput = {
   nombre?: Prisma.StringNullableFilter<"cliente"> | string | null
   apellido?: Prisma.StringNullableFilter<"cliente"> | string | null
   id_clerk?: Prisma.StringNullableFilter<"cliente"> | string | null
-  promociones?: Prisma.PromocionesListRelationFilter
   ubicacion?: Prisma.UbicacionListRelationFilter
   viajes?: Prisma.ViajesListRelationFilter
 }
@@ -240,7 +239,6 @@ export type clienteOrderByWithRelationInput = {
   nombre?: Prisma.SortOrderInput | Prisma.SortOrder
   apellido?: Prisma.SortOrderInput | Prisma.SortOrder
   id_clerk?: Prisma.SortOrderInput | Prisma.SortOrder
-  promociones?: Prisma.promocionesOrderByRelationAggregateInput
   ubicacion?: Prisma.ubicacionOrderByRelationAggregateInput
   viajes?: Prisma.viajesOrderByRelationAggregateInput
 }
@@ -255,7 +253,6 @@ export type clienteWhereUniqueInput = Prisma.AtLeast<{
   calificacion?: Prisma.DecimalNullableFilter<"cliente"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   nombre?: Prisma.StringNullableFilter<"cliente"> | string | null
   apellido?: Prisma.StringNullableFilter<"cliente"> | string | null
-  promociones?: Prisma.PromocionesListRelationFilter
   ubicacion?: Prisma.UbicacionListRelationFilter
   viajes?: Prisma.ViajesListRelationFilter
 }, "id_cliente" | "mail" | "id_clerk">
@@ -292,7 +289,6 @@ export type clienteCreateInput = {
   nombre?: string | null
   apellido?: string | null
   id_clerk?: string | null
-  promociones?: Prisma.promocionesCreateNestedManyWithoutClienteInput
   ubicacion?: Prisma.ubicacionCreateNestedManyWithoutClienteInput
   viajes?: Prisma.viajesCreateNestedManyWithoutClienteInput
 }
@@ -304,7 +300,6 @@ export type clienteUncheckedCreateInput = {
   nombre?: string | null
   apellido?: string | null
   id_clerk?: string | null
-  promociones?: Prisma.promocionesUncheckedCreateNestedManyWithoutClienteInput
   ubicacion?: Prisma.ubicacionUncheckedCreateNestedManyWithoutClienteInput
   viajes?: Prisma.viajesUncheckedCreateNestedManyWithoutClienteInput
 }
@@ -315,7 +310,6 @@ export type clienteUpdateInput = {
   nombre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apellido?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_clerk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  promociones?: Prisma.promocionesUpdateManyWithoutClienteNestedInput
   ubicacion?: Prisma.ubicacionUpdateManyWithoutClienteNestedInput
   viajes?: Prisma.viajesUpdateManyWithoutClienteNestedInput
 }
@@ -327,7 +321,6 @@ export type clienteUncheckedUpdateInput = {
   nombre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apellido?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_clerk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  promociones?: Prisma.promocionesUncheckedUpdateManyWithoutClienteNestedInput
   ubicacion?: Prisma.ubicacionUncheckedUpdateManyWithoutClienteNestedInput
   viajes?: Prisma.viajesUncheckedUpdateManyWithoutClienteNestedInput
 }
@@ -424,22 +417,6 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type clienteCreateNestedOneWithoutPromocionesInput = {
-  create?: Prisma.XOR<Prisma.clienteCreateWithoutPromocionesInput, Prisma.clienteUncheckedCreateWithoutPromocionesInput>
-  connectOrCreate?: Prisma.clienteCreateOrConnectWithoutPromocionesInput
-  connect?: Prisma.clienteWhereUniqueInput
-}
-
-export type clienteUpdateOneWithoutPromocionesNestedInput = {
-  create?: Prisma.XOR<Prisma.clienteCreateWithoutPromocionesInput, Prisma.clienteUncheckedCreateWithoutPromocionesInput>
-  connectOrCreate?: Prisma.clienteCreateOrConnectWithoutPromocionesInput
-  upsert?: Prisma.clienteUpsertWithoutPromocionesInput
-  disconnect?: Prisma.clienteWhereInput | boolean
-  delete?: Prisma.clienteWhereInput | boolean
-  connect?: Prisma.clienteWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.clienteUpdateToOneWithWhereWithoutPromocionesInput, Prisma.clienteUpdateWithoutPromocionesInput>, Prisma.clienteUncheckedUpdateWithoutPromocionesInput>
-}
-
 export type clienteCreateNestedOneWithoutUbicacionInput = {
   create?: Prisma.XOR<Prisma.clienteCreateWithoutUbicacionInput, Prisma.clienteUncheckedCreateWithoutUbicacionInput>
   connectOrCreate?: Prisma.clienteCreateOrConnectWithoutUbicacionInput
@@ -472,71 +449,12 @@ export type clienteUpdateOneWithoutViajesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.clienteUpdateToOneWithWhereWithoutViajesInput, Prisma.clienteUpdateWithoutViajesInput>, Prisma.clienteUncheckedUpdateWithoutViajesInput>
 }
 
-export type clienteCreateWithoutPromocionesInput = {
-  mail: string
-  calificacion?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nombre?: string | null
-  apellido?: string | null
-  id_clerk?: string | null
-  ubicacion?: Prisma.ubicacionCreateNestedManyWithoutClienteInput
-  viajes?: Prisma.viajesCreateNestedManyWithoutClienteInput
-}
-
-export type clienteUncheckedCreateWithoutPromocionesInput = {
-  id_cliente?: number
-  mail: string
-  calificacion?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nombre?: string | null
-  apellido?: string | null
-  id_clerk?: string | null
-  ubicacion?: Prisma.ubicacionUncheckedCreateNestedManyWithoutClienteInput
-  viajes?: Prisma.viajesUncheckedCreateNestedManyWithoutClienteInput
-}
-
-export type clienteCreateOrConnectWithoutPromocionesInput = {
-  where: Prisma.clienteWhereUniqueInput
-  create: Prisma.XOR<Prisma.clienteCreateWithoutPromocionesInput, Prisma.clienteUncheckedCreateWithoutPromocionesInput>
-}
-
-export type clienteUpsertWithoutPromocionesInput = {
-  update: Prisma.XOR<Prisma.clienteUpdateWithoutPromocionesInput, Prisma.clienteUncheckedUpdateWithoutPromocionesInput>
-  create: Prisma.XOR<Prisma.clienteCreateWithoutPromocionesInput, Prisma.clienteUncheckedCreateWithoutPromocionesInput>
-  where?: Prisma.clienteWhereInput
-}
-
-export type clienteUpdateToOneWithWhereWithoutPromocionesInput = {
-  where?: Prisma.clienteWhereInput
-  data: Prisma.XOR<Prisma.clienteUpdateWithoutPromocionesInput, Prisma.clienteUncheckedUpdateWithoutPromocionesInput>
-}
-
-export type clienteUpdateWithoutPromocionesInput = {
-  mail?: Prisma.StringFieldUpdateOperationsInput | string
-  calificacion?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nombre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apellido?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  id_clerk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ubicacion?: Prisma.ubicacionUpdateManyWithoutClienteNestedInput
-  viajes?: Prisma.viajesUpdateManyWithoutClienteNestedInput
-}
-
-export type clienteUncheckedUpdateWithoutPromocionesInput = {
-  id_cliente?: Prisma.IntFieldUpdateOperationsInput | number
-  mail?: Prisma.StringFieldUpdateOperationsInput | string
-  calificacion?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  nombre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  apellido?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  id_clerk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ubicacion?: Prisma.ubicacionUncheckedUpdateManyWithoutClienteNestedInput
-  viajes?: Prisma.viajesUncheckedUpdateManyWithoutClienteNestedInput
-}
-
 export type clienteCreateWithoutUbicacionInput = {
   mail: string
   calificacion?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   nombre?: string | null
   apellido?: string | null
   id_clerk?: string | null
-  promociones?: Prisma.promocionesCreateNestedManyWithoutClienteInput
   viajes?: Prisma.viajesCreateNestedManyWithoutClienteInput
 }
 
@@ -547,7 +465,6 @@ export type clienteUncheckedCreateWithoutUbicacionInput = {
   nombre?: string | null
   apellido?: string | null
   id_clerk?: string | null
-  promociones?: Prisma.promocionesUncheckedCreateNestedManyWithoutClienteInput
   viajes?: Prisma.viajesUncheckedCreateNestedManyWithoutClienteInput
 }
 
@@ -573,7 +490,6 @@ export type clienteUpdateWithoutUbicacionInput = {
   nombre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apellido?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_clerk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  promociones?: Prisma.promocionesUpdateManyWithoutClienteNestedInput
   viajes?: Prisma.viajesUpdateManyWithoutClienteNestedInput
 }
 
@@ -584,7 +500,6 @@ export type clienteUncheckedUpdateWithoutUbicacionInput = {
   nombre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apellido?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_clerk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  promociones?: Prisma.promocionesUncheckedUpdateManyWithoutClienteNestedInput
   viajes?: Prisma.viajesUncheckedUpdateManyWithoutClienteNestedInput
 }
 
@@ -594,7 +509,6 @@ export type clienteCreateWithoutViajesInput = {
   nombre?: string | null
   apellido?: string | null
   id_clerk?: string | null
-  promociones?: Prisma.promocionesCreateNestedManyWithoutClienteInput
   ubicacion?: Prisma.ubicacionCreateNestedManyWithoutClienteInput
 }
 
@@ -605,7 +519,6 @@ export type clienteUncheckedCreateWithoutViajesInput = {
   nombre?: string | null
   apellido?: string | null
   id_clerk?: string | null
-  promociones?: Prisma.promocionesUncheckedCreateNestedManyWithoutClienteInput
   ubicacion?: Prisma.ubicacionUncheckedCreateNestedManyWithoutClienteInput
 }
 
@@ -631,7 +544,6 @@ export type clienteUpdateWithoutViajesInput = {
   nombre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apellido?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_clerk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  promociones?: Prisma.promocionesUpdateManyWithoutClienteNestedInput
   ubicacion?: Prisma.ubicacionUpdateManyWithoutClienteNestedInput
 }
 
@@ -642,7 +554,6 @@ export type clienteUncheckedUpdateWithoutViajesInput = {
   nombre?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   apellido?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   id_clerk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  promociones?: Prisma.promocionesUncheckedUpdateManyWithoutClienteNestedInput
   ubicacion?: Prisma.ubicacionUncheckedUpdateManyWithoutClienteNestedInput
 }
 
@@ -652,13 +563,11 @@ export type clienteUncheckedUpdateWithoutViajesInput = {
  */
 
 export type ClienteCountOutputType = {
-  promociones: number
   ubicacion: number
   viajes: number
 }
 
 export type ClienteCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  promociones?: boolean | ClienteCountOutputTypeCountPromocionesArgs
   ubicacion?: boolean | ClienteCountOutputTypeCountUbicacionArgs
   viajes?: boolean | ClienteCountOutputTypeCountViajesArgs
 }
@@ -671,13 +580,6 @@ export type ClienteCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
    * Select specific fields to fetch from the ClienteCountOutputType
    */
   select?: Prisma.ClienteCountOutputTypeSelect<ExtArgs> | null
-}
-
-/**
- * ClienteCountOutputType without action
- */
-export type ClienteCountOutputTypeCountPromocionesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.promocionesWhereInput
 }
 
 /**
@@ -702,7 +604,6 @@ export type clienteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   nombre?: boolean
   apellido?: boolean
   id_clerk?: boolean
-  promociones?: boolean | Prisma.cliente$promocionesArgs<ExtArgs>
   ubicacion?: boolean | Prisma.cliente$ubicacionArgs<ExtArgs>
   viajes?: boolean | Prisma.cliente$viajesArgs<ExtArgs>
   _count?: boolean | Prisma.ClienteCountOutputTypeDefaultArgs<ExtArgs>
@@ -737,7 +638,6 @@ export type clienteSelectScalar = {
 
 export type clienteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id_cliente" | "mail" | "calificacion" | "nombre" | "apellido" | "id_clerk", ExtArgs["result"]["cliente"]>
 export type clienteInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  promociones?: boolean | Prisma.cliente$promocionesArgs<ExtArgs>
   ubicacion?: boolean | Prisma.cliente$ubicacionArgs<ExtArgs>
   viajes?: boolean | Prisma.cliente$viajesArgs<ExtArgs>
   _count?: boolean | Prisma.ClienteCountOutputTypeDefaultArgs<ExtArgs>
@@ -748,7 +648,6 @@ export type clienteIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
 export type $clientePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "cliente"
   objects: {
-    promociones: Prisma.$promocionesPayload<ExtArgs>[]
     ubicacion: Prisma.$ubicacionPayload<ExtArgs>[]
     viajes: Prisma.$viajesPayload<ExtArgs>[]
   }
@@ -1153,7 +1052,6 @@ readonly fields: clienteFieldRefs;
  */
 export interface Prisma__clienteClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  promociones<T extends Prisma.cliente$promocionesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.cliente$promocionesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$promocionesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   ubicacion<T extends Prisma.cliente$ubicacionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.cliente$ubicacionArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ubicacionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   viajes<T extends Prisma.cliente$viajesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.cliente$viajesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$viajesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1581,30 +1479,6 @@ export type clienteDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many clientes to delete.
    */
   limit?: number
-}
-
-/**
- * cliente.promociones
- */
-export type cliente$promocionesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the promociones
-   */
-  select?: Prisma.promocionesSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the promociones
-   */
-  omit?: Prisma.promocionesOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.promocionesInclude<ExtArgs> | null
-  where?: Prisma.promocionesWhereInput
-  orderBy?: Prisma.promocionesOrderByWithRelationInput | Prisma.promocionesOrderByWithRelationInput[]
-  cursor?: Prisma.promocionesWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.PromocionesScalarFieldEnum | Prisma.PromocionesScalarFieldEnum[]
 }
 
 /**

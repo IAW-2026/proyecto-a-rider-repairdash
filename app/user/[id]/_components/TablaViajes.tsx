@@ -7,7 +7,6 @@ type ViajeRow = {
   tipo_de_trabajo: string;
   fecha?: Date | string | null;
   estado?: string | null;
-  driver?: string | null;
   pagos?: Array<{ monto: unknown }>;
 };
 
@@ -59,24 +58,23 @@ export default function TablaViajes({ filas }: { filas: ViajeRow[] }) {
     <div className="border border-rd-border bg-rd-surface overflow-hidden">
       {/* Desktop / tablet: tabla con scroll horizontal cuando hace falta */}
       <div className="hidden sm:block w-full overflow-x-auto">
-        <table className="w-full min-w-[860px] table-fixed border-collapse">
+        <table className="w-full min-w-[600px] table-fixed border-collapse">
           <colgroup>
-            <col className="w-[26%]" />
-            <col className="w-[24%]" />
-            <col className="w-[22%]" />
-            <col className="w-[14%]" />
-            <col className="w-[14%]" />
+            <col className="w-[35%]" />
+            <col className="w-[25%]" />
+            <col className="w-[20%]" />
+            <col className="w-[20%]" />
           </colgroup>
           <thead className="bg-rd-bg-2">
             <tr>
-              {["Servicio", "Fecha", "Trabajador", "Costo", "Estado"].map(
+              {["Servicio", "Fecha", "Costo", "Estado"].map(
                 (h, i) => (
                   <th
                     key={h}
                     className={`py-4 text-left text-[11px] font-bold uppercase tracking-[0.14em] text-rd-muted whitespace-nowrap ${
                       i === 0
-                        ? "pl-40 lg:pl-48 pr-4"
-                        : i === 4
+                        ? "pl-8 lg:pl-10 pr-4"
+                        : i === 3
                           ? "pr-8 lg:pr-10 pl-4"
                           : "px-4 lg:px-5"
                     }`}
@@ -110,9 +108,6 @@ export default function TablaViajes({ filas }: { filas: ViajeRow[] }) {
                 </td>
                 <td className="px-4 lg:px-5 py-4 align-middle text-sm text-rd-text-2 whitespace-nowrap">
                   {fmtFecha(v.fecha)}
-                </td>
-                <td className="px-4 lg:px-5 py-4 align-middle text-sm text-rd-text-2 break-words">
-                  {v.driver ?? "Pendiente de asignación"}
                 </td>
                 <td className="px-4 lg:px-5 py-4 align-middle text-sm font-semibold tabular-rd text-rd-text whitespace-nowrap">
                   {fmtMonto(v.pagos?.[0]?.monto)}
@@ -148,8 +143,8 @@ export default function TablaViajes({ filas }: { filas: ViajeRow[] }) {
                 <div className="font-bold text-[13.5px] capitalize text-rd-text break-words">
                   {v.tipo_de_trabajo}
                 </div>
-                <div className="text-[11.5px] text-rd-muted mt-0.5 break-words">
-                  {(v.driver ?? "Sin trabajador")} · {fmtFecha(v.fecha)}
+                <div className="text-[11.5px] text-rd-muted mt-0.5">
+                  {fmtFecha(v.fecha)}
                 </div>
               </div>
               <span className="text-[15px] font-bold tabular-rd text-rd-text shrink-0 whitespace-nowrap">
