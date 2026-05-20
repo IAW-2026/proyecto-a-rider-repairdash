@@ -21,7 +21,7 @@ const FLUJO_ESTADOS: EstadoViaje[] = [
 ];
 
 const ESTADOS_TERMINALES: EstadoViaje[] = ["finalizado", "cancelado", "concluido"];
-const INTERVALO_MS = 10_000;
+const INTERVALO_MS = 30_000;
 
 /**
  * Probabilidad de que el driver cancele el viaje en cada tick.
@@ -164,10 +164,7 @@ export function useActualizarEstadoViaje(
       }
     };
 
-    // Primer tick inmediato
-    avanzar();
-
-    // Interval fijo, no se reinicia nunca salvo que cambie idViaje
+    // Primer tick y todos los siguientes: cada INTERVALO_MS
     intervaloId = setInterval(avanzar, INTERVALO_MS);
 
     return () => {

@@ -2,5 +2,4 @@
 export * from "./clientes";
 export * from "./viajes";
 export * from "./pagos";
-export * from "./promociones";
 export * from "./ubicacion";

@@ -14,7 +14,9 @@ import {
 import BotonConformidad from "./BotonConformidad";
 import BotonDisconformidad from "./BotonDisconformidad";
 import BotonAceptarCancelacion from "./BotonAceptarCancelacion";
+import BotonCancelarViaje from "./BotonCancelarViaje";
 import { Pill } from "@/app/components/ui";
+import DriverCard from "./DriverCard";
 import { supabaseBrowser } from "@/lib/supabaseClient";
 
 type StepDef = {
@@ -50,6 +52,8 @@ const STEPS: StepDef[] = [
     description: "¡El técnico llegó y está listo para comenzar!",
   },
 ];
+
+const ESTADOS_CANCELABLES = ["pendiente", "aceptado", "en camino", "ha llegado"];
 
 export default function ViajeEnCurso({
   idViaje,
@@ -206,6 +210,13 @@ export default function ViajeEnCurso({
         </Pill>
       </div>
 
+      {/* Driver card — visible desde "aceptado" en adelante */}
+      {["aceptado", "en camino", "ha llegado"].includes(estadoActual) && (
+        <div className="mb-6">
+          <DriverCard />
+        </div>
+      )}
+
       {/* Stepper */}
       <div className="relative pl-1">
         <div
@@ -303,6 +314,12 @@ export default function ViajeEnCurso({
           />
         </div>
       </div>
+
+      {ESTADOS_CANCELABLES.includes(estadoActual) && (
+        <div className="mt-4">
+          <BotonCancelarViaje idViaje={idViaje} />
+        </div>
+      )}
     </div>
   );
 }

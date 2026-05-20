@@ -76,21 +76,9 @@ export async function crearCliente(mail: string, calificacion: number, nombre: s
     return serializeCliente(cliente);
 }
 
-/** Eliminar un cliente de Prisma y de Clerk */
+/** Eliminar un cliente de Prisma */
 export async function eliminarClienteCompleto(id_cliente: number, id_clerk?: string | null) {
-    // 1. Borrar de Prisma
-    await deleteCliente(id_cliente);
-
-    // 2. Borrar de Clerk
-    if (id_clerk) {
-        try {
-            const c = await clerkClient();
-            await c.users.deleteUser(id_clerk);
-        } catch (error) {
-            console.error("Error al eliminar usuario de Clerk:", error);
-        }
-    }
-    
+    await deleteCliente(id_cliente);    
 }
 
 /** Actualizar información básica de un cliente */

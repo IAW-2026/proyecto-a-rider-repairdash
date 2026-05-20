@@ -10,7 +10,6 @@
  */
 export type * from './models/cliente'
 export type * from './models/pagos'
-export type * from './models/promociones'
 export type * from './models/ubicacion'
 export type * from './models/viajes'
 export type * from './commonInputTypes'
