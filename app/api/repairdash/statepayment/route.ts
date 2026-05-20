@@ -1,4 +1,4 @@
-import { getPagosByViajeId, updateEstadoViaje, asignarDriverViaje, updatePago } from "../../../../lib/queries"
+import { getPagosByViajeId, updateEstadoViaje, updatePago } from "../../../../lib/queries"
 
 
 export async function PUT( req:Request){
@@ -18,7 +18,6 @@ export async function PUT( req:Request){
     switch (state) {
         case "aceptado":
             await updatePago(id_viaje, "aceptado");
-            await updateEstadoViaje(id_viaje, "aceptado");
             message = "pago aceptado";
             break;
 

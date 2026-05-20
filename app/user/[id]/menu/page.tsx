@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { currentUser } from "@clerk/nextjs/server";
 import ViajeEnCurso from "./_components/ViajeEnCurso";
-import BotonCancelarViaje from "./_components/BotonCancelarViaje";
 import MenuSkeleton from "@/app/components/skeletons/MenuSkeleton";
 import ActualizarEstadoViaje from "@/app/mocks/actualizarEstadoViaje";
 import { getViajesByClienteId } from "@/lib/queries/viajes";
@@ -130,14 +129,6 @@ async function MenuContent({ idStr }: { idStr: string }) {
               <ActualizarEstadoViaje id={viajeActivo.id_viaje} />
             </section>
             <aside className="flex flex-col gap-3">
-              {[
-                "pendiente",
-                "aceptado",
-                "en camino",
-                "ha llegado",
-              ].includes((viajeActivo.estado ?? "").toLowerCase()) && (
-                <BotonCancelarViaje idViaje={viajeActivo.id_viaje} />
-              )}
               {kpis}
             </aside>
           </div>
