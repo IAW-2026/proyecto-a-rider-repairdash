@@ -386,7 +386,6 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   cliente: 'cliente',
   pagos: 'pagos',
-  promociones: 'promociones',
   ubicacion: 'ubicacion',
   viajes: 'viajes'
 } as const
@@ -404,7 +403,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "cliente" | "pagos" | "promociones" | "ubicacion" | "viajes"
+    modelProps: "cliente" | "pagos" | "ubicacion" | "viajes"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -553,80 +552,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.pagosCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.PagosCountAggregateOutputType> | number
-        }
-      }
-    }
-    promociones: {
-      payload: Prisma.$promocionesPayload<ExtArgs>
-      fields: Prisma.promocionesFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.promocionesFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$promocionesPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.promocionesFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$promocionesPayload>
-        }
-        findFirst: {
-          args: Prisma.promocionesFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$promocionesPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.promocionesFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$promocionesPayload>
-        }
-        findMany: {
-          args: Prisma.promocionesFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$promocionesPayload>[]
-        }
-        create: {
-          args: Prisma.promocionesCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$promocionesPayload>
-        }
-        createMany: {
-          args: Prisma.promocionesCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.promocionesCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$promocionesPayload>[]
-        }
-        delete: {
-          args: Prisma.promocionesDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$promocionesPayload>
-        }
-        update: {
-          args: Prisma.promocionesUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$promocionesPayload>
-        }
-        deleteMany: {
-          args: Prisma.promocionesDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.promocionesUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.promocionesUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$promocionesPayload>[]
-        }
-        upsert: {
-          args: Prisma.promocionesUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$promocionesPayload>
-        }
-        aggregate: {
-          args: Prisma.PromocionesAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregatePromociones>
-        }
-        groupBy: {
-          args: Prisma.promocionesGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PromocionesGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.promocionesCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.PromocionesCountAggregateOutputType> | number
         }
       }
     }
@@ -837,15 +762,6 @@ export const PagosScalarFieldEnum = {
 } as const
 
 export type PagosScalarFieldEnum = (typeof PagosScalarFieldEnum)[keyof typeof PagosScalarFieldEnum]
-
-
-export const PromocionesScalarFieldEnum = {
-  id_promocion: 'id_promocion',
-  id_cliente: 'id_cliente',
-  codigo_descuento: 'codigo_descuento'
-} as const
-
-export type PromocionesScalarFieldEnum = (typeof PromocionesScalarFieldEnum)[keyof typeof PromocionesScalarFieldEnum]
 
 
 export const UbicacionScalarFieldEnum = {
@@ -1083,7 +999,6 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   cliente?: Prisma.clienteOmit
   pagos?: Prisma.pagosOmit
-  promociones?: Prisma.promocionesOmit
   ubicacion?: Prisma.ubicacionOmit
   viajes?: Prisma.viajesOmit
 }

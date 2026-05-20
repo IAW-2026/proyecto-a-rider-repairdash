@@ -101,12 +101,7 @@ Guarda el registro monetario asociado a los viajes.
 
 ### `promociones` (Descuentos)
 
-Tabla sencilla para gestionar los códigos de descuento asignados a los usuarios.
-
-- **Campos principales:** `id_promocion` (PK), `codigo_descuento`.
-- **Relaciones:** Pertenece a un `cliente` (`id_cliente`).
-
-_Nota sobre la integridad referencial:_ Prisma está configurado para manejar eliminaciones en cascada (`onDelete: Cascade`) en casi todas las relaciones que dependen del cliente. Es decir, si se elimina un usuario, se limpian automáticamente sus viajes, ubicaciones, pagos y promociones para no dejar datos huérfanos en el sistema.
+Esta tabla que figura inicalmente en el modelo de datos fue removida pues se opto por consultar las promociones previo a presentar el formulario de solicitud de nuevo viaje ya que se ahora el paso de tener que verificar los codigos que los usarios ingresan
 
 ---
 
