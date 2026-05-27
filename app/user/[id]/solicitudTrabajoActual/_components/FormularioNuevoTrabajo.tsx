@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useFormStatus } from "react-dom";
 import {
   ArrowRight,
@@ -40,7 +40,7 @@ function BotonSolicitar() {
       type="submit"
       disabled={pending}
       className="flex-1 inline-flex items-center justify-center gap-2 h-12 px-5 rounded-xl bg-rd-accent text-white font-semibold text-[15px] transition-colors hover:bg-[#C932BD] disabled:opacity-60 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-accent focus-visible:ring-offset-2 focus-visible:ring-offset-rd-bg"
-    >
+    onClick={() => {redirect(`/user/id/menu`)}}>
       {pending ? (
         <Loader2 size={16} strokeWidth={2} className="animate-spin" />
       ) : (

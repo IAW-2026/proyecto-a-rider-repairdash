@@ -18,7 +18,7 @@ import BotonCancelarViaje from "./BotonCancelarViaje";
 import { Pill } from "@/app/components/ui";
 import DriverCard from "./DriverCard";
 import { supabaseBrowser } from "@/lib/supabaseClient";
-
+import { realizarFetchPayment } from "@/lib/actions/apis/realizarFetchPayment";
 type StepDef = {
   id: "pendiente" | "aceptado" | "en camino" | "ha llegado";
   label: string;
@@ -69,6 +69,7 @@ export default function ViajeEnCurso({
   );
   const [pulse, setPulse] = useState(false);
   const estadoRef = useRef(estadoInicial.toLowerCase());
+  const pagoIniciadoRef = useRef(false);
 
   useEffect(() => {
     estadoRef.current = estadoActual;
@@ -123,6 +124,16 @@ export default function ViajeEnCurso({
       supabaseBrowser.removeChannel(channel);
     };
   }, [idViaje]);
+
+  useEffect(() => {
+    if (estadoActual === "aceptado" && !pagoIniciadoRef.current) {
+      pagoIniciadoRef.current = true;
+      realizarFetchPayment(idViaje).catch((e) => {
+        pagoIniciadoRef.current = false;
+        console.error("[Pago] Error iniciando checkout:", e);
+      });
+    }
+  }, [estadoActual, idViaje]);
 
   if (estadoActual === "cancelado") {
     return (
@@ -323,3 +334,5 @@ export default function ViajeEnCurso({
     </div>
   );
 }
+
+

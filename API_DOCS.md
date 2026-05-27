@@ -147,7 +147,7 @@ const response = await fetch("https://tu-dominio.com/api/repairdash/statepayment
   },
   body: JSON.stringify({
     id_viaje: 123,
-    estado: "cancelado",
+    estado: "rechazado",
   }),
 });
 
@@ -164,7 +164,7 @@ const data = await response.json();
 **Estados Permitidos para `estado`:**
 
 - `"aceptado"`: Actualiza el estado del viaje.
-- `"cancelado"`: Actualiza el estado del viaje a cancelado.
+- `"rechazado"`: Actualiza el estado del viaje a cancelado.
 
 ### Ejemplos de Body (JSON)
 

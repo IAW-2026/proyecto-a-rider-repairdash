@@ -76,7 +76,7 @@ async function ProfileIdentityCard({ id }: { id: string }) {
       )}
 
       <Button
-        href="https://proyecto-a-payments-repairdash-lvnq2cmkm.vercel.app/driver"
+        href="https://proyecto-a-payments-repairdash.vercel.app"
         className="w-full mt-5 relative z-10"
       >
         <CreditCard size={16} strokeWidth={1.75} />
