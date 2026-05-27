@@ -41,7 +41,7 @@ async function llamarApiEstado(
       "Content-Type": "application/json",
       ...(apiKey ? { "x-api-key": apiKey } : {}),
     },
-    body: JSON.stringify({ id_viaje: idViaje, estado: nuevoEstado, driver: Math.random() % 100}),
+    body: JSON.stringify({ id_viaje: idViaje, estado: nuevoEstado, driver: "user_3E8v3FXNIw992nRYxEyVtHmJ1ke"}),
   });
 
   if (!res.ok) {
