@@ -20,7 +20,7 @@ import BotonIrAPagar from "./BotonIrAPagar";
 import { Pill } from "@/app/components/ui";
 import DriverCard from "./DriverCard";
 import { supabaseBrowser } from "@/lib/supabaseClient";
-import { realizarFetchPayment } from "@/lib/actions/apis/realizarFetchPayment";
+import { realizarFetchPayment } from "@/lib/actions/apis/payment/realizarFetchPayment";
 import { redirect } from "next/navigation";
 type StepDef = {
   id: "pendiente" | "aceptado" | "en camino" | "ha llegado";
@@ -145,8 +145,9 @@ export default function ViajeEnCurso({
     localStorage.setItem(pagoKey, "1");
 
     (async () => {
-     redirect(await realizarFetchPayment(idViaje));
-      setPagoYaIniciado(true);
+     const url = await realizarFetchPayment(idViaje);
+    setPagoYaIniciado(true);
+    redirect(url);
     })();
   }, [estadoActual, idViaje]);
 
@@ -368,14 +369,27 @@ export default function ViajeEnCurso({
       {pagoYaIniciado &&
         ["aceptado", "en camino", "ha llegado"].includes(estadoActual) && (
           <>
-          <div className="mt-4">
-            <BotonIrAPagar />
-            </div>
+            {pagoEstadoInicial?.toLowerCase() == "pendiente" ? (
+              <div className="mt-4">
+                <BotonIrAPagar />
+              </div>
+            ) : (
+              <div className="mt-4 rounded-xl px-4 py-3 bg-rd-ok-bg border border-rd-ok/30 flex items-center gap-3">
+                <CheckCircle2
+                  size={20}
+                  strokeWidth={1.75}
+                  className="text-rd-ok shrink-0"
+                />
+                <p className="text-sm font-semibold text-rd-ok">
+                  Viaje pago
+                </p>
+              </div>
+            )}
             <div className="mt-4">
-            <BotonCancelarViaje idViaje={idViaje} />
-          </div>
+              <BotonCancelarViaje idViaje={idViaje} />
+            </div>
           </>
-          )}
+        )}
       
     </div>
   );

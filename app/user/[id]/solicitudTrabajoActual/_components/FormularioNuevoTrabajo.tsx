@@ -176,6 +176,7 @@ export default function FormularioNuevoTrabajo({
             </label>
             <input
               id="foto"
+              name="foto"
               type="file"
               accept="image/*"
               multiple

@@ -1,7 +1,7 @@
 
 
 import {  getViajeById, getPagosByViajeId, updateEstadoViaje, asignarDriverViaje } from "../../../../lib/queries"
-import { cancelacionPayment } from "@/lib/actions/apis/cancelarPayment";
+import { cancelacionPayment } from "@/lib/actions/apis/payment/cancelarPayment";
 
 export async function PUT( req:Request){
 
