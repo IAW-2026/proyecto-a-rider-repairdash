@@ -10,15 +10,18 @@ import {
   CheckCircle2,
   XCircle,
   Sparkles,
+  CreditCard,
 } from "lucide-react";
 import BotonConformidad from "./BotonConformidad";
 import BotonDisconformidad from "./BotonDisconformidad";
 import BotonAceptarCancelacion from "./BotonAceptarCancelacion";
 import BotonCancelarViaje from "./BotonCancelarViaje";
+import BotonIrAPagar from "./BotonIrAPagar";
 import { Pill } from "@/app/components/ui";
 import DriverCard from "./DriverCard";
 import { supabaseBrowser } from "@/lib/supabaseClient";
 import { realizarFetchPayment } from "@/lib/actions/apis/realizarFetchPayment";
+import { redirect } from "next/navigation";
 type StepDef = {
   id: "pendiente" | "aceptado" | "en camino" | "ha llegado";
   label: string;
@@ -59,21 +62,28 @@ export default function ViajeEnCurso({
   idViaje,
   idCliente,
   estadoInicial,
+  pagoEstadoInicial,
 }: {
   idViaje: number;
   idCliente: number;
   estadoInicial: string;
+  pagoEstadoInicial: string | null;
 }) {
   const [estadoActual, setEstadoActual] = useState<string>(
     estadoInicial.toLowerCase(),
   );
   const [pulse, setPulse] = useState(false);
+  const [pagoYaIniciado, setPagoYaIniciado] = useState(false);
   const estadoRef = useRef(estadoInicial.toLowerCase());
   const pagoIniciadoRef = useRef(false);
 
   useEffect(() => {
     estadoRef.current = estadoActual;
   }, [estadoActual]);
+
+  useEffect(() => {
+    setPagoYaIniciado(!!localStorage.getItem(`pago-iniciado-${idViaje}`));
+  }, [idViaje]);
 
   useEffect(() => {
     const channel = supabaseBrowser
@@ -126,13 +136,18 @@ export default function ViajeEnCurso({
   }, [idViaje]);
 
   useEffect(() => {
-    if (estadoActual === "aceptado" && !pagoIniciadoRef.current) {
-      pagoIniciadoRef.current = true;
-      realizarFetchPayment(idViaje).catch((e) => {
-        pagoIniciadoRef.current = false;
-        console.error("[Pago] Error iniciando checkout:", e);
-      });
-    }
+    if (estadoActual !== "aceptado") return;
+
+    const pagoKey = `pago-iniciado-${idViaje}`;
+    if (pagoIniciadoRef.current || localStorage.getItem(pagoKey)) return;
+
+    pagoIniciadoRef.current = true;
+    localStorage.setItem(pagoKey, "1");
+
+    (async () => {
+     redirect(await realizarFetchPayment(idViaje));
+      setPagoYaIniciado(true);
+    })();
   }, [estadoActual, idViaje]);
 
   if (estadoActual === "cancelado") {
@@ -157,6 +172,30 @@ export default function ViajeEnCurso({
   }
 
   if (estadoActual === "finalizado") {
+    const pagado = pagoEstadoInicial?.toLowerCase() === "aceptado";
+
+    if (!pagado) {
+      return (
+        <div className="w-full rounded-2xl p-6 sm:p-7 bg-gradient-to-b from-rd-warn-bg to-rd-surface border border-rd-warn/30 flex flex-col sm:flex-row sm:items-center gap-5">
+          <div className="w-14 h-14 shrink-0 rounded-xl bg-rd-warn-bg border border-rd-warn/40 grid place-items-center text-rd-warn">
+            <CreditCard size={26} strokeWidth={1.75} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h2 className="text-xl font-bold text-rd-warn tracking-tight">
+              Servicio finalizado
+            </h2>
+            <p className="text-rd-muted text-sm mt-1 leading-relaxed">
+              El técnico terminó el trabajo. Aboná el servicio para confirmar tu
+              conformidad o reportar un problema.
+            </p>
+          </div>
+          <div className="w-full sm:w-auto sm:min-w-[200px]">
+            <BotonIrAPagar />
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="w-full rounded-2xl p-6 sm:p-7 bg-gradient-to-b from-rd-ok-bg to-rd-surface border border-rd-ok/30 flex flex-col sm:flex-row sm:items-center gap-5">
         <div className="w-14 h-14 shrink-0 rounded-xl bg-rd-ok grid place-items-center text-[#0d2419]">
@@ -326,11 +365,18 @@ export default function ViajeEnCurso({
         </div>
       </div>
 
-      {ESTADOS_CANCELABLES.includes(estadoActual) && (
-        <div className="mt-4">
-          <BotonCancelarViaje idViaje={idViaje} />
-        </div>
-      )}
+      {pagoYaIniciado &&
+        ["aceptado", "en camino", "ha llegado"].includes(estadoActual) && (
+          <>
+          <div className="mt-4">
+            <BotonIrAPagar />
+            </div>
+            <div className="mt-4">
+            <BotonCancelarViaje idViaje={idViaje} />
+          </div>
+          </>
+          )}
+      
     </div>
   );
 }
