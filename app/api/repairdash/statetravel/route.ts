@@ -1,6 +1,7 @@
 
 
 import {  getViajeById, getPagosByViajeId, updateEstadoViaje, asignarDriverViaje } from "../../../../lib/queries"
+import { cancelacionPayment } from "@/lib/actions/apis/payment/cancelarPayment";
 
 export async function PUT( req:Request){
 
@@ -34,6 +35,7 @@ export async function PUT( req:Request){
         case "cancelado":
             const pagos = await getPagosByViajeId(id_viaje);
             await updateEstadoViaje(id_viaje, "cancelado");
+            await cancelacionPayment(id_viaje);
             message = "Viaje cancelado";
             break;
             

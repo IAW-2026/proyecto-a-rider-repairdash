@@ -124,6 +124,7 @@ async function MenuContent({ idStr }: { idStr: string }) {
                 idViaje={viajeActivo.id_viaje}
                 idCliente={id}
                 estadoInicial={viajeActivo.estado ?? "pendiente"}
+                pagoEstadoInicial={viajeActivo.pagos?.[0]?.estado ?? null}
               />
               {/* Mock temporal para simular transiciones de estado en dev */}
               <ActualizarEstadoViaje id={viajeActivo.id_viaje} />

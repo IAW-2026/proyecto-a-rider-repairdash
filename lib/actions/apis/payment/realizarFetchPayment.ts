@@ -1,7 +1,6 @@
 "use server"
 
 import { getViajeById,getClienteById } from "@/lib/queries"
-import { redirect } from "next/navigation"
 
 export async function realizarFetchPayment( id_viaje:number ){
     const result = await getViajeById(id_viaje);
@@ -19,9 +18,7 @@ export async function realizarFetchPayment( id_viaje:number ){
     const amount = Number(pago.monto);
 
     const payload = { trabajoId: String(id_viaje), clientId: id, trabajadorId: result?.driver, amount: String(amount), description: result?.tipo_de_trabajo };
-    console.log('[Payment] Request payload:', payload);
-
-    if (pago.estado === "pendiente") {
+   
     const res = await fetch('https://proyecto-a-payments-repairdash.vercel.app/api/payments/checkout', {
         method: 'POST',
         headers: {
@@ -38,8 +35,7 @@ export async function realizarFetchPayment( id_viaje:number ){
     }
 
     const data = await res.json();
-    redirect(data.redirectUrl);
-    }
+    return data.redirectUrl;
 }
 
 

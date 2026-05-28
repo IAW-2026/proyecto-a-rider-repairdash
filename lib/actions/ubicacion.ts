@@ -1,7 +1,7 @@
 
 "use server"
 
-import { createUbicacion, getUbicacionesByClienteId } from "../queries/ubicacion";
+import { createUbicacion, getUbicacionesByClienteId, getUbicacionById } from "../queries/ubicacion";
 
 export async function getUbicacionesPorCliente(idCliente: string) {
     return await getUbicacionesByClienteId(Number(idCliente));
@@ -23,4 +23,9 @@ export async function crearUbicacion(formData: FormData) {
     ciudad,
   });
 
+}
+
+export async function recuperarUbicacion(id_ubicacion: number) {
+  const result = await getUbicacionById(id_ubicacion);
+  return result;
 }

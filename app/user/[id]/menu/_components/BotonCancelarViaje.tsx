@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { XCircle, Loader2 } from "lucide-react";
 import { updateEstado } from "@/lib/actions/viajes";
+import { cancelacionPayment } from "@/lib/actions/apis/payment/cancelarPayment";
 
 export default function BotonCancelarViaje({
   idViaje,
@@ -12,32 +13,18 @@ export default function BotonCancelarViaje({
 }) {
   const [loading, setLoading] = useState(false);
 
-  const ejecutarCancelacion = async () => {
+  const handleClick = async () => {
+    if (loading) return;
     setLoading(true);
     try {
+      await cancelacionPayment(idViaje);
       await updateEstado(idViaje, "cancelado");
       toast.success("Cancelación enviada", {
         description: "Confirmá la cancelación en el panel del viaje.",
       });
     } catch (e) {
-      console.error("Error al cancelar viaje:", e);
-      toast.error("No se pudo cancelar el viaje.");
       setLoading(false);
     }
-  };
-
-  const handleClick = () => {
-    if (loading) return;
-    toast("¿Cancelar este viaje?", {
-      description:
-        "Se marcará como cancelado y deberás confirmar la cancelación.",
-      action: {
-        label: "Sí, cancelar",
-        onClick: ejecutarCancelacion,
-      },
-      cancel: { label: "Volver", onClick: () => {} },
-      duration: 10000,
-    });
   };
 
   return (
