@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { XCircle, Loader2 } from "lucide-react";
 import { updateEstado } from "@/lib/actions/viajes";
-import { cancelacionPayment } from "@/lib/actions/apis/cancelarPayment";
+import { cancelacionPayment } from "@/lib/actions/apis/payment/cancelarPayment";
 
 export default function BotonCancelarViaje({
   idViaje,
