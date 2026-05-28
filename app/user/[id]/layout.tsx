@@ -49,8 +49,8 @@ export default async function Layout({
       </aside>
 
       <div className="flex-1 flex flex-col min-w-0 sm:mr-[220px]">
-        <main className="pt-4 sm:pt-8 pb-[calc(5.5rem+env(safe-area-inset-bottom))] sm:pb-10 flex-1 flex flex-col items-center">
-          <div className="w-full max-w-screen-xl pl-[max(1.25rem,env(safe-area-inset-left))] pr-[max(1.25rem,env(safe-area-inset-right))] sm:px-8">
+        <main className="pt-4 sm:pt-8 pb-[calc(5.5rem+env(safe-area-inset-bottom))] sm:pb-10 flex-1 flex flex-col items-center px-safe-page sm:px-8">
+          <div className="w-full max-w-screen-xl">
             {children}
           </div>
         </main>

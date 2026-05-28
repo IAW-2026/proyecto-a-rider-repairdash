@@ -43,7 +43,24 @@
       "PowerShell(git mv \"app/components/BotonLogIn.tsx\" \"app/_components/BotonIniciarSesion.tsx\")",
       "PowerShell(git mv \"app/components/lazyProvisioning.tsx\" \"app/_components/ProvisioningPerezoso.tsx\")",
       "PowerShell(git add app/_components app/page.tsx app/components)",
-      "PowerShell(git add app/components README.md)"
+      "PowerShell(git add app/components README.md)",
+      "Bash(timeout 90 ./node_modules/.bin/tailwindcss -i ./app/globals.css -o /tmp/out.css)",
+      "Read(//tmp/**)",
+      "Bash(curl -s http://localhost:3000/ -o /tmp/home.html)",
+      "Bash(curl -s \"http://localhost:3000/_next/static/chunks/%5Broot-of-the-server%5D__06wiw79._.css\" -o /tmp/app.css)",
+      "Bash(awk 'NR>=2860 && NR<=2890 {print NR\": \"$0}' /tmp/app.css)",
+      "Bash(awk 'NR>=167 && NR<=185 {print NR\": \"$0}' /tmp/app.css)",
+      "Bash(curl -s -H \"Cache-Control: no-cache\" \"http://localhost:3000/?nocache=$\\(date +%s\\)\" -o /dev/null)",
+      "Bash(curl -s -H \"Cache-Control: no-cache\" \"http://localhost:3000/_next/static/chunks/%5Broot-of-the-server%5D__06wiw79._.css?v=$\\(date +%s\\)\" -o /tmp/app3.css)",
+      "Bash(grep -n \"^\\\\*, :before, :after {\" /tmp/app3.css)",
+      "Bash([ -f \"$LOG\" ])",
+      "Bash(git branch *)",
+      "Bash(git -C \"C:/proyecto-a-rider-repairdash.worktrees/agents-ajuste-espacios-bordes-pantallas\" status --short)",
+      "Bash(git *)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(node *)",
+      "Bash(pnpm exec *)",
+      "Bash(Select-Object -First 40)"
     ]
   }
 }

@@ -137,8 +137,9 @@ export function useActualizarEstadoViaje(
       }
 
       // ── Cancelación aleatoria (simula driver que rechaza el viaje) ─────
-      // Solo puede cancelar si el driver aún no finaliza el viaje.
-      const puedeCancel = estadoRef.current !== "ha llegado";
+      // Solo se puede cancelar mientras está "aceptado" o "en camino".
+      const puedeCancel =
+        estadoRef.current === "aceptado" || estadoRef.current === "en camino";
       if (puedeCancel && Math.random() < PROB_CANCELAR) {
         try {
           await llamarApiEstado(idViaje, "cancelado");
