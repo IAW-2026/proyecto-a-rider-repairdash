@@ -1,6 +1,6 @@
 
 
-export default async function realizarFetchDriver (
+/*export default async function realizarFetchDriver (
   id: string,
   categoria: string,
   id_trabajo: string,
@@ -26,4 +26,4 @@ export default async function realizarFetchDriver (
         console.error(`[Driver] API ${res.status} response body:`, errBody);
         throw new Error(`Driver API error: ${res.status} — ${errBody}`);
     }
-}
+}*/
