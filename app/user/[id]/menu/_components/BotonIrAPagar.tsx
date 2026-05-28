@@ -2,15 +2,14 @@
 
 import { useState } from "react";
 import { CreditCard, Loader2 } from "lucide-react";
-import { redirect } from "next/navigation";
 
-export default function BotonIrAPagar() {
+export default function BotonIrAPagar({ url }: { url: string | null }) {
   const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
     if (loading) return;
     setLoading(true);
-    redirect("https://proyecto-a-payments-repairdash.vercel.app");
+    window.location.href = url || "https://proyecto-a-payments-repairdash.vercel.app";
   };
 
   return (
