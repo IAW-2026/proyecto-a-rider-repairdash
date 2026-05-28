@@ -21,7 +21,6 @@ import { Pill } from "@/app/components/ui";
 import DriverCard from "./DriverCard";
 import { supabaseBrowser } from "@/lib/supabaseClient";
 import { realizarFetchPayment } from "@/lib/actions/apis/payment/realizarFetchPayment";
-import { redirect } from "next/navigation";
 type StepDef = {
   id: "pendiente" | "aceptado" | "en camino" | "ha llegado";
   label: string;
@@ -76,7 +75,6 @@ export default function ViajeEnCurso({
   const [pagoYaIniciado, setPagoYaIniciado] = useState(false);
   const estadoRef = useRef(estadoInicial.toLowerCase());
   const pagoIniciadoRef = useRef(false);
-
   useEffect(() => {
     estadoRef.current = estadoActual;
   }, [estadoActual]);
@@ -146,8 +144,9 @@ export default function ViajeEnCurso({
 
     (async () => {
      const url = await realizarFetchPayment(idViaje);
+    localStorage.setItem(`pago-url-${idViaje}`, url);
     setPagoYaIniciado(true);
-    redirect(url);
+    window.location.href = url;
     })();
   }, [estadoActual, idViaje]);
 
@@ -191,7 +190,7 @@ export default function ViajeEnCurso({
             </p>
           </div>
           <div className="w-full sm:w-auto sm:min-w-[200px]">
-            <BotonIrAPagar />
+            <BotonIrAPagar url={localStorage.getItem(`pago-url-${idViaje}`)} />
           </div>
         </div>
       );
@@ -371,7 +370,7 @@ export default function ViajeEnCurso({
           <>
             {pagoEstadoInicial?.toLowerCase() == "pendiente" ? (
               <div className="mt-4">
-                <BotonIrAPagar />
+                <BotonIrAPagar url={localStorage.getItem(`pago-url-${idViaje}`)} />
               </div>
             ) : (
               <div className="mt-4 rounded-xl px-4 py-3 bg-rd-ok-bg border border-rd-ok/30 flex items-center gap-3">
