@@ -72,7 +72,12 @@ export async function crearCliente(mail: string, calificacion: number, nombre: s
         id_clerk
     });
     const c = await clerkClient();
-    await c.users.updateUser(id_clerk, { publicMetadata: { role: "rider" } });
+    const usuario = await c.users.getUser(id_clerk);
+    const rolActual = (usuario.publicMetadata as { role?: string })?.role;
+    // Solo asignamos "rider" si el usuario no tiene ya un rol (no pisamos el de un driver).
+    if (!rolActual) {
+        await c.users.updateUser(id_clerk, { publicMetadata: { role: "rider" } });
+    }
     return serializeCliente(cliente);
 }
 
