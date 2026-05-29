@@ -22,8 +22,14 @@ export default function ProvisioningPerezoso() {
             // Verificamos si ya existe en nuestra BD
             const cliente = await getClienteClerkID(userId);
 
-            // Si no existe, lo creamos con sus datos de Clerk
-            if (!cliente) {
+            // Si el usuario ya tiene un rol de otra app (p. ej. un driver),
+            // no lo provisionamos como rider para no pisarle el rol en Clerk.
+            const rol = (user.publicMetadata as { role?: string })?.role;
+            const esRiderOSinRol =
+                !rol || rol === "rider" || rol === "admin-rider";
+
+            // Si no existe y es (o será) un rider, lo creamos con sus datos de Clerk
+            if (!cliente && esRiderOSinRol) {
                 await crearCliente(
                     user.primaryEmailAddress?.emailAddress ?? "",
                     0,

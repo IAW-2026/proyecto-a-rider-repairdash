@@ -61,7 +61,8 @@
       "Bash(node *)",
       "Bash(pnpm exec *)",
       "Bash(Select-Object -First 40)",
-      "Bash(pnpm add *)"
+      "Bash(pnpm add *)",
+      "Bash(echo \"EXIT:$?\")"
     ]
   }
 }
