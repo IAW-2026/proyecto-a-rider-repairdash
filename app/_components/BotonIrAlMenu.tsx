@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Loader2 } from "lucide-react";
-import { getClienteClerkID } from "@/lib/actions/clientes";
 import { Button } from "@/app/components/ui";
 
 export default function BotonIrAlMenu() {
@@ -12,15 +11,10 @@ export default function BotonIrAlMenu() {
   const { userId } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleClick = async () => {
+  const handleClick = () => {
     if (!userId) return;
     setIsLoading(true);
-    const id = await getClienteClerkID(userId);
-    if (id?.id_cliente) {
-      router.push(`/user/${id.id_cliente}/menu`);
-    } else {
-      setIsLoading(false);
-    }
+    router.push(`/user/${userId}/menu`);
   };
 
   return (

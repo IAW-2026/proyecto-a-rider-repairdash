@@ -93,7 +93,6 @@ export default function FormularioNuevoTrabajo({
           action={distribuirFormulario}
           className="rounded-2xl p-5 sm:p-7 bg-rd-surface border border-rd-border-2 flex flex-col gap-5"
         >
-          <input type="hidden" name="id" value={id} />
           <input type="hidden" name="monto" value={montoFinal} />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

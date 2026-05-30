@@ -24,10 +24,10 @@ export async function getViajeById(id: number) {
   });
 }
 
-/** Obtener todos los viajes de un cliente */
-export async function getViajesByClienteId(idCliente: number) {
+/** Obtener todos los viajes de un cliente por su id_clerk */
+export async function getViajesByClerkID(idClerk: string) {
   return prisma.viajes.findMany({
-    where: { id_cliente: idCliente },
+    where: { id_clerk: idClerk },
     orderBy: { fecha: "desc" },
     include: {
       pagos: true,
@@ -89,10 +89,10 @@ export async function getViajesByFechaRango(desde: Date, hasta: Date) {
   });
 }
 
-/*Obtener ultimos 4 viajes de un cliente */
-export async function getUltimos4ViajesCliente(idCliente: number) {
+/* Obtener últimos 4 viajes de un cliente por su id_clerk */
+export async function getUltimos4ViajesPorClerkID(idClerk: string) {
   return prisma.viajes.findMany({
-    where: { id_cliente: idCliente },
+    where: { id_clerk: idClerk },
     orderBy: { fecha: "desc" },
     take: 4,
     include: {
@@ -101,21 +101,21 @@ export async function getUltimos4ViajesCliente(idCliente: number) {
   });
 }
 
-
-/** Obtener viajes paginados de un cliente (10 por página) */
-export async function getViajesPaginados(id_cliente: number, pagina: number = 1) {
+/** Obtener viajes paginados de un cliente por id_clerk */
+export async function getViajesPaginadosByClerkID(idClerk: string, pagina: number = 1) {
   const porPagina = 10;
   const skip = (pagina - 1) * porPagina;
+  const where = { id_clerk: idClerk };
 
   const [viajes, total] = await Promise.all([
     prisma.viajes.findMany({
-      where: { id_cliente },
+      where,
       orderBy: { fecha: "desc" },
       skip,
       take: porPagina,
       include: { pagos: true },
     }),
-    prisma.viajes.count({ where: { id_cliente } }),
+    prisma.viajes.count({ where }),
   ]);
 
   return {
@@ -125,11 +125,12 @@ export async function getViajesPaginados(id_cliente: number, pagina: number = 1)
     paginaActual: pagina,
   };
 }
+
 // ─── CREATE ──────────────────────────────────────────────────────────────────
 
 /** Crear un nuevo viaje */
 export async function createViaje(data: {
-  id_cliente?: number;
+  id_clerk?: string;
   tipo_de_trabajo: string;
   driver?: string;
   estado?: string;
@@ -137,7 +138,7 @@ export async function createViaje(data: {
 }) {
   return prisma.viajes.create({
     data: {
-      id_cliente: data.id_cliente,
+      id_clerk: data.id_clerk,
       tipo_de_trabajo: data.tipo_de_trabajo,
       driver: data.driver,
       estado: data.estado ?? "pendiente",
@@ -148,14 +149,14 @@ export async function createViaje(data: {
 
 /** Crear un nuevo viaje junto con su pago asociado de forma atómica */
 export async function createViajeConPago(data: {
-  id_cliente: number;
+  id_clerk: string;
   tipo_de_trabajo: string;
   monto: number;
   id_ubicacion: number;
 }) {
   return prisma.viajes.create({
     data: {
-      id_cliente: data.id_cliente,
+      id_clerk: data.id_clerk,
       tipo_de_trabajo: data.tipo_de_trabajo,
       estado: "pendiente",
       id_ubicacion: data.id_ubicacion,
@@ -217,11 +218,9 @@ export async function countViajesByEstado(estado: string) {
   });
 }
 
-/** Contar viajes de un cliente */
-export async function countViajesByCliente(idCliente: number) {
+/** Contar viajes de un cliente por su id_clerk */
+export async function countViajesByClerkID(idClerk: string) {
   return prisma.viajes.count({
-    where: { id_cliente: idCliente },
+    where: { id_clerk: idClerk },
   });
 }
-
-

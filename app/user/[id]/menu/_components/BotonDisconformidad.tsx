@@ -7,12 +7,12 @@ import { updateEstado } from "@/lib/actions/viajes";
 
 interface BotonDisconformidadProps {
   idViaje: number;
-  idCliente: number;
+  idClerk: string;
 }
 
 export default function BotonDisconformidad({
   idViaje,
-  idCliente,
+  idClerk,
 }: BotonDisconformidadProps) {
   const [loading, setLoading] = useState(false);
 
@@ -25,7 +25,7 @@ export default function BotonDisconformidad({
     } finally {
       setLoading(false);
     }
-    redirect(`/mocks/feedback?id_cliente=${idCliente}`);
+    redirect(`/mocks/feedback?id_clerk=${idClerk}`);
   };
 
   return (
