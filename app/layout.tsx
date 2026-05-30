@@ -29,6 +29,8 @@ export const metadata: Metadata = {
   description: "Plataforma de gestión de trabajos para riders de RepairDash",
 };
 
+const BUILD_ID = process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ?? "dev";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider>
@@ -37,6 +39,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         className={`${jakarta.variable} ${jetbrains.variable} ${jakarta.className}`}
         suppressHydrationWarning
       >
+        <head>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `try { if (localStorage.getItem('__build_id') !== '${BUILD_ID}') { localStorage.clear(); localStorage.setItem('__build_id', '${BUILD_ID}'); } } catch(e) {}`,
+            }}
+          />
+        </head>
         <body>
           <Toaster
             position="top-center"
