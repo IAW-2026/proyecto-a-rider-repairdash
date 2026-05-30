@@ -59,12 +59,12 @@ const ESTADOS_CANCELABLES = ["pendiente", "aceptado", "en camino", "ha llegado"]
 
 export default function ViajeEnCurso({
   idViaje,
-  idCliente,
+  idClerk,
   estadoInicial,
   pagoEstadoInicial,
 }: {
   idViaje: number;
-  idCliente: number;
+  idClerk: string;
   estadoInicial: string;
   pagoEstadoInicial: string | null;
 }) {
@@ -211,7 +211,7 @@ export default function ViajeEnCurso({
         </div>
         <div className="flex flex-col gap-2 w-full sm:w-auto sm:min-w-[200px]">
           <BotonConformidad idViaje={idViaje} />
-          <BotonDisconformidad idViaje={idViaje} idCliente={idCliente} />
+          <BotonDisconformidad idViaje={idViaje} idClerk={idClerk} />
         </div>
       </div>
     );

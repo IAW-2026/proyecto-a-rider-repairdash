@@ -28,17 +28,15 @@ export type AggregateUbicacion = {
 
 export type UbicacionAvgAggregateOutputType = {
   id_ubicacion: number | null
-  id_cliente: number | null
 }
 
 export type UbicacionSumAggregateOutputType = {
   id_ubicacion: number | null
-  id_cliente: number | null
 }
 
 export type UbicacionMinAggregateOutputType = {
   id_ubicacion: number | null
-  id_cliente: number | null
+  id_clerk: string | null
   calle: string | null
   numero: string | null
   ciudad: string | null
@@ -46,7 +44,7 @@ export type UbicacionMinAggregateOutputType = {
 
 export type UbicacionMaxAggregateOutputType = {
   id_ubicacion: number | null
-  id_cliente: number | null
+  id_clerk: string | null
   calle: string | null
   numero: string | null
   ciudad: string | null
@@ -54,7 +52,7 @@ export type UbicacionMaxAggregateOutputType = {
 
 export type UbicacionCountAggregateOutputType = {
   id_ubicacion: number
-  id_cliente: number
+  id_clerk: number
   calle: number
   numero: number
   ciudad: number
@@ -64,17 +62,15 @@ export type UbicacionCountAggregateOutputType = {
 
 export type UbicacionAvgAggregateInputType = {
   id_ubicacion?: true
-  id_cliente?: true
 }
 
 export type UbicacionSumAggregateInputType = {
   id_ubicacion?: true
-  id_cliente?: true
 }
 
 export type UbicacionMinAggregateInputType = {
   id_ubicacion?: true
-  id_cliente?: true
+  id_clerk?: true
   calle?: true
   numero?: true
   ciudad?: true
@@ -82,7 +78,7 @@ export type UbicacionMinAggregateInputType = {
 
 export type UbicacionMaxAggregateInputType = {
   id_ubicacion?: true
-  id_cliente?: true
+  id_clerk?: true
   calle?: true
   numero?: true
   ciudad?: true
@@ -90,7 +86,7 @@ export type UbicacionMaxAggregateInputType = {
 
 export type UbicacionCountAggregateInputType = {
   id_ubicacion?: true
-  id_cliente?: true
+  id_clerk?: true
   calle?: true
   numero?: true
   ciudad?: true
@@ -185,7 +181,7 @@ export type ubicacionGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 
 export type UbicacionGroupByOutputType = {
   id_ubicacion: number
-  id_cliente: number | null
+  id_clerk: string | null
   calle: string
   numero: string
   ciudad: string
@@ -216,7 +212,7 @@ export type ubicacionWhereInput = {
   OR?: Prisma.ubicacionWhereInput[]
   NOT?: Prisma.ubicacionWhereInput | Prisma.ubicacionWhereInput[]
   id_ubicacion?: Prisma.IntFilter<"ubicacion"> | number
-  id_cliente?: Prisma.IntNullableFilter<"ubicacion"> | number | null
+  id_clerk?: Prisma.StringNullableFilter<"ubicacion"> | string | null
   calle?: Prisma.StringFilter<"ubicacion"> | string
   numero?: Prisma.StringFilter<"ubicacion"> | string
   ciudad?: Prisma.StringFilter<"ubicacion"> | string
@@ -226,7 +222,7 @@ export type ubicacionWhereInput = {
 
 export type ubicacionOrderByWithRelationInput = {
   id_ubicacion?: Prisma.SortOrder
-  id_cliente?: Prisma.SortOrderInput | Prisma.SortOrder
+  id_clerk?: Prisma.SortOrderInput | Prisma.SortOrder
   calle?: Prisma.SortOrder
   numero?: Prisma.SortOrder
   ciudad?: Prisma.SortOrder
@@ -239,7 +235,7 @@ export type ubicacionWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.ubicacionWhereInput | Prisma.ubicacionWhereInput[]
   OR?: Prisma.ubicacionWhereInput[]
   NOT?: Prisma.ubicacionWhereInput | Prisma.ubicacionWhereInput[]
-  id_cliente?: Prisma.IntNullableFilter<"ubicacion"> | number | null
+  id_clerk?: Prisma.StringNullableFilter<"ubicacion"> | string | null
   calle?: Prisma.StringFilter<"ubicacion"> | string
   numero?: Prisma.StringFilter<"ubicacion"> | string
   ciudad?: Prisma.StringFilter<"ubicacion"> | string
@@ -249,7 +245,7 @@ export type ubicacionWhereUniqueInput = Prisma.AtLeast<{
 
 export type ubicacionOrderByWithAggregationInput = {
   id_ubicacion?: Prisma.SortOrder
-  id_cliente?: Prisma.SortOrderInput | Prisma.SortOrder
+  id_clerk?: Prisma.SortOrderInput | Prisma.SortOrder
   calle?: Prisma.SortOrder
   numero?: Prisma.SortOrder
   ciudad?: Prisma.SortOrder
@@ -265,7 +261,7 @@ export type ubicacionScalarWhereWithAggregatesInput = {
   OR?: Prisma.ubicacionScalarWhereWithAggregatesInput[]
   NOT?: Prisma.ubicacionScalarWhereWithAggregatesInput | Prisma.ubicacionScalarWhereWithAggregatesInput[]
   id_ubicacion?: Prisma.IntWithAggregatesFilter<"ubicacion"> | number
-  id_cliente?: Prisma.IntNullableWithAggregatesFilter<"ubicacion"> | number | null
+  id_clerk?: Prisma.StringNullableWithAggregatesFilter<"ubicacion"> | string | null
   calle?: Prisma.StringWithAggregatesFilter<"ubicacion"> | string
   numero?: Prisma.StringWithAggregatesFilter<"ubicacion"> | string
   ciudad?: Prisma.StringWithAggregatesFilter<"ubicacion"> | string
@@ -281,7 +277,7 @@ export type ubicacionCreateInput = {
 
 export type ubicacionUncheckedCreateInput = {
   id_ubicacion?: number
-  id_cliente?: number | null
+  id_clerk?: string | null
   calle: string
   numero: string
   ciudad: string
@@ -298,7 +294,7 @@ export type ubicacionUpdateInput = {
 
 export type ubicacionUncheckedUpdateInput = {
   id_ubicacion?: Prisma.IntFieldUpdateOperationsInput | number
-  id_cliente?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id_clerk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   calle?: Prisma.StringFieldUpdateOperationsInput | string
   numero?: Prisma.StringFieldUpdateOperationsInput | string
   ciudad?: Prisma.StringFieldUpdateOperationsInput | string
@@ -307,7 +303,7 @@ export type ubicacionUncheckedUpdateInput = {
 
 export type ubicacionCreateManyInput = {
   id_ubicacion?: number
-  id_cliente?: number | null
+  id_clerk?: string | null
   calle: string
   numero: string
   ciudad: string
@@ -321,7 +317,7 @@ export type ubicacionUpdateManyMutationInput = {
 
 export type ubicacionUncheckedUpdateManyInput = {
   id_ubicacion?: Prisma.IntFieldUpdateOperationsInput | number
-  id_cliente?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id_clerk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   calle?: Prisma.StringFieldUpdateOperationsInput | string
   numero?: Prisma.StringFieldUpdateOperationsInput | string
   ciudad?: Prisma.StringFieldUpdateOperationsInput | string
@@ -339,7 +335,7 @@ export type ubicacionOrderByRelationAggregateInput = {
 
 export type ubicacionCountOrderByAggregateInput = {
   id_ubicacion?: Prisma.SortOrder
-  id_cliente?: Prisma.SortOrder
+  id_clerk?: Prisma.SortOrder
   calle?: Prisma.SortOrder
   numero?: Prisma.SortOrder
   ciudad?: Prisma.SortOrder
@@ -347,12 +343,11 @@ export type ubicacionCountOrderByAggregateInput = {
 
 export type ubicacionAvgOrderByAggregateInput = {
   id_ubicacion?: Prisma.SortOrder
-  id_cliente?: Prisma.SortOrder
 }
 
 export type ubicacionMaxOrderByAggregateInput = {
   id_ubicacion?: Prisma.SortOrder
-  id_cliente?: Prisma.SortOrder
+  id_clerk?: Prisma.SortOrder
   calle?: Prisma.SortOrder
   numero?: Prisma.SortOrder
   ciudad?: Prisma.SortOrder
@@ -360,7 +355,7 @@ export type ubicacionMaxOrderByAggregateInput = {
 
 export type ubicacionMinOrderByAggregateInput = {
   id_ubicacion?: Prisma.SortOrder
-  id_cliente?: Prisma.SortOrder
+  id_clerk?: Prisma.SortOrder
   calle?: Prisma.SortOrder
   numero?: Prisma.SortOrder
   ciudad?: Prisma.SortOrder
@@ -368,7 +363,6 @@ export type ubicacionMinOrderByAggregateInput = {
 
 export type ubicacionSumOrderByAggregateInput = {
   id_ubicacion?: Prisma.SortOrder
-  id_cliente?: Prisma.SortOrder
 }
 
 export type UbicacionNullableScalarRelationFilter = {
@@ -480,7 +474,7 @@ export type ubicacionScalarWhereInput = {
   OR?: Prisma.ubicacionScalarWhereInput[]
   NOT?: Prisma.ubicacionScalarWhereInput | Prisma.ubicacionScalarWhereInput[]
   id_ubicacion?: Prisma.IntFilter<"ubicacion"> | number
-  id_cliente?: Prisma.IntNullableFilter<"ubicacion"> | number | null
+  id_clerk?: Prisma.StringNullableFilter<"ubicacion"> | string | null
   calle?: Prisma.StringFilter<"ubicacion"> | string
   numero?: Prisma.StringFilter<"ubicacion"> | string
   ciudad?: Prisma.StringFilter<"ubicacion"> | string
@@ -495,7 +489,7 @@ export type ubicacionCreateWithoutViajesInput = {
 
 export type ubicacionUncheckedCreateWithoutViajesInput = {
   id_ubicacion?: number
-  id_cliente?: number | null
+  id_clerk?: string | null
   calle: string
   numero: string
   ciudad: string
@@ -526,7 +520,7 @@ export type ubicacionUpdateWithoutViajesInput = {
 
 export type ubicacionUncheckedUpdateWithoutViajesInput = {
   id_ubicacion?: Prisma.IntFieldUpdateOperationsInput | number
-  id_cliente?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id_clerk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   calle?: Prisma.StringFieldUpdateOperationsInput | string
   numero?: Prisma.StringFieldUpdateOperationsInput | string
   ciudad?: Prisma.StringFieldUpdateOperationsInput | string
@@ -594,7 +588,7 @@ export type UbicacionCountOutputTypeCountViajesArgs<ExtArgs extends runtime.Type
 
 export type ubicacionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id_ubicacion?: boolean
-  id_cliente?: boolean
+  id_clerk?: boolean
   calle?: boolean
   numero?: boolean
   ciudad?: boolean
@@ -605,7 +599,7 @@ export type ubicacionSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type ubicacionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id_ubicacion?: boolean
-  id_cliente?: boolean
+  id_clerk?: boolean
   calle?: boolean
   numero?: boolean
   ciudad?: boolean
@@ -614,7 +608,7 @@ export type ubicacionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
 
 export type ubicacionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id_ubicacion?: boolean
-  id_cliente?: boolean
+  id_clerk?: boolean
   calle?: boolean
   numero?: boolean
   ciudad?: boolean
@@ -623,13 +617,13 @@ export type ubicacionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 
 export type ubicacionSelectScalar = {
   id_ubicacion?: boolean
-  id_cliente?: boolean
+  id_clerk?: boolean
   calle?: boolean
   numero?: boolean
   ciudad?: boolean
 }
 
-export type ubicacionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id_ubicacion" | "id_cliente" | "calle" | "numero" | "ciudad", ExtArgs["result"]["ubicacion"]>
+export type ubicacionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id_ubicacion" | "id_clerk" | "calle" | "numero" | "ciudad", ExtArgs["result"]["ubicacion"]>
 export type ubicacionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   cliente?: boolean | Prisma.ubicacion$clienteArgs<ExtArgs>
   viajes?: boolean | Prisma.ubicacion$viajesArgs<ExtArgs>
@@ -650,7 +644,7 @@ export type $ubicacionPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id_ubicacion: number
-    id_cliente: number | null
+    id_clerk: string | null
     calle: string
     numero: string
     ciudad: string
@@ -1080,7 +1074,7 @@ export interface Prisma__ubicacionClient<T, Null = never, ExtArgs extends runtim
  */
 export interface ubicacionFieldRefs {
   readonly id_ubicacion: Prisma.FieldRef<"ubicacion", 'Int'>
-  readonly id_cliente: Prisma.FieldRef<"ubicacion", 'Int'>
+  readonly id_clerk: Prisma.FieldRef<"ubicacion", 'String'>
   readonly calle: Prisma.FieldRef<"ubicacion", 'String'>
   readonly numero: Prisma.FieldRef<"ubicacion", 'String'>
   readonly ciudad: Prisma.FieldRef<"ubicacion", 'String'>

@@ -17,7 +17,7 @@ interface Viaje {
   estado: string;
   fecha: string | null;
   driver: string | null;
-  id_cliente: number;
+  id_clerk: string | null;
   pagos?: Pago[];
 }
 
@@ -51,10 +51,10 @@ const fmtFecha = (f?: string | null) => {
 
 export default function ListaViajes({
   initialViajes,
-  idCliente,
+  idClerk,
 }: {
   initialViajes: any[];
-  idCliente: number;
+  idClerk: string;
 }) {
   const [viajes, setViajes] = useState<Viaje[]>(initialViajes as Viaje[]);
 
@@ -64,14 +64,14 @@ export default function ListaViajes({
 
   useEffect(() => {
     const channel = supabaseBrowser
-      .channel(`viajes-cliente-${idCliente}`)
+      .channel(`viajes-cliente-${idClerk}`)
       .on(
         "postgres_changes",
         {
           event: "*",
           schema: "public",
           table: "viajes",
-          filter: `id_cliente=eq.${idCliente}`,
+          filter: `id_clerk=eq.${idClerk}`,
         },
         (payload: any) => {
           const { eventType, new: newRow, old: oldRow } = payload;
@@ -104,7 +104,7 @@ export default function ListaViajes({
     return () => {
       supabaseBrowser.removeChannel(channel);
     };
-  }, [idCliente]);
+  }, [idClerk]);
 
   if (viajes.length === 0) {
     return (

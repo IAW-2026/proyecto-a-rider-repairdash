@@ -28,19 +28,17 @@ export type AggregateViajes = {
 
 export type ViajesAvgAggregateOutputType = {
   id_viaje: number | null
-  id_cliente: number | null
   id_ubicacion: number | null
 }
 
 export type ViajesSumAggregateOutputType = {
   id_viaje: number | null
-  id_cliente: number | null
   id_ubicacion: number | null
 }
 
 export type ViajesMinAggregateOutputType = {
   id_viaje: number | null
-  id_cliente: number | null
+  id_clerk: string | null
   tipo_de_trabajo: string | null
   driver: string | null
   fecha: Date | null
@@ -50,7 +48,7 @@ export type ViajesMinAggregateOutputType = {
 
 export type ViajesMaxAggregateOutputType = {
   id_viaje: number | null
-  id_cliente: number | null
+  id_clerk: string | null
   tipo_de_trabajo: string | null
   driver: string | null
   fecha: Date | null
@@ -60,7 +58,7 @@ export type ViajesMaxAggregateOutputType = {
 
 export type ViajesCountAggregateOutputType = {
   id_viaje: number
-  id_cliente: number
+  id_clerk: number
   tipo_de_trabajo: number
   driver: number
   fecha: number
@@ -72,19 +70,17 @@ export type ViajesCountAggregateOutputType = {
 
 export type ViajesAvgAggregateInputType = {
   id_viaje?: true
-  id_cliente?: true
   id_ubicacion?: true
 }
 
 export type ViajesSumAggregateInputType = {
   id_viaje?: true
-  id_cliente?: true
   id_ubicacion?: true
 }
 
 export type ViajesMinAggregateInputType = {
   id_viaje?: true
-  id_cliente?: true
+  id_clerk?: true
   tipo_de_trabajo?: true
   driver?: true
   fecha?: true
@@ -94,7 +90,7 @@ export type ViajesMinAggregateInputType = {
 
 export type ViajesMaxAggregateInputType = {
   id_viaje?: true
-  id_cliente?: true
+  id_clerk?: true
   tipo_de_trabajo?: true
   driver?: true
   fecha?: true
@@ -104,7 +100,7 @@ export type ViajesMaxAggregateInputType = {
 
 export type ViajesCountAggregateInputType = {
   id_viaje?: true
-  id_cliente?: true
+  id_clerk?: true
   tipo_de_trabajo?: true
   driver?: true
   fecha?: true
@@ -201,7 +197,7 @@ export type viajesGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type ViajesGroupByOutputType = {
   id_viaje: number
-  id_cliente: number | null
+  id_clerk: string | null
   tipo_de_trabajo: string
   driver: string | null
   fecha: Date | null
@@ -234,7 +230,7 @@ export type viajesWhereInput = {
   OR?: Prisma.viajesWhereInput[]
   NOT?: Prisma.viajesWhereInput | Prisma.viajesWhereInput[]
   id_viaje?: Prisma.IntFilter<"viajes"> | number
-  id_cliente?: Prisma.IntNullableFilter<"viajes"> | number | null
+  id_clerk?: Prisma.StringNullableFilter<"viajes"> | string | null
   tipo_de_trabajo?: Prisma.StringFilter<"viajes"> | string
   driver?: Prisma.StringNullableFilter<"viajes"> | string | null
   fecha?: Prisma.DateTimeNullableFilter<"viajes"> | Date | string | null
@@ -247,7 +243,7 @@ export type viajesWhereInput = {
 
 export type viajesOrderByWithRelationInput = {
   id_viaje?: Prisma.SortOrder
-  id_cliente?: Prisma.SortOrderInput | Prisma.SortOrder
+  id_clerk?: Prisma.SortOrderInput | Prisma.SortOrder
   tipo_de_trabajo?: Prisma.SortOrder
   driver?: Prisma.SortOrderInput | Prisma.SortOrder
   fecha?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -263,7 +259,7 @@ export type viajesWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.viajesWhereInput | Prisma.viajesWhereInput[]
   OR?: Prisma.viajesWhereInput[]
   NOT?: Prisma.viajesWhereInput | Prisma.viajesWhereInput[]
-  id_cliente?: Prisma.IntNullableFilter<"viajes"> | number | null
+  id_clerk?: Prisma.StringNullableFilter<"viajes"> | string | null
   tipo_de_trabajo?: Prisma.StringFilter<"viajes"> | string
   driver?: Prisma.StringNullableFilter<"viajes"> | string | null
   fecha?: Prisma.DateTimeNullableFilter<"viajes"> | Date | string | null
@@ -276,7 +272,7 @@ export type viajesWhereUniqueInput = Prisma.AtLeast<{
 
 export type viajesOrderByWithAggregationInput = {
   id_viaje?: Prisma.SortOrder
-  id_cliente?: Prisma.SortOrderInput | Prisma.SortOrder
+  id_clerk?: Prisma.SortOrderInput | Prisma.SortOrder
   tipo_de_trabajo?: Prisma.SortOrder
   driver?: Prisma.SortOrderInput | Prisma.SortOrder
   fecha?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -294,7 +290,7 @@ export type viajesScalarWhereWithAggregatesInput = {
   OR?: Prisma.viajesScalarWhereWithAggregatesInput[]
   NOT?: Prisma.viajesScalarWhereWithAggregatesInput | Prisma.viajesScalarWhereWithAggregatesInput[]
   id_viaje?: Prisma.IntWithAggregatesFilter<"viajes"> | number
-  id_cliente?: Prisma.IntNullableWithAggregatesFilter<"viajes"> | number | null
+  id_clerk?: Prisma.StringNullableWithAggregatesFilter<"viajes"> | string | null
   tipo_de_trabajo?: Prisma.StringWithAggregatesFilter<"viajes"> | string
   driver?: Prisma.StringNullableWithAggregatesFilter<"viajes"> | string | null
   fecha?: Prisma.DateTimeNullableWithAggregatesFilter<"viajes"> | Date | string | null
@@ -314,7 +310,7 @@ export type viajesCreateInput = {
 
 export type viajesUncheckedCreateInput = {
   id_viaje?: number
-  id_cliente?: number | null
+  id_clerk?: string | null
   tipo_de_trabajo: string
   driver?: string | null
   fecha?: Date | string | null
@@ -335,7 +331,7 @@ export type viajesUpdateInput = {
 
 export type viajesUncheckedUpdateInput = {
   id_viaje?: Prisma.IntFieldUpdateOperationsInput | number
-  id_cliente?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id_clerk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tipo_de_trabajo?: Prisma.StringFieldUpdateOperationsInput | string
   driver?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -346,7 +342,7 @@ export type viajesUncheckedUpdateInput = {
 
 export type viajesCreateManyInput = {
   id_viaje?: number
-  id_cliente?: number | null
+  id_clerk?: string | null
   tipo_de_trabajo: string
   driver?: string | null
   fecha?: Date | string | null
@@ -363,7 +359,7 @@ export type viajesUpdateManyMutationInput = {
 
 export type viajesUncheckedUpdateManyInput = {
   id_viaje?: Prisma.IntFieldUpdateOperationsInput | number
-  id_cliente?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id_clerk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tipo_de_trabajo?: Prisma.StringFieldUpdateOperationsInput | string
   driver?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -388,7 +384,7 @@ export type ViajesNullableScalarRelationFilter = {
 
 export type viajesCountOrderByAggregateInput = {
   id_viaje?: Prisma.SortOrder
-  id_cliente?: Prisma.SortOrder
+  id_clerk?: Prisma.SortOrder
   tipo_de_trabajo?: Prisma.SortOrder
   driver?: Prisma.SortOrder
   fecha?: Prisma.SortOrder
@@ -398,13 +394,12 @@ export type viajesCountOrderByAggregateInput = {
 
 export type viajesAvgOrderByAggregateInput = {
   id_viaje?: Prisma.SortOrder
-  id_cliente?: Prisma.SortOrder
   id_ubicacion?: Prisma.SortOrder
 }
 
 export type viajesMaxOrderByAggregateInput = {
   id_viaje?: Prisma.SortOrder
-  id_cliente?: Prisma.SortOrder
+  id_clerk?: Prisma.SortOrder
   tipo_de_trabajo?: Prisma.SortOrder
   driver?: Prisma.SortOrder
   fecha?: Prisma.SortOrder
@@ -414,7 +409,7 @@ export type viajesMaxOrderByAggregateInput = {
 
 export type viajesMinOrderByAggregateInput = {
   id_viaje?: Prisma.SortOrder
-  id_cliente?: Prisma.SortOrder
+  id_clerk?: Prisma.SortOrder
   tipo_de_trabajo?: Prisma.SortOrder
   driver?: Prisma.SortOrder
   fecha?: Prisma.SortOrder
@@ -424,7 +419,6 @@ export type viajesMinOrderByAggregateInput = {
 
 export type viajesSumOrderByAggregateInput = {
   id_viaje?: Prisma.SortOrder
-  id_cliente?: Prisma.SortOrder
   id_ubicacion?: Prisma.SortOrder
 }
 
@@ -582,7 +576,7 @@ export type viajesScalarWhereInput = {
   OR?: Prisma.viajesScalarWhereInput[]
   NOT?: Prisma.viajesScalarWhereInput | Prisma.viajesScalarWhereInput[]
   id_viaje?: Prisma.IntFilter<"viajes"> | number
-  id_cliente?: Prisma.IntNullableFilter<"viajes"> | number | null
+  id_clerk?: Prisma.StringNullableFilter<"viajes"> | string | null
   tipo_de_trabajo?: Prisma.StringFilter<"viajes"> | string
   driver?: Prisma.StringNullableFilter<"viajes"> | string | null
   fecha?: Prisma.DateTimeNullableFilter<"viajes"> | Date | string | null
@@ -601,7 +595,7 @@ export type viajesCreateWithoutPagosInput = {
 
 export type viajesUncheckedCreateWithoutPagosInput = {
   id_viaje?: number
-  id_cliente?: number | null
+  id_clerk?: string | null
   tipo_de_trabajo: string
   driver?: string | null
   fecha?: Date | string | null
@@ -636,7 +630,7 @@ export type viajesUpdateWithoutPagosInput = {
 
 export type viajesUncheckedUpdateWithoutPagosInput = {
   id_viaje?: Prisma.IntFieldUpdateOperationsInput | number
-  id_cliente?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id_clerk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tipo_de_trabajo?: Prisma.StringFieldUpdateOperationsInput | string
   driver?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -655,7 +649,7 @@ export type viajesCreateWithoutUbicacionInput = {
 
 export type viajesUncheckedCreateWithoutUbicacionInput = {
   id_viaje?: number
-  id_cliente?: number | null
+  id_clerk?: string | null
   tipo_de_trabajo: string
   driver?: string | null
   fecha?: Date | string | null
@@ -728,7 +722,7 @@ export type viajesUncheckedUpdateManyWithoutClienteInput = {
 
 export type viajesCreateManyUbicacionInput = {
   id_viaje?: number
-  id_cliente?: number | null
+  id_clerk?: string | null
   tipo_de_trabajo: string
   driver?: string | null
   fecha?: Date | string | null
@@ -746,7 +740,7 @@ export type viajesUpdateWithoutUbicacionInput = {
 
 export type viajesUncheckedUpdateWithoutUbicacionInput = {
   id_viaje?: Prisma.IntFieldUpdateOperationsInput | number
-  id_cliente?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id_clerk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tipo_de_trabajo?: Prisma.StringFieldUpdateOperationsInput | string
   driver?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -756,7 +750,7 @@ export type viajesUncheckedUpdateWithoutUbicacionInput = {
 
 export type viajesUncheckedUpdateManyWithoutUbicacionInput = {
   id_viaje?: Prisma.IntFieldUpdateOperationsInput | number
-  id_cliente?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  id_clerk?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tipo_de_trabajo?: Prisma.StringFieldUpdateOperationsInput | string
   driver?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fecha?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -796,7 +790,7 @@ export type ViajesCountOutputTypeCountPagosArgs<ExtArgs extends runtime.Types.Ex
 
 export type viajesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id_viaje?: boolean
-  id_cliente?: boolean
+  id_clerk?: boolean
   tipo_de_trabajo?: boolean
   driver?: boolean
   fecha?: boolean
@@ -810,7 +804,7 @@ export type viajesSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
 
 export type viajesSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id_viaje?: boolean
-  id_cliente?: boolean
+  id_clerk?: boolean
   tipo_de_trabajo?: boolean
   driver?: boolean
   fecha?: boolean
@@ -822,7 +816,7 @@ export type viajesSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
 
 export type viajesSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id_viaje?: boolean
-  id_cliente?: boolean
+  id_clerk?: boolean
   tipo_de_trabajo?: boolean
   driver?: boolean
   fecha?: boolean
@@ -834,7 +828,7 @@ export type viajesSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 
 export type viajesSelectScalar = {
   id_viaje?: boolean
-  id_cliente?: boolean
+  id_clerk?: boolean
   tipo_de_trabajo?: boolean
   driver?: boolean
   fecha?: boolean
@@ -842,7 +836,7 @@ export type viajesSelectScalar = {
   id_ubicacion?: boolean
 }
 
-export type viajesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id_viaje" | "id_cliente" | "tipo_de_trabajo" | "driver" | "fecha" | "estado" | "id_ubicacion", ExtArgs["result"]["viajes"]>
+export type viajesOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id_viaje" | "id_clerk" | "tipo_de_trabajo" | "driver" | "fecha" | "estado" | "id_ubicacion", ExtArgs["result"]["viajes"]>
 export type viajesInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   pagos?: boolean | Prisma.viajes$pagosArgs<ExtArgs>
   cliente?: boolean | Prisma.viajes$clienteArgs<ExtArgs>
@@ -867,7 +861,7 @@ export type $viajesPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id_viaje: number
-    id_cliente: number | null
+    id_clerk: string | null
     tipo_de_trabajo: string
     driver: string | null
     fecha: Date | null
@@ -1300,7 +1294,7 @@ export interface Prisma__viajesClient<T, Null = never, ExtArgs extends runtime.T
  */
 export interface viajesFieldRefs {
   readonly id_viaje: Prisma.FieldRef<"viajes", 'Int'>
-  readonly id_cliente: Prisma.FieldRef<"viajes", 'Int'>
+  readonly id_clerk: Prisma.FieldRef<"viajes", 'String'>
   readonly tipo_de_trabajo: Prisma.FieldRef<"viajes", 'String'>
   readonly driver: Prisma.FieldRef<"viajes", 'String'>
   readonly fecha: Prisma.FieldRef<"viajes", 'DateTime'>

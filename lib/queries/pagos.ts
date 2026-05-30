@@ -30,12 +30,12 @@ export async function getPagosByViajeId(idViaje: number) {
   });
 }
 
-/** Obtener los pagos de un cliente (a través de viajes) */
-export async function getPagosByClienteId(idCliente: number) {
+/** Obtener los pagos de un cliente por su id_clerk (a través de viajes) */
+export async function getPagosByClerkID(idClerk: string) {
   return prisma.pagos.findMany({
     where: {
       viajes: {
-        id_cliente: idCliente,
+        id_clerk: idClerk,
       },
     },
     orderBy: { id_pago: "desc" },

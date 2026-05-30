@@ -1,8 +1,8 @@
 "use server"
 
-import { crearUbicacion } from "./ubicacion";
+import { crearUbicacion, getUbicacionesPorCliente } from "./ubicacion";
 import { redirect } from "next/navigation";
-import { getUbicacionesPorCliente } from "./ubicacion";
+import { getClienteActual } from "./clientes";
 
 /**
  * Valida con Nominatim (OpenStreetMap) que la dirección exista en Argentina.
@@ -46,7 +46,7 @@ async function esUbicacionValidaEnArgentina(
 }
 
 export async function nuevaUbicacion(formData: FormData) {
-  const id     = formData.get("id")     as string;
+  const cliente = await getClienteActual();
   const calle  = formData.get("calle")  as string;
   const numero = formData.get("numero") as string;
   const ciudad = formData.get("ciudad") as string;
@@ -54,30 +54,18 @@ export async function nuevaUbicacion(formData: FormData) {
   // 1. Validar que la dirección existe en Argentina
   const esValida = await esUbicacionValidaEnArgentina(calle, numero, ciudad);
   if (!esValida) {
-    redirect(`/user/${id}/solicitudNuevaUbicacion`);
+    redirect(`/user/${cliente.id_clerk}/solicitudNuevaUbicacion`);
   }
 
-  else{
   // 2. Verificar que el usuario no tenga esa ubicación ya cargada
-  const ubicaciones = await getUbicacionesPorCliente(id);
-  var encontrado = false;
-  for (const ubicacion of ubicaciones) {
-    if (
-      ubicacion.calle === calle &&
-      ubicacion.numero === numero &&
-      ubicacion.ciudad === ciudad
-    ) {
-      encontrado = true;
-    }
-  }
+  const ubicaciones = await getUbicacionesPorCliente(cliente.id_clerk!);
+  const yaExiste = ubicaciones.some(
+    (u) => u.calle === calle && u.numero === numero && u.ciudad === ciudad
+  );
 
-  if (!encontrado){
-
-  // 3. Guardar y redirigir
-  await crearUbicacion(formData);
-  redirect(`/user/${id}/solicitudTrabajoActual`);
-  }
+  if (!yaExiste) {
+    // 3. Guardar y redirigir
+    await crearUbicacion(formData);
+    redirect(`/user/${cliente.id_clerk}/solicitudTrabajoActual`);
   }
 }
-
-

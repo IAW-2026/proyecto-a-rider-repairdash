@@ -30,8 +30,6 @@ export default function FormularioNuevaUbicacion({ id }: { id: string }) {
           action={nuevaUbicacion}
           className="rounded-2xl p-5 sm:p-6 bg-rd-surface border border-rd-border-2 flex flex-col gap-4"
         >
-          <input type="hidden" name="id" value={id} />
-
           <Input
             label="Calle"
             name="calle"

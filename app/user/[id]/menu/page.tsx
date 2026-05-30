@@ -13,7 +13,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import ViajeEnCurso from "./_components/ViajeEnCurso";
 import MenuSkeleton from "@/app/components/skeletons/MenuSkeleton";
 import ActualizarEstadoViaje from "@/app/mocks/actualizarEstadoViaje";
-import { getViajesByClienteId } from "@/lib/queries/viajes";
+import { getViajesByClerkID } from "@/lib/queries/viajes";
 import { PageHeader, Pill, Button } from "@/app/components/ui";
 import { UserButton } from "@clerk/nextjs";
 
@@ -27,15 +27,15 @@ const fmtFecha = (f?: Date | string | null) => {
   });
 };
 
-const getCachedViajes = cache((id: number) => getViajesByClienteId(id));
+const getCachedViajes = cache((idClerk: string) => getViajesByClerkID(idClerk));
 
 async function UserGreeting() {
   const user = await currentUser();
   return <>{user?.firstName ? `Hola, ${user.firstName}` : "Menú principal"}</>;
 }
 
-async function MenuDescription({ id }: { id: number }) {
-  const viajes = await getCachedViajes(id);
+async function MenuDescription({ idClerk }: { idClerk: string }) {
+  const viajes = await getCachedViajes(idClerk);
   const viajeActivo = viajes.find(
     (v) => v.estado && v.estado.toLowerCase() !== "concluido",
   );
@@ -90,9 +90,8 @@ function Kpis({
   );
 }
 
-async function MenuContent({ idStr }: { idStr: string }) {
-  const id = parseInt(idStr);
-  const viajes = await getCachedViajes(id);
+async function MenuContent({ idClerk }: { idClerk: string }) {
+  const viajes = await getCachedViajes(idClerk);
 
   const viajeActivo = viajes.find(
     (v) => v.estado && v.estado.toLowerCase() !== "concluido",
@@ -122,7 +121,7 @@ async function MenuContent({ idStr }: { idStr: string }) {
             <section className="space-y-4">
               <ViajeEnCurso
                 idViaje={viajeActivo.id_viaje}
-                idCliente={id}
+                idClerk={idClerk}
                 estadoInicial={viajeActivo.estado ?? "pendiente"}
                 pagoEstadoInicial={viajeActivo.pagos?.[0]?.estado ?? null}
               />
@@ -150,7 +149,7 @@ async function MenuContent({ idStr }: { idStr: string }) {
               </p>
             </div>
             <Button
-              href={`/user/${id}/solicitudTrabajoActual`}
+              href={`/user/${idClerk}/solicitudTrabajoActual`}
               size="lg"
               className="relative z-10 sm:!h-auto sm:self-stretch"
             >
@@ -169,7 +168,7 @@ async function MenuContent({ idStr }: { idStr: string }) {
           </h2>
           {viajesPasados.length > 0 && (
             <a
-              href={`/user/${id}/travels`}
+              href={`/user/${idClerk}/travels`}
               className="text-xs text-rd-accent-soft font-semibold hover:underline"
             >
               Ver todo →
@@ -251,7 +250,7 @@ async function MenuContent({ idStr }: { idStr: string }) {
             return (
               <Link
                 key={key}
-                href={`/user/${id}/solicitudTrabajoActual?categoria=${key}`}
+                href={`/user/${idClerk}/solicitudTrabajoActual?categoria=${key}`}
                 className="rounded-xl p-4 bg-rd-surface border border-rd-border hover:border-rd-border-3 hover:bg-rd-elevated transition-colors flex flex-col items-start gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-accent focus-visible:ring-offset-2 focus-visible:ring-offset-rd-bg"
               >
                 <span className="w-10 h-10 rounded-lg bg-rd-elevated grid place-items-center text-rd-accent-soft group-hover:bg-rd-accent group-hover:text-white transition-colors">
@@ -299,12 +298,12 @@ export default async function Menu({
         }
         description={
           <Suspense fallback="¿Qué necesitás hoy?">
-            <MenuDescription id={parseInt(id)} />
+            <MenuDescription idClerk={id} />
           </Suspense>
         }
       />
       <Suspense fallback={<MenuSkeleton />}>
-        <MenuContent idStr={id} />
+        <MenuContent idClerk={id} />
       </Suspense>
     </div>
   );

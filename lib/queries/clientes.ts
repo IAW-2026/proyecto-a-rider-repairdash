@@ -5,18 +5,11 @@ import { prisma } from "../prisma";
 /** Obtener todos los clientes */
 export async function getClientes() {
   return prisma.cliente.findMany({
-    orderBy: { id_cliente: "asc" },
+    orderBy: { id_clerk: "asc" },
   });
 }
 
-/** Obtener un cliente por ID */
-export async function getClienteById(id: number) {
-  return prisma.cliente.findUnique({
-    where: { id_cliente: id },
-  });
-}
-
-/** Obtener un cliente por mail */
+/** Obtener un cliente por su id_clerk */
 export async function getClienteByClerkID(id_clerk: string) {
   return prisma.cliente.findUnique({
     where: { id_clerk },
@@ -24,9 +17,9 @@ export async function getClienteByClerkID(id_clerk: string) {
 }
 
 /** Obtener un cliente con todas sus relaciones */
-export async function getClienteConRelaciones(id: number) {
+export async function getClienteConRelaciones(id_clerk: string) {
   return prisma.cliente.findUnique({
-    where: { id_cliente: id },
+    where: { id_clerk },
     include: {
       viajes: true,
       ubicacion: true,
@@ -44,36 +37,21 @@ export async function createCliente(data: {
   calificacion?: number;
   nombre?: string;
   apellido?: string;
-  id_clerk?: string;
+  id_clerk: string;
 }) {
   return prisma.cliente.create({
     data: {
+      id_clerk: data.id_clerk,
       mail: data.mail,
       calificacion: data.calificacion,
       nombre: data.nombre,
       apellido: data.apellido,
-      id_clerk: data.id_clerk,
     },
   });
 }
 
 // ─── UPDATE ──────────────────────────────────────────────────────────────────
 
-/** Actualizar un cliente */
-export async function updateCliente(
-  id: number,
-  data: {
-    mail?: string;
-    calificacion?: number;
-    nombre?: string;
-    apellido?: string;
-  }
-) {
-  return prisma.cliente.update({
-    where: { id_cliente: id },
-    data,
-  });
-}
 export async function updateClienteByClerkID(
   id_clerk: string,
   data: {
@@ -88,23 +66,24 @@ export async function updateClienteByClerkID(
     data,
   });
 }
+
 /** Actualizar la calificación de un cliente */
 export async function updateCalificacionCliente(
-  id: number,
+  id_clerk: string,
   calificacion: number
 ) {
   return prisma.cliente.update({
-    where: { id_cliente: id },
+    where: { id_clerk },
     data: { calificacion },
   });
 }
 
 // ─── DELETE ──────────────────────────────────────────────────────────────────
 
-/** Eliminar un cliente por ID */
-export async function deleteCliente(id: number) {
+/** Eliminar un cliente por su id_clerk */
+export async function deleteCliente(id_clerk: string) {
   return prisma.cliente.delete({
-    where: { id_cliente: id },
+    where: { id_clerk },
   });
 }
 

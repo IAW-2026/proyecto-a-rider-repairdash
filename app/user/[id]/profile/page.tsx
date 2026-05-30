@@ -3,8 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { CreditCard, CheckCircle2 } from "lucide-react";
 import { currentUser } from "@clerk/nextjs/server";
-import { getClienteID } from "@/lib/actions/clientes";
-import { getViajesByClienteId } from "@/lib/queries/viajes";
+import { getClienteByClerkID } from "@/lib/queries/clientes";
+import { getViajesByClerkID } from "@/lib/queries/viajes";
 import TablaViajes from "../_components/TablaViajes";
 import IdentityCardSkeleton from "@/app/components/skeletons/IdentityCardSkeleton";
 import ProfileHistorySkeleton from "@/app/components/skeletons/ProfileHistorySkeleton";
@@ -27,7 +27,7 @@ const fmtMonto = (m?: unknown) => {
 
 async function ProfileIdentityCard({ id }: { id: string }) {
   const [cliente, user] = await Promise.all([
-    getClienteID(id),
+    getClienteByClerkID(id),
     currentUser(),
   ]);
 
@@ -94,7 +94,7 @@ async function ProfileIdentityCard({ id }: { id: string }) {
 
 
 async function ProfileHistory({ id }: { id: string }) {
-  const viajes = await getViajesByClienteId(Number(id));
+  const viajes = await getViajesByClerkID(id);
 
   // Preparar datos para el gráfico de barras (últimos 6 meses)
   const viajesPorMes = new Map<string, number>();

@@ -3,22 +3,10 @@ import MenuHamburguesa from "./_components/MenuHamburguesa";
 import BarraInferior from "./_components/BarraInferior";
 import { currentUser, auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { getClienteClerkID } from "@/lib/actions/clientes";
+import { getClienteByClerkID } from "@/lib/queries/clientes";
 
 async function UserSidebar({ id }: { id: string }) {
   const user = await currentUser();
-  const clerkId = user?.id;
-
-  if (clerkId) {
-    const dbUser = await getClienteClerkID(clerkId);
-
-    if (!dbUser || dbUser.id_cliente.toString() !== id) {
-      redirect(`/user/${dbUser?.id_cliente}/menu`);
-    }
-  } else {
-    redirect("/");
-  }
-
   const nombre = user?.firstName || "";
   const apellido = user?.lastName || "";
 
@@ -37,6 +25,14 @@ export default async function Layout({
   const { userId } = await auth();
   if (!userId) {
     redirect("/");
+  }
+
+  const dbUser = await getClienteByClerkID(userId);
+  if (!dbUser) {
+    redirect("/");
+  }
+  if (dbUser.id_clerk !== id) {
+    redirect(`/user/${dbUser.id_clerk}/menu`);
   }
 
   return (
