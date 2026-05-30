@@ -68,7 +68,15 @@
       "Bash(npx -y tsx scripts/check-invariantes.ts)",
       "Bash(npx -y tsx --env-file=.env scripts/check-invariantes.ts)",
       "Bash(npx tsx *)",
-      "Bash(grep -v '^$')"
+      "Bash(grep -v '^$')",
+      "Bash(npx --no-install tsc --noEmit -p .)",
+      "Bash(curl -sS -i -X GET 'https://driver-repairdash.vercel.app/api/tipo-servicios' -H 'Content-Type: application/json' -H 'x-api-key: driver-secret-key')",
+      "Bash(gh search *)",
+      "PowerShell(gh search *)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl -sS -i -X GET 'https://driver-repairdash.vercel.app/api/tipos-servicios' -H 'Accept: application/json' -H 'x-api-key: driver-secret-key')",
+      "Bash(curl *)"
     ]
   }
 }

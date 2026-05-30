@@ -57,6 +57,20 @@ const STEPS: StepDef[] = [
 
 const ESTADOS_CANCELABLES = ["pendiente", "aceptado", "en camino", "ha llegado"];
 
+const ESTADO_ORDER = [
+  "pendiente",
+  "aceptado",
+  "en camino",
+  "ha llegado",
+  "finalizado",
+  "concluido",
+];
+
+function rangoEstado(e: string | undefined | null) {
+  if (!e) return -1;
+  return ESTADO_ORDER.indexOf(e);
+}
+
 export default function ViajeEnCurso({
   idViaje,
   idClerk,
@@ -117,10 +131,22 @@ export default function ViajeEnCurso({
 
             const estadoDB = data?.estado?.toLowerCase();
             if (estadoDB && estadoDB !== estadoRef.current) {
-              console.info(
-                `[Realtime] Sync al conectar: ${estadoRef.current} → ${estadoDB}`,
-              );
-              setEstadoActual(estadoDB);
+              // No regresar dentro del flujo normal: si la réplica de Supabase
+              // devuelve un estado "más atrás" que el que ya tenemos del SSR,
+              // ignoramos. "cancelado" no está en el orden y siempre se aplica.
+              const enFlujo =
+                ESTADO_ORDER.includes(estadoDB) &&
+                ESTADO_ORDER.includes(estadoRef.current);
+              if (enFlujo && rangoEstado(estadoDB) < rangoEstado(estadoRef.current)) {
+                console.info(
+                  `[Realtime] Sync ignorado (regresión): ${estadoRef.current} → ${estadoDB}`,
+                );
+              } else {
+                console.info(
+                  `[Realtime] Sync al conectar: ${estadoRef.current} → ${estadoDB}`,
+                );
+                setEstadoActual(estadoDB);
+              }
             }
           } catch (e) {
             console.error("[Realtime] Error en sync inicial:", e);
