@@ -82,11 +82,6 @@ async function ProfileIdentityCard({ id }: { id: string }) {
         <CreditCard size={16} strokeWidth={1.75} />
         Ver balance y pagos
       </Button>
-
-        <div className="flex justify-between py-1">
-          <span>ID cliente</span>
-          <span className="font-mono-rd text-rd-text-2">#{id}</span>
-        </div>
     </div>
   );
 }
