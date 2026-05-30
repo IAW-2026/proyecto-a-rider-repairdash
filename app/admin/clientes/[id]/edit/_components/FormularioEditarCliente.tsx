@@ -13,11 +13,10 @@ import {
 } from "@/app/components/ui";
 
 type Cliente = {
-  id_cliente: number;
+  id_clerk: string;
   nombre?: string | null;
   apellido?: string | null;
   mail: string;
-  id_clerk?: string | null;
   calificacion?: number | string | null;
 };
 
@@ -35,7 +34,7 @@ export default function FormularioEditarCliente({ cliente }: { cliente: Cliente 
     e.preventDefault();
     setLoading(true);
     try {
-      await actualizarClienteAction(cliente.id_cliente, formData);
+      await actualizarClienteAction(cliente.id_clerk, formData);
       toast.success("Perfil actualizado", {
         description: "Los cambios se guardaron en la base de datos.",
       });
@@ -60,7 +59,7 @@ export default function FormularioEditarCliente({ cliente }: { cliente: Cliente 
           {fullName}
         </h2>
         <p className="text-xs text-rd-muted mt-1">
-          cliente · #{cliente.id_cliente}
+          cliente · {cliente.id_clerk.slice(-8)}
         </p>
 
         <div className="w-full mt-5 pt-5 border-t border-rd-border-2 text-xs text-rd-muted">

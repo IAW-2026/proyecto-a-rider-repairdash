@@ -1,14 +1,23 @@
 "use server";
 
-import { 
-    getClienteById, 
-    getClienteByClerkID, 
-    createCliente, 
-    getClientes, 
-    deleteCliente, 
-    updateCliente 
+import {
+    getClienteByClerkID,
+    createCliente,
+    getClientes,
+    deleteCliente,
+    updateClienteByClerkID,
 } from "../queries/clientes";
 import { clerkClient } from "@clerk/nextjs/server";
+
+import { auth } from "@clerk/nextjs/server";
+
+export async function getClienteActual() {
+  const { userId } = await auth();
+  if (!userId) throw new Error("No autenticado");
+  const cliente = await getClienteByClerkID(userId);
+  if (!cliente) throw new Error("Cliente no encontrado");
+  return cliente;
+}
 
 // Helper: convierte el Decimal de Prisma a un number plano serializable
 function serializeCliente(cliente: any) {
@@ -19,30 +28,21 @@ function serializeCliente(cliente: any) {
     };
 }
 
-/** 
+/**
  * Obtener todos los clientes (para el admin)
- * Ahora filtra para mostrar solo aquellos que tengan el rol de "cliente" en Clerk.
+ * Filtra para mostrar solo aquellos que tengan el rol de "rider" en Clerk.
  */
 export async function obtenerTodosLosClientes() {
-    // 1. Obtenemos todos los registros de la base de datos
     const clientesDB = await getClientes();
-    
-    // 2. Obtenemos la lista de usuarios de Clerk para verificar roles
+
     const c = await clerkClient();
     const usuariosClerk = await c.users.getUserList({
-        limit: 500, // Ajustar según necesidad
+        limit: 500,
     });
 
-    // 3. Filtramos y unimos la información
-    // Solo incluimos a los que tienen rol "cliente" o los que no tienen ID de Clerk aún (pendientes de login)
-    // Pero la petición pide explícitamente "rol de cliente"
     const clientesFiltrados = clientesDB.filter(clienteDB => {
         const usuarioClerk = usuariosClerk.data.find(u => u.id === clienteDB.id_clerk);
-        
-        // Si no tiene usuario en Clerk, asumimos que es cliente (o está en limbo)
-        if (!usuarioClerk) return true; 
-
-        // Si tiene usuario en Clerk, verificamos que su rol sea "cliente"
+        if (!usuarioClerk) return true;
         const rol = (usuarioClerk.publicMetadata as any)?.role;
         return rol === "rider";
     });
@@ -53,12 +53,6 @@ export async function obtenerTodosLosClientes() {
 /** Obtener un cliente por su ID de Clerk */
 export async function getClienteClerkID(clerkId: string) {
     const cliente = await getClienteByClerkID(clerkId);
-    return cliente ? serializeCliente(cliente) : null;
-}
-
-/** Obtener un cliente por su ID interno */
-export async function getClienteID(id: string) {
-    const cliente = await getClienteById(parseInt(id));
     return cliente ? serializeCliente(cliente) : null;
 }
 
@@ -81,18 +75,18 @@ export async function crearCliente(mail: string, calificacion: number, nombre: s
     return serializeCliente(cliente);
 }
 
-/** Eliminar un cliente de Prisma */
-export async function eliminarClienteCompleto(id_cliente: number, id_clerk?: string | null) {
-    await deleteCliente(id_cliente);    
+/** Eliminar un cliente por su id_clerk */
+export async function eliminarClienteCompleto(id_clerk: string) {
+    await deleteCliente(id_clerk);
 }
 
 /** Actualizar información básica de un cliente */
-export async function actualizarClienteAction(id: number, data: {
+export async function actualizarClienteAction(id_clerk: string, data: {
     nombre?: string;
     apellido?: string;
     mail?: string;
     calificacion?: number;
 }) {
-    const updated = await updateCliente(id, data);
+    const updated = await updateClienteByClerkID(id_clerk, data);
     return serializeCliente(updated);
 }

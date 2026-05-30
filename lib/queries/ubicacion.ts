@@ -22,10 +22,10 @@ export async function getUbicacionById(id: number) {
   });
 }
 
-/** Obtener ubicaciones de un cliente */
-export async function getUbicacionesByClienteId(idCliente: number) {
+/** Obtener ubicaciones de un cliente por su id_clerk */
+export async function getUbicacionesByClerkID(idClerk: string) {
   return prisma.ubicacion.findMany({
-    where: { id_cliente: idCliente },
+    where: { id_clerk: idClerk },
     orderBy: { id_ubicacion: "asc" },
   });
 }
@@ -58,14 +58,14 @@ export async function getUbicacionesByCalle(calle: string) {
 
 /** Crear una nueva ubicación */
 export async function createUbicacion(data: {
-  id_cliente?: number;
+  id_clerk?: string;
   calle: string;
   numero: string;
   ciudad: string;
 }) {
   return prisma.ubicacion.create({
     data: {
-      id_cliente: data.id_cliente,
+      id_clerk: data.id_clerk,
       calle: data.calle,
       numero: data.numero,
       ciudad: data.ciudad,
@@ -82,7 +82,7 @@ export async function updateUbicacion(
     calle?: string;
     numero?: string;
     ciudad?: string;
-    id_cliente?: number;
+    id_clerk?: string;
   }
 ) {
   return prisma.ubicacion.update({
@@ -100,10 +100,10 @@ export async function deleteUbicacion(id: number) {
   });
 }
 
-/** Eliminar todas las ubicaciones de un cliente */
-export async function deleteUbicacionesByCliente(idCliente: number) {
+/** Eliminar todas las ubicaciones de un cliente por su id_clerk */
+export async function deleteUbicacionesByClerkID(idClerk: string) {
   return prisma.ubicacion.deleteMany({
-    where: { id_cliente: idCliente },
+    where: { id_clerk: idClerk },
   });
 }
 
@@ -114,9 +114,9 @@ export async function countUbicaciones() {
   return prisma.ubicacion.count();
 }
 
-/** Contar ubicaciones de un cliente */
-export async function countUbicacionesByCliente(idCliente: number) {
+/** Contar ubicaciones de un cliente por su id_clerk */
+export async function countUbicacionesByClerkID(idClerk: string) {
   return prisma.ubicacion.count({
-    where: { id_cliente: idCliente },
+    where: { id_clerk: idClerk },
   });
 }

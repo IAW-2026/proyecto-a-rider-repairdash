@@ -9,7 +9,7 @@ import { PageHeader, Button, cn } from "@/app/components/ui";
 async function TravelsData({ id, page }: { id: string; page?: string }) {
   const paginaActual = Number(page) || 1;
   const { viajes, totalPaginas } = await getViajesPaginadosCliente(
-    Number(id),
+    id,
     paginaActual,
   );
 

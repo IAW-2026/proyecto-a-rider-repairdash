@@ -9,11 +9,10 @@ import { supabaseBrowser } from "@/lib/supabaseClient";
 import { Avatar, Pill, Stars, cn } from "@/app/components/ui";
 
 interface Client {
-  id_cliente: number;
+  id_clerk: string;
   nombre: string | null;
   apellido: string | null;
   mail: string;
-  id_clerk: string | null;
   calificacion: number | null;
 }
 
@@ -24,7 +23,7 @@ export default function ListaClientes({
 }) {
   const [clients, setClients] = useState(initialClients);
   const [search, setSearch] = useState("");
-  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 15;
 
@@ -44,7 +43,7 @@ export default function ListaClientes({
           if (eventType === "INSERT") {
             const nuevo = newRow as Client;
             setClients((prev) =>
-              prev.some((c) => c.id_cliente === nuevo.id_cliente)
+              prev.some((c) => c.id_clerk === nuevo.id_clerk)
                 ? prev
                 : [nuevo, ...prev],
             );
@@ -52,13 +51,13 @@ export default function ListaClientes({
             const actualizado = newRow as Client;
             setClients((prev) =>
               prev.map((c) =>
-                c.id_cliente === actualizado.id_cliente ? actualizado : c,
+                c.id_clerk === actualizado.id_clerk ? actualizado : c,
               ),
             );
           } else if (eventType === "DELETE") {
-            const eliminado = oldRow as { id_cliente: number };
+            const eliminado = oldRow as { id_clerk: string };
             setClients((prev) =>
-              prev.filter((c) => c.id_cliente !== eliminado.id_cliente),
+              prev.filter((c) => c.id_clerk !== eliminado.id_clerk),
             );
           }
         },
@@ -87,14 +86,14 @@ export default function ListaClientes({
     currentPage * itemsPerPage
   );
 
-  const executeDelete = async (id: number, clerkId?: string | null) => {
-    setDeletingId(id);
-    const promise = eliminarClienteCompleto(id, clerkId);
+  const executeDelete = async (clerkId: string) => {
+    setDeletingId(clerkId);
+    const promise = eliminarClienteCompleto(clerkId);
 
     toast.promise(promise, {
       loading: "Eliminando cliente…",
       success: () => {
-        setClients((prev) => prev.filter((c) => c.id_cliente !== id));
+        setClients((prev) => prev.filter((c) => c.id_clerk !== clerkId));
         setDeletingId(null);
         return "Cliente eliminado correctamente de la base de datos y Clerk";
       },
@@ -105,17 +104,13 @@ export default function ListaClientes({
     });
   };
 
-  const confirmDelete = (
-    id: number,
-    nombre: string,
-    clerkId?: string | null,
-  ) => {
+  const confirmDelete = (clerkId: string, nombre: string) => {
     toast(`¿Eliminar a ${nombre}?`, {
       description:
         "Esta acción borrará todos sus viajes y su cuenta de acceso de forma permanente.",
       action: {
         label: "Confirmar",
-        onClick: () => executeDelete(id, clerkId),
+        onClick: () => executeDelete(clerkId),
       },
       cancel: { label: "Cancelar", onClick: () => {} },
       duration: 10000,
@@ -160,7 +155,7 @@ export default function ListaClientes({
               const fullName = `${c.nombre ?? ""} ${c.apellido ?? ""}`.trim();
               return (
                 <tr
-                  key={c.id_cliente}
+                  key={c.id_clerk}
                   className="border-b border-rd-border last:border-b-0 hover:bg-rd-elevated/40 transition-colors"
                 >
                   <td className="px-4 py-3.5">
@@ -199,19 +194,19 @@ export default function ListaClientes({
                     </div>
                   </td>
                   <td className="px-4 py-3.5 font-mono-rd text-[11.5px] text-rd-muted">
-                    #{c.id_cliente}
+                    {c.id_clerk.slice(-8)}
                   </td>
                   <td className="px-4 py-3.5">
                     <div className="flex justify-end gap-1.5">
                       <Link
-                        href={`/admin/clientes/${c.id_cliente}/viajes`}
+                        href={`/admin/clientes/${c.id_clerk}/viajes`}
                         className="inline-flex items-center gap-1 h-8 px-2.5 rounded-lg text-[11px] font-semibold bg-rd-elevated text-rd-text-2 hover:bg-rd-surface hover:text-rd-text border border-rd-border-2 transition-colors"
                       >
                         <Briefcase size={13} strokeWidth={1.75} />
                         Viajes
                       </Link>
                       <Link
-                        href={`/admin/clientes/${c.id_cliente}/edit`}
+                        href={`/admin/clientes/${c.id_clerk}/edit`}
                         className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-rd-elevated text-rd-text-2 hover:bg-rd-surface hover:text-rd-text border border-rd-border-2 transition-colors"
                         aria-label="Editar"
                       >
@@ -219,20 +214,16 @@ export default function ListaClientes({
                       </Link>
                       <button
                         onClick={() =>
-                          confirmDelete(
-                            c.id_cliente,
-                            fullName || "este cliente",
-                            c.id_clerk,
-                          )
+                          confirmDelete(c.id_clerk, fullName || "este cliente")
                         }
-                        disabled={deletingId === c.id_cliente}
+                        disabled={deletingId === c.id_clerk}
                         className={cn(
                           "inline-flex items-center justify-center w-8 h-8 rounded-lg border transition-colors",
                           "bg-rd-danger-bg border-rd-danger/30 text-rd-danger hover:border-rd-danger/50 disabled:opacity-50 disabled:cursor-not-allowed",
                         )}
                         aria-label="Eliminar"
                       >
-                        {deletingId === c.id_cliente ? (
+                        {deletingId === c.id_clerk ? (
                           <Loader2
                             size={13}
                             strokeWidth={2}
@@ -262,7 +253,7 @@ export default function ListaClientes({
           const fullName = `${c.nombre ?? ""} ${c.apellido ?? ""}`.trim();
           return (
             <div
-              key={c.id_cliente}
+              key={c.id_clerk}
               className="rounded-xl p-4 bg-rd-surface border border-rd-border"
             >
               <div className="flex items-center gap-3 mb-3">
@@ -276,7 +267,7 @@ export default function ListaClientes({
                   </div>
                 </div>
                 <span className="font-mono-rd text-[10.5px] text-rd-muted">
-                  #{c.id_cliente}
+                  {c.id_clerk.slice(-8)}
                 </span>
               </div>
               <div className="flex flex-wrap items-center gap-1.5">
@@ -295,30 +286,26 @@ export default function ListaClientes({
               </div>
               <div className="flex gap-1.5 mt-3">
                 <Link
-                  href={`/admin/clientes/${c.id_cliente}/viajes`}
+                  href={`/admin/clientes/${c.id_clerk}/viajes`}
                   className="flex-1 inline-flex items-center justify-center gap-1 h-9 rounded-lg text-xs font-semibold bg-rd-elevated text-rd-text-2 border border-rd-border-2"
                 >
                   <Briefcase size={13} strokeWidth={1.75} /> Viajes
                 </Link>
                 <Link
-                  href={`/admin/clientes/${c.id_cliente}/edit`}
+                  href={`/admin/clientes/${c.id_clerk}/edit`}
                   className="flex-1 inline-flex items-center justify-center gap-1 h-9 rounded-lg text-xs font-semibold bg-rd-elevated text-rd-text-2 border border-rd-border-2"
                 >
                   <Edit size={13} strokeWidth={1.75} /> Editar
                 </Link>
                 <button
                   onClick={() =>
-                    confirmDelete(
-                      c.id_cliente,
-                      fullName || "este cliente",
-                      c.id_clerk,
-                    )
+                    confirmDelete(c.id_clerk, fullName || "este cliente")
                   }
-                  disabled={deletingId === c.id_cliente}
+                  disabled={deletingId === c.id_clerk}
                   className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-rd-danger-bg border border-rd-danger/30 text-rd-danger"
                   aria-label="Eliminar"
                 >
-                  {deletingId === c.id_cliente ? (
+                  {deletingId === c.id_clerk ? (
                     <Loader2 size={13} strokeWidth={2} className="animate-spin" />
                   ) : (
                     <Trash2 size={13} strokeWidth={1.75} />

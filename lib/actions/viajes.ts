@@ -1,5 +1,14 @@
 "use server";
-import { deleteViaje, getViajesPaginados, getViajeById, getViajesByClienteId, createViajeConPago, getUltimos4ViajesCliente, updateEstadoViaje } from "../queries/viajes";
+import {
+  deleteViaje,
+  getViajeById,
+  createViajeConPago,
+  updateEstadoViaje,
+  getViajesByClerkID,
+  getUltimos4ViajesPorClerkID,
+  getViajesPaginadosByClerkID,
+} from "../queries/viajes";
+import { getClienteActual } from "./clientes";
 
 
 export async function getEstadoViaje(idViaje: number) {
@@ -7,8 +16,8 @@ export async function getEstadoViaje(idViaje: number) {
  return viaja?.estado;
 }
 
-export async function getViajesCliente(idCliente: number) {
- const viajes = await getViajesByClienteId(idCliente);
+export async function getViajesCliente(idClerk: string) {
+ const viajes = await getViajesByClerkID(idClerk);
  return viajes;
 }
 
@@ -18,29 +27,29 @@ export async function cancelarViaje(idViaje: number) {
 
 }
 
-export async function getViajesPaginadosCliente(idCliente: number, pagina: number = 1) {
-  return await getViajesPaginados(idCliente, pagina);
+export async function getViajesPaginadosCliente(idClerk: string, pagina: number = 1) {
+  return await getViajesPaginadosByClerkID(idClerk, pagina);
 }
 
 export async function crearViajeYPago(formData: FormData){
-  const id = formData.get("id") as string;
+  const cliente = await getClienteActual();
   const categoria = formData.get("categoria") as string;
   const monto = formData.get("monto") as string;
   const id_ubicacion = formData.get("id_ubicacion") as string;
-      
+
   const result = await createViajeConPago({
-    id_cliente: parseInt(id),
+    id_clerk: cliente.id_clerk,
     tipo_de_trabajo: categoria,
     monto: parseInt(monto) || 0,
     id_ubicacion: parseInt(id_ubicacion),
   });
-  
+
 
   return result;
 }
 
-export async function getUltimos4Cliente(idCliente: number) {
-  return await getUltimos4ViajesCliente(idCliente);
+export async function getUltimos4Cliente(idClerk: string) {
+  return await getUltimos4ViajesPorClerkID(idClerk);
 }
 
 export async function updateEstado(idViaje: number, estado: string) {
