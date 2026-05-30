@@ -3,6 +3,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 import type { Viewport, Metadata } from "next";
 import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import BfcacheWatch from "./_components/BfcacheWatch";
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
         </head>
         <body>
+          <BfcacheWatch />
           <Toaster
             position="top-center"
             richColors
