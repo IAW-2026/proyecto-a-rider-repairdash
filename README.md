@@ -46,6 +46,22 @@ Para mantener la información actualizada en pantalla, usamos dos estrategias di
 Para evitar que los usuarios ingresen direcciones falsas o mal escritas, decidimos no depender de campos de texto libre. Integramos la API de **Nominatim (OpenStreetMap)** para validar que la dirección existe realmente en Argentina antes de guardarla.
 Además, para manejar errores (como ubicaciones duplicadas o no encontradas), usamos el hook `useActionState` de React junto con las notificaciones de Sonner, lo que nos permite avisarle al usuario del problema sin tener que recargar o redirigir la página.
 
+### 3.5. Identidad del cliente: `id_clerk` como clave única
+
+Originalmente la tabla `cliente` usaba un `id_cliente` autoincremental como clave primaria, y la columna `id_clerk` quedaba como simple referencia única al usuario en Clerk. Detectamos un problema serio con este diseño: el `id_cliente` es **volátil**. Si una fila se borraba y se recreaba (por una limpieza administrativa, por un webhook de Clerk, o porque el cliente se daba de baja y volvía a registrarse), el cliente quedaba con un id_cliente nuevo, pero su navegador conservaba la URL vieja (`/user/7/menu`) en historial, bookmarks o autocompletado. Al volver a entrar, los server actions confiaban en ese id viejo y Prisma rebotaba con un error de foreign key.
+
+Decidimos eliminar `id_cliente` por completo y promover `id_clerk` (string del tipo `user_xxx`) a clave primaria del modelo. Las foreign keys de `viajes` y `ubicacion` ahora apuntan a `cliente.id_clerk`. El identificador de Clerk es **estable**: nunca cambia mientras la cuenta de Clerk exista, así que las URLs persistidas en el browser siguen siendo válidas a través del tiempo.
+
+### 3.6. Compresión de imágenes en el cliente
+
+Los server actions de Next.js tienen un límite de body de 1 MB por defecto, y Vercel rechaza requests por encima de 4.5 MB en sus funciones serverless. Las fotos modernas chocan con esos techos sin esfuerzo: una imagen sacada con un teléfono de 12 megapíxeles ronda los 3-8 MB, y las imágenes generadas por IA en alta definición llegan a 4-10 MB. Subir más de una foto en el formulario de nuevo trabajo hacía explotar el request antes de llegar al server.
+
+Decidimos resolverlo del lado del cliente, redimensionando y recomprimiendo las imágenes en el navegador antes del submit (`lib/utils/compressImage.ts`). El helper carga el archivo en un elemento `<img>`, lo redibuja en un `<canvas>` con un máximo de 1920px en el lado mayor y lo exporta con `canvas.toBlob` como JPEG de calidad 0.85. Estos parámetros son un balance pensado: 1920px es suficiente para previews en mobile y desktop sin desperdiciar bytes. Si la imagen ya pesa menos de 800 KB y no excede el tamaño máximo, el helper la deja pasar sin tocar para no introducir una generación adicional de pérdida.
+
+Elegimos resolverlo con APIs nativas del navegador en vez de incorporar una librería como `browser-image-compression` o `pica`: el problema se resuelve en pocas líneas y no justifica sumar 50-200 KB al bundle del cliente. También descartamos subir el límite de body de los server actions, porque es un parche que no escala (Vercel sigue rechazando arriba de 4.5 MB y mover archivos pesados sobre redes móviles débiles es lento aunque el server los acepte). El otro camino válido habría sido implementar upload directo del navegador a Vercel Blob, pero hoy las fotos ni siquiera se persisten en el backend, así que sería código sin uso real; queda como evolución natural cuando se descomente el flujo de envío al microservicio de drivers.
+
+Para integrar la compresión sin perder la estructura del form action de Next, envolvimos `action={distribuirFormulario}` con un callback async en cliente que comprime las fotos del FormData antes de delegar al server action. Esto mantiene el `useFormStatus()` para el pending state automático del botón y el comportamiento progressive enhancement del `<form>` real.
+
 ---
 
 ## 4. Diseño y Rendimiento
@@ -73,15 +89,15 @@ La base de datos (PostgreSQL en Supabase) está estructurada a través de **Pris
 
 Es el núcleo del sistema. Contiene los datos personales de los usuarios y sirve como punto de anclaje para el resto de las tablas.
 
-- **Campos principales:** `id_cliente` (PK), `nombre`, `apellido`, `mail` (Único), `calificacion`.
-- **Integración con Clerk:** Posee un campo vital llamado `id_clerk` (Único). Este es el identificador que viene desde nuestro proveedor de autenticación. Gracias al patrón de "Lazy Provisioning", cuando un usuario inicia sesión por primera vez, atamos su cuenta de Clerk con un registro en esta tabla.
+- **Campos principales:** `id_clerk` (PK, string del tipo `user_xxx`), `nombre`, `apellido`, `mail` (Único), `calificacion`.
+- **Integración con Clerk:** La clave primaria es directamente el identificador que viene desde nuestro proveedor de autenticación. Gracias al patrón de "Lazy Provisioning", cuando un usuario inicia sesión por primera vez, su cuenta de Clerk queda atada a un registro en esta tabla usando el mismo id. Ver sección 3.5 para el racional de esta decisión.
 - **Relaciones:** Un cliente puede tener muchas ubicaciones, muchos viajes y múltiples promociones.
 
 ### `ubicacion` (Direcciones)
 
 Almacena las distintas direcciones que un cliente registra en la plataforma.
 
-- **Campos principales:** `id_ubicacion` (PK), `id_cliente` (FK), `calle`, `numero`, `ciudad`.
+- **Campos principales:** `id_ubicacion` (PK), `id_clerk` (FK a `cliente`), `calle`, `numero`, `ciudad`.
 - **Detalle:** Antes de guardar cualquier registro aquí, las direcciones son validadas con la API de Nominatim (OpenStreetMap).
 - **Relaciones:** Pertenece a un `cliente` y se vincula con los `viajes` (un viaje ocurre en una ubicación específica).
 
@@ -90,7 +106,7 @@ Almacena las distintas direcciones que un cliente registra en la plataforma.
 Representa el corazón operativo de la aplicación. Registra cada solicitud de servicio técnico.
 
 - **Campos principales:** `id_viaje` (PK), `tipo_de_trabajo`, `driver` (El nombre del técnico asignado), `fecha`, y un `estado` (Por defecto arranca en `"Pendiente"`).
-- **Relaciones:** Cada viaje está atado a un `cliente` (FK) y a una `ubicacion` (FK). Además, puede tener varios registros de `pagos` asociados.
+- **Relaciones:** Cada viaje está atado a un `cliente` (FK `id_clerk`) y a una `ubicacion` (FK). Además, puede tener varios registros de `pagos` asociados.
 
 ### `pagos` (Transacciones)
 
