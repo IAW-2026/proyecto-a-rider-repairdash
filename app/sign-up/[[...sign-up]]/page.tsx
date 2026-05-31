@@ -42,7 +42,11 @@ export default function Page() {
       </div>
 
       <div className="z-10 w-full max-w-md mx-auto flex justify-center">
-        <SignUp appearance={clerkAppearance} />
+        <SignUp
+          appearance={clerkAppearance}
+          signInUrl="/sign-in"
+          fallbackRedirectUrl="/"
+        />
       </div>
     </div>
   );
