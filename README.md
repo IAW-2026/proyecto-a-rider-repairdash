@@ -1,8 +1,8 @@
-# Documentación de RepairDash
+# Documentación de Rider App
 
 ## 1. Introducción
 
-RepairDash es una plataforma desarrollada para la gestión de servicios técnicos ("Riders"). El objetivo de este proyecto es construir un sistema escalable, seguro y rápido, que ofrezca una buena experiencia de usuario (UX). En este documento se detallan las tecnologías utilizadas y las principales decisiones de arquitectura tomadas durante el desarrollo.
+Rider App es una plataforma desarrollada para la gestión de servicios técnicos ("Riders"). El objetivo de este proyecto es construir un sistema escalable, seguro y rápido, que ofrezca una buena experiencia de usuario (UX). En este documento se detallan las tecnologías utilizadas y las principales decisiones de arquitectura tomadas durante el desarrollo.
 
 **Link de la pagina** : https://proyecto-a-rider-repairdash.vercel.app
 
@@ -65,6 +65,14 @@ Decidimos resolverlo del lado del cliente, redimensionando y recomprimiendo las 
 Elegimos resolverlo con APIs nativas del navegador en vez de incorporar una librería como `browser-image-compression` o `pica`: el problema se resuelve en pocas líneas y no justifica sumar 50-200 KB al bundle del cliente. También descartamos subir el límite de body de los server actions, porque es un parche que no escala (Vercel sigue rechazando arriba de 4.5 MB y mover archivos pesados sobre redes móviles débiles es lento aunque el server los acepte). El otro camino válido habría sido implementar upload directo del navegador a Vercel Blob, pero hoy las fotos ni siquiera se persisten en el backend, así que sería código sin uso real; queda como evolución natural cuando se descomente el flujo de envío al microservicio de drivers.
 
 Para integrar la compresión sin perder la estructura del form action de Next, envolvimos `action={distribuirFormulario}` con un callback async en cliente que comprime las fotos del FormData antes de delegar al server action. Esto mantiene el `useFormStatus()` para el pending state automático del botón y el comportamiento progressive enhancement del `<form>` real.
+
+### 3.7. Conexión con la Payment App
+
+Rider App se integra con una aplicación externa de pagos (`proyecto-a-payments-repairdash`) mediante server actions que hacen `fetch` al microservicio, autenticándose con el header `x-internal-api-key` (variable de entorno `NEXT_PUBLIC_PAYMENT_KEY`).
+
+- **Iniciar cobro (`realizarFetchPayment`):** Cuando el cliente confirma el pago, se envía un `POST` a `/api/payments/checkout` con `trabajoId`, `clientId`, `trabajadorId`, `amount` y `description`. La payment app responde con una `redirectUrl` a la que se redirige al usuario para completar la transacción.
+- **Cancelación (`cancelacionPayment`):** Si el viaje se cancela y el pago está en estado `"pendiente"`, se notifica al microservicio con un `PUT` a `/api/payments/checkout/cancel` para invalidar el checkout abierto. Se actualizo la funcionalidad, ahora el boton de cancelar solo aparecera cuando un driver haya aceptado el viaje.
+- **Webhook entrante:** La payment app reporta el resultado final (aprobado/rechazado) a Rider App a través del endpoint `PUT /api/repairdash/statepayment` (ver sección 6.2), cerrando el ciclo y actualizando los estados de `pagos` y `viajes` en consecuencia.
 
 ---
 
