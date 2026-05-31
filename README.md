@@ -4,6 +4,11 @@
 
 RepairDash es una plataforma desarrollada para la gestión de servicios técnicos ("Riders"). El objetivo de este proyecto es construir un sistema escalable, seguro y rápido, que ofrezca una buena experiencia de usuario (UX). En este documento se detallan las tecnologías utilizadas y las principales decisiones de arquitectura tomadas durante el desarrollo.
 
+CUENTA ADMIN-RIDER
+Email:pruebaRider+clerk_test@example.com
+Contraseña: repairdash123
+Codigo de verificación: 424242
+
 ---
 
 ## 2. Stack Tecnológico
