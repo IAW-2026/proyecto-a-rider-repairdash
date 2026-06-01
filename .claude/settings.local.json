@@ -76,7 +76,8 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(curl -sS -i -X GET 'https://driver-repairdash.vercel.app/api/tipos-servicios' -H 'Accept: application/json' -H 'x-api-key: driver-secret-key')",
-      "Bash(curl *)"
+      "Bash(curl *)",
+      "Bash(dir .claude)"
     ]
   }
 }
