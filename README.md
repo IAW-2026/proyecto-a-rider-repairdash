@@ -8,6 +8,8 @@ Rider App es una plataforma desarrollada para la gestión de servicios técnicos
 
 **CUENTA ADMIN-RIDER** -**Email**:pruebaRider+clerk_test@example.com -**Contraseña**: repairdash123 -**Codigo de verificación**: 424242
 
+**Aclaraciones** : Rider App ya esta enlazada con Payment App, por lo que los pagos deben hacerse con cuentas de prueba pues aun mantenemos mercado pago en modo desarrollo. Las credenciales necesarias seran proveidas en el Readme.md de Payment App.
+
 ---
 
 ## 2. Stack Tecnológico
@@ -93,6 +95,6 @@ Para mejorar el rendimiento general y cumplir con las métricas de Core Web Vita
 
 ---
 
-## Modelo de Datos (Base de Datos) : [MODELO_DE_DATOS.md]
+**Modelo de Datos (Base de Datos)** : [MODELO_DE_DATOS.md]
 
-## Documentación de APIs (Mock / Webhooks) : [API_DOC.md]
+**Documentación de APIs (Mock / Webhooks)** : [API_DOC.md]
