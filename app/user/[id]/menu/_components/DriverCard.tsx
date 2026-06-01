@@ -2,7 +2,7 @@ import { User } from "lucide-react";
 import Stars from "@/app/components/ui/Stars";
 
 const DRIVER_HARDCODED = {
-  nombre: "Carlos Rodríguez",
+  nombre: "Driver Prueba Entrega",
   calificacion: 4.8,
 };
 

@@ -23,11 +23,6 @@ const FLUJO_ESTADOS: EstadoViaje[] = [
 const ESTADOS_TERMINALES: EstadoViaje[] = ["finalizado", "cancelado", "concluido"];
 const INTERVALO_MS = 30_000;
 
-/**
- * Probabilidad de que el driver cancele el viaje en cada tick.
- * 0.15 = 15% por tick. No aplica cuando ya "ha llegado" (está en el domicilio).
- */
-const PROB_CANCELAR = 0.15;
 
 async function llamarApiEstado(
   idViaje: number,
@@ -41,7 +36,7 @@ async function llamarApiEstado(
       "Content-Type": "application/json",
       ...(apiKey ? { "x-api-key": apiKey } : {}),
     },
-    body: JSON.stringify({ id_viaje: idViaje, estado: nuevoEstado, driver: "user_3E8v3FXNIw992nRYxEyVtHmJ1ke"}),
+    body: JSON.stringify({ id_viaje: idViaje, estado: nuevoEstado, driver: "user_3EXSt7dGVU0sFfpFpq3Km8OjGzq"}),
   });
 
   if (!res.ok) {
@@ -61,22 +56,12 @@ function siguienteEstado(estadoActual: EstadoViaje): EstadoViaje | null {
  * /api/repairdash/statetravel.
  *
  * Flujo: pendiente → aceptado → en camino → ha llegado → finalizado
- * Desde cualquier estado puede derivar en cancelado.
  * El polling se detiene automáticamente al llegar a finalizado o cancelado.
  */
-export function useActualizarEstadoViaje(
-  idViaje: number,
-  cancelar: boolean = false
-) {
+export function useActualizarEstadoViaje(idViaje: number) {
   // Usamos refs para todo lo que NO debe recrear el effect
   const estadoRef = useRef<EstadoViaje>("pendiente");
   const detenidoRef = useRef(false);
-  const cancelarRef = useRef(cancelar);
-
-  // Mantenemos cancelarRef sincronizado sin recrear el effect
-  useEffect(() => {
-    cancelarRef.current = cancelar;
-  }, [cancelar]);
 
   // El effect SOLO depende de idViaje: se crea una vez por viaje y no se reinicia
   useEffect(() => {
@@ -95,17 +80,6 @@ export function useActualizarEstadoViaje(
 
     const avanzar = async () => {
       if (detenidoRef.current) return;
-
-      if (cancelarRef.current) {
-        try {
-          await llamarApiEstado(idViaje, "cancelado");
-          console.info(`[mock] Viaje ${idViaje}: cancelado`);
-        } catch (err) {
-          console.error("[mock] Error al cancelar:", err);
-        }
-        detener();
-        return;
-      }
 
       // ── Verificar estado real en BD antes de avanzar ──────────────────
       // Si el viaje ya fue cancelado/concluido externamente, detenemos el mock
@@ -136,21 +110,6 @@ export function useActualizarEstadoViaje(
         return;
       }
 
-      // ── Cancelación aleatoria (simula driver que rechaza el viaje) ─────
-      // Solo se puede cancelar mientras está "aceptado" o "en camino".
-      const puedeCancel =
-        estadoRef.current === "aceptado" || estadoRef.current === "en camino";
-      if (puedeCancel && Math.random() < PROB_CANCELAR) {
-        try {
-          await llamarApiEstado(idViaje, "cancelado");
-          console.info(`[mock] Viaje ${idViaje}: driver canceló (azar) desde "${estadoRef.current}"`);
-        } catch (err) {
-          console.error("[mock] Error al cancelar por azar:", err);
-        }
-        detener();
-        return;
-      }
-      // ──────────────────────────────────────────────────────────────────
 
       try {
         await llamarApiEstado(idViaje, proximo);
