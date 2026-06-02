@@ -6,12 +6,24 @@ Rider App es una plataforma desarrollada para la gestión de servicios técnicos
 
 **Link de la pagina** : https://proyecto-a-rider-repairdash.vercel.app
 
-**CUENTA ADMIN-RIDER** -**Email**:adminrider+clerk_test@iaw.com -**Contraseña**: iawuser# -**Codigo de verificación**: 424242
+**CUENTA ADMIN-RIDER:**
+**Email**:adminrider+clerk_test@iaw.com
+**Contraseña**: iawuser#
+**Codigo de verificación**: 424242
 
-**CUENTA CLIENTE** -**Email**:rider+clerk_test@iaw.com -**Contraseña**: iawuser# -**Codigo de verificación**: 424242
+**CUENTA CLIENTE:**
+**Email**:rider+clerk_test@iaw.com
+**Contraseña**: iawuser#
+**Codigo de verificación**: 424242
 
 **Aclaraciones** : Rider App ya esta enlazada con Payment App, por lo que los pagos deben hacerse con cuentas de prueba pues aun mantenemos mercado pago en modo desarrollo. Las credenciales necesarias seran proveidas en el Readme.md de Payment App. Se debe utilizar la misma cuenta para pedir el viaje que para pagar de lo contrario no se podra pagar.
 Los estados del trackeo pasan cada 30 segundos
+
+**cuenta de mercado pago de test para comprar:**
+
+- **usuario**: TESTUSER4726867390927051026
+- **contraseña**: asUVHQxXZS
+- **codigo de verificacion**: 439411
 
 ---
 
