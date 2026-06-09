@@ -1,5 +1,5 @@
 import { Wrench, ShieldCheck, Activity, CheckCircle2 } from "lucide-react";
-import BotonIniciarSesion from "./_components/BotonIniciarSesion";
+import IniciarSesion from "./_components/IniciarSesion";
 import ProvisioningPerezoso from "./_components/ProvisioningPerezoso";
 import { Pill } from "./components/ui";
 
@@ -43,7 +43,7 @@ export default function Home() {
           </p>
         </div>
 
-        <BotonIniciarSesion />
+        <IniciarSesion />
 
         <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-[11.5px] text-rd-muted">
           <span className="inline-flex items-center gap-1.5">

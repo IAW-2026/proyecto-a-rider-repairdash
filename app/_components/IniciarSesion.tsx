@@ -1,16 +1,32 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Show, UserButton, useUser } from "@clerk/nextjs";
 import { LogIn, UserPlus, Loader2 } from "lucide-react";
 import { Button } from "@/app/components/ui";
+import { getClienteClerkID } from "@/lib/actions/clientes";
 
-export default function BotonIniciarSesion() {
+export default function IniciarSesion() {
   const router = useRouter();
   const { user, isLoaded } = useUser();
   const metadata = user?.publicMetadata as { role?: string } | undefined;
   const [showFallback, setShowFallback] = useState(false);
+  const [clienteEnDB, setClienteEnDB] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (!isLoaded || !user) {
+      setClienteEnDB(null);
+      return;
+    }
+    let cancelled = false;
+    getClienteClerkID(user.id).then((c) => {
+      if (!cancelled) setClienteEnDB(!!c);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [isLoaded, user]);
 
   useEffect(() => {
     if (isLoaded && user && !metadata?.role) {
@@ -18,6 +34,15 @@ export default function BotonIniciarSesion() {
       return () => clearTimeout(timer);
     }
   }, [isLoaded, user, metadata?.role]);
+
+  useEffect(() => {
+    if (!isLoaded || !user || clienteEnDB !== true) return;
+    if (metadata?.role === "admin-rider") {
+      router.replace("/admin");
+    } else if (metadata?.role === "rider") {
+      router.replace(`/user/${user.id}/menu`);
+    }
+  }, [isLoaded, user, metadata?.role, clienteEnDB, router]);
 
   return (
     <div>
@@ -45,11 +70,11 @@ export default function BotonIniciarSesion() {
               <UserButton />
             </div>
           </div>
-          {!isLoaded ? null : metadata?.role === "admin-rider" ? (
-            redirect("/admin")
-          ) : metadata?.role === "rider" ? (
-            redirect(`/user/${user?.id}/menu`)
-          ) : !metadata?.role && !showFallback ? (
+          {!isLoaded ? null : !metadata?.role && showFallback ? (
+            <p className="text-sm font-medium text-rd-text-2 text-center max-w-xs">
+              Para iniciar sesión, creá una cuenta como Rider.
+            </p>
+          ) : (
             <div className="flex flex-col items-center gap-2">
               <Loader2
                 size={20}
@@ -60,10 +85,6 @@ export default function BotonIniciarSesion() {
                 Cargando…
               </span>
             </div>
-          ) : (
-            <p className="text-sm font-medium text-rd-text-2 text-center max-w-xs">
-              Para iniciar sesión, creá una cuenta como Rider.
-            </p>
           )}
         </div>
       </Show>
