@@ -34,13 +34,13 @@ export async function getViajesPaginadosCliente(idClerk: string, pagina: number 
 export async function crearViajeYPago(formData: FormData){
   const cliente = await getClienteActual();
   const categoria = formData.get("categoria") as string;
-  const monto = formData.get("monto") as string;
+  const montoConDescuento = formData.get("montoConDescuento") as string;
   const id_ubicacion = formData.get("id_ubicacion") as string;
 
   const result = await createViajeConPago({
     id_clerk: cliente.id_clerk,
     tipo_de_trabajo: categoria,
-    monto: parseInt(monto) || 0,
+    monto: parseInt(montoConDescuento) || 0,
     id_ubicacion: parseInt(id_ubicacion),
   });
 
@@ -55,4 +55,9 @@ export async function getUltimos4Cliente(idClerk: string) {
 export async function updateEstado(idViaje: number, estado: string) {
   await updateEstadoViaje(idViaje, estado);
 
+}
+
+export async function getDriver(idViaje: number) {
+  const viaje = await getViajeById(idViaje);
+  return viaje?.driver;
 }
