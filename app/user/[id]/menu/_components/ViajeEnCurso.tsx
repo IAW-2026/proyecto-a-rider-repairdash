@@ -289,7 +289,7 @@ export default function ViajeEnCurso({
       {/* Driver card — visible desde "aceptado" en adelante */}
       {["aceptado", "en camino", "ha llegado"].includes(estadoActual) && (
         <div className="mb-6">
-          <DriverCard />
+          <DriverCard idViaje = {idViaje}/>
         </div>
       )}
 

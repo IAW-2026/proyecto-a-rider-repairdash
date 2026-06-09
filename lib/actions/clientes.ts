@@ -90,3 +90,8 @@ export async function actualizarClienteAction(id_clerk: string, data: {
     const updated = await updateClienteByClerkID(id_clerk, data);
     return serializeCliente(updated);
 }
+
+export async function getCalificacionCliente(id_clerk: string){
+    const cliente = await getClienteByClerkID(id_clerk);
+    return cliente?.calificacion;
+}

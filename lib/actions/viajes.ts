@@ -56,3 +56,8 @@ export async function updateEstado(idViaje: number, estado: string) {
   await updateEstadoViaje(idViaje, estado);
 
 }
+
+export async function getDriver(idViaje: number) {
+  const viaje = await getViajeById(idViaje);
+  return viaje?.driver;
+}
