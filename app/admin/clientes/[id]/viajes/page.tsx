@@ -56,21 +56,19 @@ export default async function ClienteViajesPage({
         }
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1.6fr_1fr] gap-5 lg:gap-6">
-        <ListaViajes initialViajes={viajes} idClerk={cliente.id_clerk} />
-
-        <aside className="rounded-2xl p-5 sm:p-6 bg-rd-surface border border-rd-border h-fit">
-          <div className="flex items-center gap-3.5">
-            <Avatar name={fullName || "Cliente"} size={56} online={!!cliente.id_clerk} />
-            <div className="min-w-0">
-              <div className="font-bold text-rd-text truncate">{fullName}</div>
-              <div className="text-[12px] text-rd-muted truncate">
-                {cliente.mail}
-              </div>
-            </div>
+      <aside className="rounded-xl px-3.5 py-2.5 bg-rd-surface border border-rd-border mb-4 inline-flex items-center gap-2.5 max-w-full">
+        <Avatar name={fullName || "Cliente"} size={32} online={!!cliente.id_clerk} />
+        <div className="min-w-0 leading-tight">
+          <div className="font-semibold text-[13px] text-rd-text truncate">
+            {fullName}
           </div>
-        </aside>
-      </div>
+          <div className="text-[11px] text-rd-muted truncate">
+            {cliente.mail}
+          </div>
+        </div>
+      </aside>
+
+      <ListaViajes initialViajes={viajes} idClerk={cliente.id_clerk} />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import {
   Briefcase,
 } from "lucide-react";
 import { obtenerTrabajos } from "@/lib/actions/apis/driver/obtenerTrabajos";
+import { obtenerInfoDriverPorViaje } from "@/lib/actions/apis/driver/obtenerInfoDriver";
 import { currentUser } from "@clerk/nextjs/server";
 import ViajeEnCurso from "./_components/ViajeEnCurso";
 import MenuSkeleton from "@/app/components/skeletons/MenuSkeleton";
@@ -110,6 +111,15 @@ async function MenuContent({ idClerk }: { idClerk: string }) {
     <Kpis totalGastado={totalGastado} cantidadRealizados={cantidadRealizados} />
   );
 
+  const estadoActivoLower = viajeActivo?.estado?.toLowerCase() ?? "";
+  const driverYaAsignado = ["aceptado", "en camino", "ha llegado"].includes(
+    estadoActivoLower,
+  );
+  const driverInicial =
+    viajeActivo && driverYaAsignado
+      ? await obtenerInfoDriverPorViaje(viajeActivo.id_viaje).catch(() => null)
+      : null;
+
   return (
     <>
       {viajeActivo ? (
@@ -121,6 +131,7 @@ async function MenuContent({ idClerk }: { idClerk: string }) {
                 idClerk={idClerk}
                 estadoInicial={viajeActivo.estado ?? "pendiente"}
                 pagoEstadoInicial={viajeActivo.pagos?.[0]?.estado ?? null}
+                driverInicial={driverInicial}
               />
             </section>
             <aside className="flex flex-col gap-3">
