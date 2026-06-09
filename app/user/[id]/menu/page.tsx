@@ -3,12 +3,10 @@ import Link from "next/link";
 import {
   ArrowRight,
   Wrench,
-  Sparkles,
-  Settings,
-  MoreHorizontal,
   DollarSign,
   Briefcase,
 } from "lucide-react";
+import { obtenerTrabajos } from "@/lib/actions/apis/driver/obtenerTrabajos";
 import { currentUser } from "@clerk/nextjs/server";
 import ViajeEnCurso from "./_components/ViajeEnCurso";
 import MenuSkeleton from "@/app/components/skeletons/MenuSkeleton";
@@ -219,57 +217,97 @@ async function MenuContent({ idClerk }: { idClerk: string }) {
             </span>
           )}
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          {[
-            { key: "limpieza", label: "Limpieza", Icon: Sparkles },
-            { key: "reparacion", label: "Reparación", Icon: Wrench },
-            { key: "mantenimiento", label: "Mantenimiento", Icon: Settings },
-            { key: "otro", label: "Otro", Icon: MoreHorizontal },
-          ].map(({ key, label, Icon }) => {
-            if (viajeActivo) {
-              return (
-                <div
-                  key={key}
-                  aria-disabled
-                  className="rounded-xl p-4 bg-rd-surface border border-rd-border flex flex-col items-start gap-3 opacity-50 cursor-not-allowed select-none"
-                >
-                  <span className="w-10 h-10 rounded-lg bg-rd-elevated grid place-items-center text-rd-subtle">
-                    <Icon size={18} strokeWidth={1.75} />
-                  </span>
-                  <div>
-                    <div className="font-semibold text-[14px] text-rd-text-2">
-                      {label}
-                    </div>
-                    <div className="text-[11.5px] text-rd-muted mt-0.5">
-                      No disponible
-                    </div>
-                  </div>
-                </div>
-              );
-            }
-            return (
-              <Link
-                key={key}
-                href={`/user/${idClerk}/solicitudTrabajoActual?categoria=${key}`}
-                className="rounded-xl p-4 bg-rd-surface border border-rd-border hover:border-rd-border-3 hover:bg-rd-elevated transition-colors flex flex-col items-start gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-accent focus-visible:ring-offset-2 focus-visible:ring-offset-rd-bg"
-              >
-                <span className="w-10 h-10 rounded-lg bg-rd-elevated grid place-items-center text-rd-accent-soft group-hover:bg-rd-accent group-hover:text-white transition-colors">
-                  <Icon size={18} strokeWidth={1.75} />
-                </span>
-                <div>
-                  <div className="font-semibold text-[14px] text-rd-text">
-                    {label}
-                  </div>
-                  <div className="text-[11.5px] text-rd-muted mt-0.5">
-                    Solicitar ahora →
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+        <Suspense fallback={<TrabajosDisponiblesSkeleton />}>
+          <TrabajosDisponibles
+            idClerk={idClerk}
+            deshabilitado={Boolean(viajeActivo)}
+          />
+        </Suspense>
       </section>
     </>
+  );
+}
+
+function TrabajosDisponiblesSkeleton() {
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div
+          key={i}
+          className="rounded-xl p-4 bg-rd-surface border border-rd-border h-[96px] animate-pulse"
+        />
+      ))}
+    </div>
+  );
+}
+
+async function TrabajosDisponibles({
+  idClerk,
+  deshabilitado,
+}: {
+  idClerk: string;
+  deshabilitado: boolean;
+}) {
+  let tipos: { id: string; nombre: string }[] = [];
+  try {
+    tipos = await obtenerTrabajos();
+  } catch {
+    tipos = [];
+  }
+
+  if (tipos.length === 0) {
+    return (
+      <div className="rounded-xl p-6 text-center bg-rd-bg-2 border border-rd-border text-sm text-rd-muted">
+        No hay categorías disponibles.
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      {tipos.map((t) => {
+        if (deshabilitado) {
+          return (
+            <div
+              key={t.id}
+              aria-disabled
+              className="rounded-xl p-4 bg-rd-surface border border-rd-border flex flex-col items-start gap-3 opacity-50 cursor-not-allowed select-none"
+            >
+              <span className="w-10 h-10 rounded-lg bg-rd-elevated grid place-items-center text-rd-subtle">
+                <Wrench size={18} strokeWidth={1.75} />
+              </span>
+              <div>
+                <div className="font-semibold text-[14px] text-rd-text-2">
+                  {t.nombre}
+                </div>
+                <div className="text-[11.5px] text-rd-muted mt-0.5">
+                  No disponible
+                </div>
+              </div>
+            </div>
+          );
+        }
+        return (
+          <Link
+            key={t.id}
+            href={`/user/${idClerk}/solicitudTrabajoActual?tipoServicioId=${t.id}`}
+            className="rounded-xl p-4 bg-rd-surface border border-rd-border hover:border-rd-border-3 hover:bg-rd-elevated transition-colors flex flex-col items-start gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rd-accent focus-visible:ring-offset-2 focus-visible:ring-offset-rd-bg"
+          >
+            <span className="w-10 h-10 rounded-lg bg-rd-elevated grid place-items-center text-rd-accent-soft group-hover:bg-rd-accent group-hover:text-white transition-colors">
+              <Wrench size={18} strokeWidth={1.75} />
+            </span>
+            <div>
+              <div className="font-semibold text-[14px] text-rd-text">
+                {t.nombre}
+              </div>
+              <div className="text-[11.5px] text-rd-muted mt-0.5">
+                Solicitar ahora →
+              </div>
+            </div>
+          </Link>
+        );
+      })}
+    </div>
   );
 }
 

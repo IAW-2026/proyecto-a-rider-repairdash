@@ -11,7 +11,7 @@ export default function BotonDescuentos({
   pathname: string;
 }) {
   void id;
-  const href = "/mocks/promotions";
+  const href = "https://proyecto-a-promotions-repairdash.vercel.app";
   return (
     <NavLink
       href={href}
