@@ -12,7 +12,6 @@ import {
   Truck,
   CheckCircle2,
 } from "lucide-react";
-import { PRECIOS, PrecioconDescuento } from "@/lib/services/pricing";
 import BotonAgregarDestino from "./BotonAgregarDestino";
 import { distribuirFormulario } from "@/lib/actions/distribuirFormulario";
 import { compressImage } from "@/lib/utils/compressImage";
@@ -25,14 +24,25 @@ type Ubicacion = {
   ciudad: string;
 };
 
-// Descuentos disponibles (mock — vendrán de microservicio de promotions)
-const DESCUENTOS = [
-  { id: "001", codigo: "DESC001", valor: 10 },
-  { id: "002", codigo: "DESC002", valor: 20 },
-  { id: "003", codigo: "DESC003", valor: 30 },
-  { id: "004", codigo: "DESC004", valor: 40 },
-  { id: "005", codigo: "DESC005", valor: 50 },
-];
+type TipoServicio = {
+  id: string;
+  nombre: string;
+  precioBase: number;
+};
+
+type Descuento = {
+  id: number;
+  nombre: string;
+  tipoDescuento: "$" | "%";
+  valor: number;
+  precioMinimo: number | null;
+  categorias: string[];
+};
+
+function aplicarDescuento(monto: number, d: Descuento): number {
+  if (d.tipoDescuento === "$") return Math.max(0, monto - d.valor);
+  return monto - (monto * d.valor) / 100;
+}
 
 function BotonSolicitar() {
   const { pending } = useFormStatus();
@@ -55,22 +65,42 @@ function BotonSolicitar() {
 export default function FormularioNuevoTrabajo({
   id,
   ubicaciones,
-  categoriaInicial,
+  tipos,
+  descuentos,
+  tipoServicioIdInicial,
 }: {
   id: string;
   ubicaciones: Ubicacion[];
-  categoriaInicial?: string;
+  tipos: TipoServicio[];
+  descuentos: Descuento[];
+  tipoServicioIdInicial?: string;
 }) {
   const router = useRouter();
-  const [categoria, setCategoria] = useState(categoriaInicial ?? "");
+  const [tipoServicioId, setTipoServicioId] = useState(
+    tipoServicioIdInicial ?? "",
+  );
   const [destinos, setDestinos] = useState("");
-  const [descuentoId, setDescuentoId] = useState<string | null>(null);
-  const precio = PRECIOS[categoria] ?? null;
+  const [descuentoId, setDescuentoId] = useState<number | null>(null);
+  const tipoSeleccionado =
+    tipos.find((t) => t.id === tipoServicioId) ?? null;
+  const precio = tipoSeleccionado?.precioBase ?? null;
+
+  const descuentosCompatibles = tipoSeleccionado
+    ? descuentos.filter(
+        (d) =>
+          d.categorias.includes(tipoSeleccionado.id) &&
+          (d.precioMinimo == null || (precio ?? 0) >= d.precioMinimo),
+      )
+    : [];
+
   const descuentoSeleccionado =
-    DESCUENTOS.find((d) => d.id === descuentoId) ?? null;
-  const montoFinal = precio
-    ? PrecioconDescuento(precio.monto, descuentoSeleccionado?.valor ?? 0)
-    : 0;
+    descuentosCompatibles.find((d) => d.id === descuentoId) ?? null;
+  const montoFinal =
+    precio != null
+      ? descuentoSeleccionado
+        ? aplicarDescuento(precio, descuentoSeleccionado)
+        : precio
+      : 0;
 
   return (
     <div className="py-2 sm:py-4 max-w-5xl mx-auto w-full">
@@ -102,24 +132,44 @@ export default function FormularioNuevoTrabajo({
           }}
           className="rounded-2xl p-5 sm:p-7 bg-rd-surface border border-rd-border-2 flex flex-col gap-5"
         >
-          <input type="hidden" name="monto" value={montoFinal} />
+          <input
+            type="hidden"
+            name="montoSinDescuento"
+            value={precio ?? 0}
+          />
+          <input
+            type="hidden"
+            name="montoConDescuento"
+            value={montoFinal}
+          />
+          <input
+            type="hidden"
+            name="promocionId"
+            value={descuentoSeleccionado?.id ?? ""}
+          />
+          <input
+            type="hidden"
+            name="categoria"
+            value={tipoSeleccionado?.nombre ?? ""}
+          />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Select
               label="Categoría"
-              id="categoria"
-              name="categoria"
+              id="tipoServicioId"
+              name="tipoServicioId"
               required
-              value={categoria}
-              onChange={(e) => setCategoria(e.target.value)}
+              value={tipoServicioId}
+              onChange={(e) => setTipoServicioId(e.target.value)}
             >
               <option value="" disabled>
                 Seleccionar categoría
               </option>
-              <option value="limpieza">Limpieza</option>
-              <option value="reparacion">Reparación</option>
-              <option value="mantenimiento">Mantenimiento</option>
-              <option value="otro">Otro</option>
+              {tipos.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.nombre}
+                </option>
+              ))}
             </Select>
 
             <Select
@@ -163,14 +213,25 @@ export default function FormularioNuevoTrabajo({
           <Select
             label="Descuento"
             id="descuento"
-            name="descuento"
             value={descuentoId ?? ""}
-            onChange={(e) => setDescuentoId(e.target.value || null)}
+            onChange={(e) =>
+              setDescuentoId(e.target.value ? Number(e.target.value) : null)
+            }
+            disabled={!tipoSeleccionado || descuentosCompatibles.length === 0}
           >
-            <option value="">Sin descuento</option>
-            {DESCUENTOS.map((d) => (
+            <option value="">
+              {!tipoSeleccionado
+                ? "Elegí primero una categoría"
+                : descuentosCompatibles.length === 0
+                  ? "Sin descuentos disponibles"
+                  : "Sin descuento"}
+            </option>
+            {descuentosCompatibles.map((d) => (
               <option key={d.id} value={d.id}>
-                {d.codigo} — {d.valor}% de descuento
+                {d.nombre} —{" "}
+                {d.tipoDescuento === "%"
+                  ? `${d.valor}% off`
+                  : `$${d.valor.toLocaleString("es-AR")} off`}
               </option>
             ))}
           </Select>
@@ -204,8 +265,11 @@ export default function FormularioNuevoTrabajo({
                 </div>
                 {descuentoSeleccionado && (
                   <div className="text-[11.5px] text-rd-muted mt-1">
-                    {precio.monto.toLocaleString("es-AR")} base ·{" "}
-                    -{descuentoSeleccionado.valor}% descuento
+                    {precio.toLocaleString("es-AR")} base ·{" "}
+                    {descuentoSeleccionado.tipoDescuento === "%"
+                      ? `-${descuentoSeleccionado.valor}%`
+                      : `-$${descuentoSeleccionado.valor.toLocaleString("es-AR")}`}{" "}
+                    descuento
                   </div>
                 )}
               </div>
@@ -215,8 +279,7 @@ export default function FormularioNuevoTrabajo({
                 </div>
                 {descuentoSeleccionado && (
                   <Pill tone="accent" size="sm" className="mt-1">
-                    -{descuentoSeleccionado.valor}%{" "}
-                    {descuentoSeleccionado.codigo}
+                    {descuentoSeleccionado.nombre}
                   </Pill>
                 )}
               </div>

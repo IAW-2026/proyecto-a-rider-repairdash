@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { XCircle, Loader2 } from "lucide-react";
 import { updateEstado } from "@/lib/actions/viajes";
 import { cancelacionPayment } from "@/lib/actions/apis/payment/cancelarPayment";
+import { cancelarViajeADriver } from "@/lib/actions/apis/driver/cancelarViajeADriver";
 
 export default function BotonCancelarViaje({
   idViaje,
@@ -18,6 +19,7 @@ export default function BotonCancelarViaje({
     setLoading(true);
     try {
       await cancelacionPayment(idViaje);
+      await cancelarViajeADriver(idViaje);
       await updateEstado(idViaje, "cancelado");
       toast.success("Cancelación enviada", {
         description: "Confirmá la cancelación en el panel del viaje.",
