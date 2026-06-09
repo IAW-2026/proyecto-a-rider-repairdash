@@ -15,20 +15,15 @@ export default function ProvisioningPerezoso() {
     const { user } = useUser();
 
     useEffect(() => {
-        // Esperamos a que Clerk termine de cargar y haya un usuario activo
         if (!isLoaded || !userId || !user) return;
 
         const provisionarUsuario = async () => {
-            // Verificamos si ya existe en nuestra BD
             const cliente = await getClienteClerkID(userId);
 
-            // Si el usuario ya tiene un rol de otra app (p. ej. un driver),
-            // no lo provisionamos como rider para no pisarle el rol en Clerk.
             const rol = (user.publicMetadata as { role?: string })?.role;
             const esRiderOSinRol =
                 !rol || rol === "rider" || rol === "admin-rider";
 
-            // Si no existe y es (o será) un rider, lo creamos con sus datos de Clerk
             if (!cliente && esRiderOSinRol) {
                 await crearCliente(
                     user.primaryEmailAddress?.emailAddress ?? "",
@@ -38,14 +33,12 @@ export default function ProvisioningPerezoso() {
                     userId
                 );
                 console.log(`[Lazy] Usuario creado en BD: ${userId}`);
-                // Refrescamos el objeto de sesión para que Clerk actualice
-                // el publicMetadata (rol) en el cliente sin recargar la página
                 await user.reload();
             }
         };
 
         provisionarUsuario();
-    }, [isLoaded, userId, user]); // Se ejecuta cuando cambia el estado de sesión
+    }, [isLoaded, userId, user]);
 
-    return null; // Componente invisible, solo lógica
+    return null;
 }
