@@ -1,11 +1,11 @@
+"use server";
 
-
-export async function cancelarViajeADriver( trabajo_id: number){
-      const apiKey = process.env.NEXT_PUBLIC_DRIVER_KEY;
+export async function cancelarViajeADriver(trabajo_id: number) {
+  const apiKey = process.env.NEXT_PUBLIC_DRIVER_KEY;
   if (!apiKey) throw new Error("Missing API key NEXT_PUBLIC_DRIVER_KEY");
 
   const res = await fetch(
-    `https://proyecto-a-driver-repairdash.vercel.app/api/trabajos/state`,
+    `https://driver-repairdash.vercel.app/api/trabajos/state`,
     {
       method: "PUT",
       headers: {
@@ -13,10 +13,10 @@ export async function cancelarViajeADriver( trabajo_id: number){
         "x-api-key": apiKey,
       },
       body: JSON.stringify({
-        id_trabajo: String (trabajo_id),
+        id_trabajo: String(trabajo_id),
         estado: "cancelado",
       }),
-    }
+    },
   );
 
   if (!res.ok) {
