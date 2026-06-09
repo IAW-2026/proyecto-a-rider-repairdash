@@ -1,18 +1,18 @@
+"use server";
 
-
-export async function obtenerInfoDriver( driverId : string){
-      const apiKey = process.env.NEXT_PUBLIC_DRIVER_KEY;
+export async function obtenerInfoDriver(driverId: string) {
+  const apiKey = process.env.NEXT_PUBLIC_DRIVER_KEY;
   if (!apiKey) throw new Error("Missing API key NEXT_PUBLIC_DRIVER_KEY");
 
   const res = await fetch(
-    `https://proyecto-a-driver-repairdash.vercel.app/api/drivers/${driverId}`,
+    `https://driver-repairdash.vercel.app/api/drivers/${driverId}`,
     {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         "x-api-key": apiKey,
       },
-    }
+    },
   );
 
   if (!res.ok) {

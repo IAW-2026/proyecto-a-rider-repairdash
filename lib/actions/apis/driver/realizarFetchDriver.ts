@@ -1,3 +1,5 @@
+"use server";
+
 export async function realizarFetchDriver(
   id: string,
   categoria: string,
@@ -13,7 +15,7 @@ export async function realizarFetchDriver(
   if (!apiKey) throw new Error("Missing API key NEXT_PUBLIC_DRIVER_KEY");
 
   const res = await fetch(
-    "https://proyecto-a-driver-repairdash.vercel.app/api/webhooks/nuevo-trabajo",
+    "https://driver-repairdash.vercel.app/api/webhooks/nuevo-trabajo",
     {
       method: "POST",
       headers: {
@@ -31,7 +33,7 @@ export async function realizarFetchDriver(
         fotos: urlsFotos,
         descripcion,
       }),
-    }
+    },
   );
 
   if (!res.ok) {
