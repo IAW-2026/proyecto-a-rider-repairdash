@@ -1,12 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { Show, UserButton, useUser } from "@clerk/nextjs";
 import { LogIn, UserPlus, Loader2 } from "lucide-react";
 import { Button } from "@/app/components/ui";
-import BotonIrAlMenu from "./BotonIrAlMenu";
-import BotonIrAlMenuAdmin from "./BotonIrAlMenuAdmin";
 
 export default function BotonIniciarSesion() {
   const router = useRouter();
@@ -48,9 +46,9 @@ export default function BotonIniciarSesion() {
             </div>
           </div>
           {!isLoaded ? null : metadata?.role === "admin-rider" ? (
-            <BotonIrAlMenuAdmin />
+            redirect("/admin")
           ) : metadata?.role === "rider" ? (
-            <BotonIrAlMenu />
+            redirect(`/user/${user?.id}/menu`)
           ) : !metadata?.role && !showFallback ? (
             <div className="flex flex-col items-center gap-2">
               <Loader2

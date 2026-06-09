@@ -123,15 +123,15 @@ export default function ListaViajes({
   return (
     <div className="rounded-2xl overflow-hidden border border-rd-border bg-rd-surface">
       {/* Desktop tabla */}
-      <div className="hidden md:block overflow-x-auto">
-        <table className="w-full min-w-[640px] border-collapse">
+      <div className="hidden md:block">
+        <table className="w-full table-auto border-collapse">
           <thead className="bg-rd-bg-2">
             <tr>
               {["#", "Servicio", "Trabajador", "Fecha", "Estado", "Pago", "Monto"].map(
                 (h) => (
                   <th
                     key={h}
-                    className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-[0.14em] text-rd-muted"
+                    className="px-3 py-3 text-left text-[11px] font-bold uppercase tracking-[0.14em] text-rd-muted"
                   >
                     {h}
                   </th>
@@ -145,31 +145,31 @@ export default function ListaViajes({
                 key={v.id_viaje}
                 className="border-b border-rd-border last:border-b-0 hover:bg-rd-elevated/40 transition-colors"
               >
-                <td className="px-4 py-3.5 font-mono-rd text-[11.5px] text-rd-muted">
+                <td className="px-3 py-3 font-mono-rd text-[11.5px] text-rd-muted">
                   {v.id_viaje}
                 </td>
-                <td className="px-4 py-3.5 font-semibold text-[13.5px] text-rd-text capitalize">
+                <td className="px-3 py-3 font-semibold text-[13.5px] text-rd-text capitalize">
                   {v.tipo_de_trabajo}
                 </td>
-                <td className="px-4 py-3.5 text-sm text-rd-text-2">
+                <td className="px-3 py-3 text-sm text-rd-text-2 truncate max-w-[160px]">
                   {v.driver ?? "—"}
                 </td>
-                <td className="px-4 py-3.5 text-sm text-rd-text-2">
+                <td className="px-3 py-3 text-sm text-rd-text-2 whitespace-nowrap">
                   {fmtFecha(v.fecha)}
                 </td>
-                <td className="px-4 py-3.5">
+                <td className="px-3 py-3">
                   <Pill tone={estadoTone(v.estado)} dot>
                     {v.estado}
                   </Pill>
                 </td>
-                <td className="px-4 py-3.5">
+                <td className="px-3 py-3">
                   {v.pagos?.[0] && (
                     <Pill tone={pagoTone(v.pagos[0].estado)} size="sm">
                       {v.pagos[0].estado}
                     </Pill>
                   )}
                 </td>
-                <td className="px-4 py-3.5 text-sm font-semibold tabular-rd text-rd-text">
+                <td className="px-3 py-3 text-sm font-semibold tabular-rd text-rd-text whitespace-nowrap">
                   {v.pagos?.[0] != null
                     ? "$ " + Number(v.pagos[0].monto).toLocaleString("es-AR")
                     : "—"}

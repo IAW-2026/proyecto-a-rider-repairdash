@@ -21,6 +21,7 @@ import { Pill } from "@/app/components/ui";
 import DriverCard from "./DriverCard";
 import { supabaseBrowser } from "@/lib/supabaseClient";
 import { realizarFetchPayment } from "@/lib/actions/apis/payment/realizarFetchPayment";
+import type { DriverInfo } from "@/lib/actions/apis/driver/obtenerInfoDriver";
 type StepDef = {
   id: "pendiente" | "aceptado" | "en camino" | "ha llegado";
   label: string;
@@ -76,11 +77,13 @@ export default function ViajeEnCurso({
   idClerk,
   estadoInicial,
   pagoEstadoInicial,
+  driverInicial,
 }: {
   idViaje: number;
   idClerk: string;
   estadoInicial: string;
   pagoEstadoInicial: string | null;
+  driverInicial: DriverInfo | null;
 }) {
   const [estadoActual, setEstadoActual] = useState<string>(
     estadoInicial.toLowerCase(),
@@ -289,7 +292,7 @@ export default function ViajeEnCurso({
       {/* Driver card — visible desde "aceptado" en adelante */}
       {["aceptado", "en camino", "ha llegado"].includes(estadoActual) && (
         <div className="mb-6">
-          <DriverCard idViaje = {idViaje}/>
+          <DriverCard idViaje={idViaje} driverInicial={driverInicial} />
         </div>
       )}
 

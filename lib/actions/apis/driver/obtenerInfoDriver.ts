@@ -1,6 +1,13 @@
 "use server";
 
-export async function obtenerInfoDriver(driverId: string) {
+import { getViajeById } from "@/lib/queries/viajes";
+
+export type DriverInfo = {
+  nombre: string;
+  rating_promedio: number;
+};
+
+export async function obtenerInfoDriver(driverId: string): Promise<DriverInfo> {
   const apiKey = process.env.NEXT_PUBLIC_DRIVER_KEY;
   if (!apiKey) throw new Error("Missing API key NEXT_PUBLIC_DRIVER_KEY");
 
@@ -22,4 +29,12 @@ export async function obtenerInfoDriver(driverId: string) {
   }
 
   return (await res.json()).data;
+}
+
+export async function obtenerInfoDriverPorViaje(
+  idViaje: number,
+): Promise<DriverInfo | null> {
+  const viaje = await getViajeById(idViaje);
+  if (!viaje?.driver) return null;
+  return obtenerInfoDriver(viaje.driver);
 }

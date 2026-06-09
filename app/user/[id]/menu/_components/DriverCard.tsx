@@ -3,27 +3,32 @@
 import { useEffect, useState } from "react";
 import { User } from "lucide-react";
 import Stars from "@/app/components/ui/Stars";
-import { getDriver } from "@/lib/actions/viajes";
-import { obtenerInfoDriver } from "@/lib/actions/apis/driver/obtenerInfoDriver";
+import {
+  obtenerInfoDriverPorViaje,
+  type DriverInfo,
+} from "@/lib/actions/apis/driver/obtenerInfoDriver";
 
-type DriverInfo = {
-  nombre: string;
-  rating_promedio: number;
-};
-
-export default function DriverCard({ idViaje }: { idViaje: number }) {
-  const [driver, setDriver] = useState<DriverInfo | null>(null);
+export default function DriverCard({
+  idViaje,
+  driverInicial,
+}: {
+  idViaje: number;
+  driverInicial: DriverInfo | null;
+}) {
+  const [driver, setDriver] = useState<DriverInfo | null>(driverInicial);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (driver) return;
+
     let cancelled = false;
 
     (async () => {
       try {
-        const driverId = await getDriver(idViaje);
-        if (!driverId) throw new Error("No se encontró el driver");
-        const info = await obtenerInfoDriver(driverId);
-        if (!cancelled) setDriver(info);
+        const info = await obtenerInfoDriverPorViaje(idViaje);
+        if (cancelled) return;
+        if (!info) throw new Error("No se encontró el driver");
+        setDriver(info);
       } catch (e) {
         if (!cancelled) {
           setError(e instanceof Error ? e.message : "Error desconocido");
@@ -34,7 +39,7 @@ export default function DriverCard({ idViaje }: { idViaje: number }) {
     return () => {
       cancelled = true;
     };
-  }, [idViaje]);
+  }, [idViaje, driver]);
 
   return (
     <div className="flex items-center gap-4 p-4 rounded-xl bg-rd-elevated border border-rd-border-2">
