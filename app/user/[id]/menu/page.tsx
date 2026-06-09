@@ -10,7 +10,6 @@ import { obtenerTrabajos } from "@/lib/actions/apis/driver/obtenerTrabajos";
 import { currentUser } from "@clerk/nextjs/server";
 import ViajeEnCurso from "./_components/ViajeEnCurso";
 import MenuSkeleton from "@/app/components/skeletons/MenuSkeleton";
-import ActualizarEstadoViaje from "@/app/mocks/actualizarEstadoViaje";
 import { getViajesByClerkID } from "@/lib/queries/viajes";
 import { PageHeader, Pill, Button } from "@/app/components/ui";
 import { UserButton } from "@clerk/nextjs";
@@ -123,8 +122,6 @@ async function MenuContent({ idClerk }: { idClerk: string }) {
                 estadoInicial={viajeActivo.estado ?? "pendiente"}
                 pagoEstadoInicial={viajeActivo.pagos?.[0]?.estado ?? null}
               />
-              {/* Mock temporal para simular transiciones de estado en dev */}
-              <ActualizarEstadoViaje id={viajeActivo.id_viaje} />
             </section>
             <aside className="flex flex-col gap-3">
               {kpis}
@@ -134,8 +131,8 @@ async function MenuContent({ idClerk }: { idClerk: string }) {
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-3 mb-6 items-stretch">
           <section className="relative overflow-hidden rounded-2xl p-6 sm:p-7 flex flex-col sm:flex-row sm:items-stretch gap-5 border border-rd-border-3 group min-h-[200px] sm:min-h-[172px]">
-            <div 
-              className="absolute inset-0 pointer-events-none transition-opacity duration-300 group-hover:opacity-80" 
+            <div
+              className="absolute inset-0 pointer-events-none transition-opacity duration-300 group-hover:opacity-80"
               style={{
                 background: "linear-gradient(135deg, rgba(217,64,204,0.18), rgba(141,98,165,0.10))",
               }}
@@ -317,7 +314,7 @@ export default async function Menu({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  
+
   return (
     <div className="py-2 sm:py-4 max-w-5xl mx-auto w-full px-4 relative">
       <div className="absolute top-0 right-4 sm:hidden w-20 h-20 flex items-center justify-center overflow-hidden">
