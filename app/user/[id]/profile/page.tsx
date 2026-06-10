@@ -16,6 +16,7 @@ import {
   Button,
   cn,
 } from "@/app/components/ui";
+import { obtenerCalificacionCliente } from "@/lib/actions/apis/feedback/obtenerCalificacionCliente";
 
 const fmtMonto = (m?: unknown) => {
   if (m == null) return "—";
@@ -35,10 +36,10 @@ async function ProfileIdentityCard({ id }: { id: string }) {
   const apellido = cliente?.apellido ?? user?.lastName ?? "";
   const fullName = `${nombre} ${apellido}`.trim();
   const email = user?.primaryEmailAddress?.emailAddress ?? "";
-  const calificacion = Number(cliente?.calificacion ?? 0);
+  const calificacion = Number(await obtenerCalificacionCliente(id));
 
   return (
-    <div 
+    <div
       className="rounded-2xl p-6 sm:p-7 border border-rd-border flex flex-col items-center text-center relative overflow-hidden"
       style={{
         background: "linear-gradient(180deg, var(--color-rd-surface) 0%, var(--color-rd-bg-2) 100%)"
@@ -65,7 +66,7 @@ async function ProfileIdentityCard({ id }: { id: string }) {
         <p className="text-sm text-rd-muted mt-1 break-all relative z-10">{email}</p>
       )}
 
-      {calificacion > 0 && (
+      {calificacion >= 0 && (
         <div className="mt-4 px-4 py-3 rounded-xl bg-rd-bg-2/50 border border-rd-border flex flex-col items-center gap-1.5 relative z-10">
           <Stars value={calificacion} size={16} />
           <div className="text-sm font-semibold tabular-rd text-rd-text">
@@ -94,7 +95,7 @@ async function ProfileHistory({ id }: { id: string }) {
   // Preparar datos para el gráfico de barras (últimos 6 meses)
   const viajesPorMes = new Map<string, number>();
   const mesesLabels = [];
-  
+
   for (let i = 5; i >= 0; i--) {
     const d = new Date();
     d.setMonth(d.getMonth() - i);
@@ -151,7 +152,7 @@ async function ProfileHistory({ id }: { id: string }) {
             {chartData.map((d, i) => {
               const isZero = d.cantidad === 0;
               const heightPct = isZero ? 4 : (d.cantidad / maxViajes) * 100;
-              
+
               return (
                 <div key={i} className="flex flex-col items-center flex-1 gap-2 group">
                   <div
@@ -163,7 +164,7 @@ async function ProfileHistory({ id }: { id: string }) {
                     {d.cantidad}
                   </div>
                   <div className="w-full px-1 sm:px-2 flex justify-center">
-                    <div 
+                    <div
                       className="w-full max-w-[32px] sm:max-w-[40px] bg-rd-bg-2 border border-rd-border-2 rounded-t-xl overflow-hidden relative flex flex-col justify-end"
                       style={{ height: "120px" }}
                     >
@@ -222,12 +223,12 @@ export default async function Profile({
         title="Perfil de cuenta"
         description="Información de tu cuenta y resumen de actividad."
       />
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-5 lg:gap-6">
         <Suspense fallback={<IdentityCardSkeleton />}>
           <ProfileIdentityCard id={id} />
         </Suspense>
-        
+
         <Suspense fallback={<ProfileHistorySkeleton />}>
           <ProfileHistory id={id} />
         </Suspense>

@@ -172,10 +172,10 @@ export default function ViajeEnCurso({
     localStorage.setItem(pagoKey, "1");
 
     (async () => {
-     const url = await realizarFetchPayment(idViaje);
-    localStorage.setItem(`pago-url-${idViaje}`, url);
-    setPagoYaIniciado(true);
-    window.location.href = url;
+      const url = await realizarFetchPayment(idViaje);
+      localStorage.setItem(`pago-url-${idViaje}`, url);
+      setPagoYaIniciado(true);
+      window.location.href = url;
     })();
   }, [estadoActual, idViaje]);
 
@@ -240,7 +240,7 @@ export default function ViajeEnCurso({
         </div>
         <div className="flex flex-col gap-2 w-full sm:w-auto sm:min-w-[200px]">
           <BotonConformidad idViaje={idViaje} />
-          <BotonDisconformidad idViaje={idViaje} idClerk={idClerk} />
+          <BotonDisconformidad idViaje={idViaje} />
         </div>
       </div>
     );
@@ -272,9 +272,8 @@ export default function ViajeEnCurso({
 
   return (
     <div
-      className={`w-full rounded-2xl p-6 sm:p-7 bg-rd-surface border border-rd-border-2 transition-colors duration-300 ${
-        pulse ? "ring-2 ring-rd-accent/40" : ""
-      }`}
+      className={`w-full rounded-2xl p-6 sm:p-7 bg-rd-surface border border-rd-border-2 transition-colors duration-300 ${pulse ? "ring-2 ring-rd-accent/40" : ""
+        }`}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-7">
@@ -320,19 +319,18 @@ export default function ViajeEnCurso({
               className={`flex gap-4 sm:gap-5 relative z-10 ${isLast ? "" : "mb-7"}`}
             >
               <div
-                className={`w-[50px] h-[50px] shrink-0 rounded-full grid place-items-center transition-all duration-300 border ${
-                  isCurrent
+                className={`w-[50px] h-[50px] shrink-0 rounded-full grid place-items-center transition-all duration-300 border ${isCurrent
                     ? "bg-rd-accent border-rd-accent text-white"
                     : isCompleted
                       ? "bg-rd-elevated border-rd-border-3 text-rd-accent-soft"
                       : "bg-rd-bg border-rd-border text-rd-subtle"
-                }`}
+                  }`}
                 style={
                   isCurrent
                     ? {
-                        boxShadow:
-                          "0 0 0 5px var(--color-rd-bg), 0 0 0 6px var(--color-rd-accent-dim)",
-                      }
+                      boxShadow:
+                        "0 0 0 5px var(--color-rd-bg), 0 0 0 6px var(--color-rd-accent-dim)",
+                    }
                     : { boxShadow: "0 0 0 5px var(--color-rd-bg)" }
                 }
               >
@@ -346,13 +344,12 @@ export default function ViajeEnCurso({
               <div className="pt-1 flex flex-col gap-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h3
-                    className={`text-[15px] font-bold transition-colors ${
-                      isCurrent
+                    className={`text-[15px] font-bold transition-colors ${isCurrent
                         ? "text-rd-text"
                         : isCompleted
                           ? "text-rd-text-2"
                           : "text-rd-subtle"
-                    }`}
+                      }`}
                   >
                     {step.label}
                   </h3>
@@ -418,7 +415,7 @@ export default function ViajeEnCurso({
             </div>
           </>
         )}
-      
+
     </div>
   );
 }
