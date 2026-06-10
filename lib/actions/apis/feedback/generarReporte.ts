@@ -14,7 +14,7 @@ export async function generarReporte(idViaje: number) {
   if (!id_clerk) return { success: false };
 
   const res = await fetch(
-    `https://proyecto-a-feedback-repairdash.vercel.app/feedback/api/reports`,
+    `https://proyecto-a-feedback-repairdash.vercel.app/api/reports`,
     {
       method: "POST",
       headers: {
