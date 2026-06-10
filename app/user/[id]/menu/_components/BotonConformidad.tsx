@@ -15,7 +15,7 @@ export default function BotonConformidad({ idViaje }: BotonConformidadProps) {
     setLoading(true);
     try {
       await updateEstado(idViaje, "concluido");
-      window.location.reload();
+      window.location.href = "https://proyecto-a-feedback-repairdash.vercel.app";
     } catch (e) {
       console.error("Error al concluir viaje:", e);
       setLoading(false);

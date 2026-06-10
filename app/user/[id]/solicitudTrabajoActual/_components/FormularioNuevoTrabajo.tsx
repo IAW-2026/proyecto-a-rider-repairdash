@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { redirect, useRouter } from "next/navigation";
 import { useFormStatus } from "react-dom";
 import {
@@ -11,6 +11,8 @@ import {
   User,
   Truck,
   CheckCircle2,
+  Plus,
+  X,
 } from "lucide-react";
 import BotonAgregarDestino from "./BotonAgregarDestino";
 import { distribuirFormulario } from "@/lib/actions/distribuirFormulario";
@@ -80,6 +82,28 @@ export default function FormularioNuevoTrabajo({
     tipoServicioIdInicial ?? "",
   );
   const [destinos, setDestinos] = useState("");
+  const [fotos, setFotos] = useState<File[]>([]);
+  const [fotoError, setFotoError] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleAddFoto = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setFotos((prev) => {
+      if (prev.length >= 3) return prev;
+      const isDuplicate = prev.some(
+        (f) => f.name === file.name && f.size === file.size,
+      );
+      if (isDuplicate) return prev;
+      return [...prev, file];
+    });
+    e.target.value = "";
+    setFotoError("");
+  };
+
+  const handleRemoveFoto = (index: number) => {
+    setFotos((prev) => prev.filter((_, i) => i !== index));
+  };
   const [descuentoId, setDescuentoId] = useState<number | null>(null);
   const tipoSeleccionado =
     tipos.find((t) => t.id === tipoServicioId) ?? null;
@@ -122,7 +146,10 @@ export default function FormularioNuevoTrabajo({
       <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-5 lg:gap-6">
         <form
           action={async (formData) => {
-            const fotos = formData.getAll("foto") as File[];
+            if (fotos.length === 0) {
+              setFotoError("Debés adjuntar al menos 1 foto.");
+              return;
+            }
             const comprimidas = await Promise.all(
               fotos.map((f) => compressImage(f)),
             );
@@ -236,22 +263,59 @@ export default function FormularioNuevoTrabajo({
             ))}
           </Select>
 
-          <div className="flex flex-col gap-1.5">
-            <label
-              htmlFor="foto"
-              className="text-[12.5px] font-semibold text-rd-text-2 tracking-wide"
-            >
-              Adjuntar foto
-            </label>
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[12.5px] font-semibold text-rd-text-2 tracking-wide">
+                Adjuntar fotos
+              </span>
+              <span className={`text-[11.5px] font-medium ${fotos.length === 0 ? "text-rd-muted" : "text-rd-accent-soft"}`}>
+                {fotos.length} / 3
+              </span>
+            </div>
+
             <input
-              id="foto"
-              name="foto"
+              ref={fileInputRef}
               type="file"
               accept="image/*"
-              multiple
-              required
-              className="w-full px-3.5 py-3 rounded-xl text-sm outline-none bg-rd-inset border border-rd-border-2 text-rd-text file:mr-3 file:px-3 file:py-1.5 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-rd-elevated file:text-rd-text-2 hover:file:bg-rd-surface focus:border-rd-accent transition-colors"
+              className="hidden"
+              onChange={handleAddFoto}
             />
+
+            <div className="flex gap-2 flex-wrap">
+              {fotos.map((foto, i) => (
+                <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-rd-border-2 shrink-0">
+                  <img
+                    src={URL.createObjectURL(foto)}
+                    alt={`Foto ${i + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveFoto(i)}
+                    className="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 transition-colors"
+                  >
+                    <X size={10} />
+                  </button>
+                </div>
+              ))}
+
+              {fotos.length < 3 && (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-20 h-20 rounded-xl border-2 border-dashed border-rd-border-2 flex flex-col items-center justify-center gap-1 text-rd-muted hover:border-rd-accent hover:text-rd-accent-soft transition-colors shrink-0"
+                >
+                  <Plus size={18} />
+                  <span className="text-[10px] font-semibold">Agregar</span>
+                </button>
+              )}
+            </div>
+
+            {fotoError ? (
+              <p className="text-xs text-red-500">{fotoError}</p>
+            ) : (
+              <p className="text-xs text-rd-muted">Mínimo 1, máximo 3 fotos.</p>
+            )}
           </div>
 
           {precio && (

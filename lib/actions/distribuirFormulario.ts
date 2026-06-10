@@ -8,12 +8,15 @@ import { cancelarViaje } from "@/lib/actions/viajes";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { redirect } from "next/navigation";
 import { getCalificacionCliente, getClienteActual } from "./clientes";
+import { obtenerCalificacionCliente } from "./apis/feedback/obtenerCalificacionCliente";
+import { updateClienteByClerkID } from "../queries";
 
 export async function distribuirFormulario(formData: FormData): Promise<void> {
   const result = await nuevoTrabajo(formData);
   const cliente = await getClienteActual();
-  const valoracionRaw = await getCalificacionCliente(cliente.id_clerk);
-  const valoracion = valoracionRaw ? Number(valoracionRaw) : 0;
+
+  const valoracionActual = await obtenerCalificacionCliente(cliente.id_clerk);
+
   if (result) {
     const promocionIdRaw = formData.get("promocionId") as string;
     const promocionId = promocionIdRaw ? Number(promocionIdRaw) : 0;
@@ -90,7 +93,7 @@ export async function distribuirFormulario(formData: FormData): Promise<void> {
         descripcion,
         cliente.nombre || "",
         cliente.apellido || "",
-        valoracion,
+        valoracionActual,
       );
     } catch (err) {
       console.error(

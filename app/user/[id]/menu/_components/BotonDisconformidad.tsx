@@ -4,15 +4,18 @@ import { useState } from "react";
 import { AlertTriangle, Loader2 } from "lucide-react";
 import { redirect } from "next/navigation";
 import { updateEstado } from "@/lib/actions/viajes";
+import { generarReporte } from "@/lib/actions/apis/feedback/generarReporte";
+
+
+
 
 interface BotonDisconformidadProps {
   idViaje: number;
-  idClerk: string;
+  idClerk?: string;
 }
 
 export default function BotonDisconformidad({
   idViaje,
-  idClerk,
 }: BotonDisconformidadProps) {
   const [loading, setLoading] = useState(false);
 
@@ -20,12 +23,13 @@ export default function BotonDisconformidad({
     setLoading(true);
     try {
       await updateEstado(idViaje, "concluido");
+      await generarReporte(idViaje);
+      window.location.href = "https://proyecto-a-feedback-repairdash.vercel.app";
     } catch (e) {
       console.error("Error al concluir viaje (disconformidad):", e);
     } finally {
       setLoading(false);
     }
-    redirect(`/mocks/feedback?id_clerk=${idClerk}`);
   };
 
   return (
