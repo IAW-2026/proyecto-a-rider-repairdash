@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+@theme {
+  /* Backgrounds — paleta violeta (vuelta al feel original, más cálido) */
+  --color-rd-bg: #271033;
+  --color-rd-bg-2: #2f1640;
+  --color-rd-surface: #3a1a4d;
+  --color-rd-elevated: #4a2160;
+  --color-rd-inset: #1c0a26;
+
+  /* Borders (rgba) */
+  --color-rd-border: rgba(195, 146, 221, 0.10);
+  --color-rd-border-2: rgba(195, 146, 221, 0.18);
+  --color-rd-border-3: rgba(195, 146, 221, 0.32);
+
+  /* Text */
+  --color-rd-text: #F2E4F0;
+  --color-rd-text-2: #C9B5D8;
+  --color-rd-muted: #9783A8;
+  --color-rd-subtle: #6F5C7E;
+
+  /* Brand */
+  --color-rd-accent: #D940CC;
+  --color-rd-accent-soft: #E89FE0;
+  --color-rd-accent-dim: rgba(217, 64, 204, 0.16);
+  --color-rd-purple: #8D62A5;
+  --color-rd-lavender: #C392DD;
+
+  /* Semantic */
+  --color-rd-ok: #4ED4A8;
+  --color-rd-ok-bg: rgba(78, 212, 168, 0.12);
+  --color-rd-warn: #E8B45C;
+  --color-rd-warn-bg: rgba(232, 180, 92, 0.12);
+  --color-rd-danger: #EF6E6E;
+  --color-rd-danger-bg: rgba(239, 110, 110, 0.10);
+  --color-rd-info: #7BB8F0;
+  --color-rd-info-bg: rgba(123, 184, 240, 0.12);
+
+  /* Legacy aliases — for components not yet migrated. Map a paleta violeta. */
+  --color-brand-bg: #271033;
+  --color-brand-surface: #3a1a4d;
+  --color-brand-purple: #8D62A5;
+  --color-brand-lavender: #C392DD;
+  --color-brand-accent: #D940CC;
+  --color-brand-text: #F2E4F0;
+  --color-brand-muted: #9783A8;
+
+  /* Type */
+  --font-main: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html {
+  background-color: var(--color-rd-bg);
+}
+
+body {
+  font-family: var(--font-main);
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(217, 64, 204, 0.10), transparent 60%),
+    linear-gradient(135deg, #271033 0%, #3a1a4d 60%, #271033 100%);
+  background-attachment: fixed;
+  color: var(--color-rd-text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "ss01", "cv11";
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* --- Animaciones reutilizables --- */
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: .9; }
+  50% { transform: scale(1.4); opacity: .3; }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Skeleton helper — pinta el bg con gradient animado.
+   Aplicar como `className="skeleton-shimmer"` sobre un elemento con tamaño. */
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-rd-elevated) 0%,
+    var(--color-rd-surface) 50%,
+    var(--color-rd-elevated) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+.font-mono-rd { font-family: var(--font-mono); }
+.tabular-rd { font-variant-numeric: tabular-nums; }
+
+/* Padding lateral seguro para páginas standalone (sin layout user/admin).
+   Garantiza un mínimo de 20px + el inset del dispositivo (notch / curvatura). */
+.px-safe-page {
+  padding-left: max(2rem, env(safe-area-inset-left));
+  padding-right: max(2rem, env(safe-area-inset-right));
+}
